@@ -1,0 +1,18 @@
+parameters:
+    level: 3
+    paths:
+        - .
+    excludePaths:
+        analyse:
+            - vendor
+            - assets
+            - .stubs
+            - node_modules (?)
+            - build (?)
+            - dist (?)
+            - tests
+            - inc/form-builder/builder/views
+    scanFiles: []
+    bootstrapFiles:
+        - phpstan-bootstrap.php
+    treatPhpDocTypesAsCertain: false

@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<ruleset name="WordPress Plugin Quality">
+    <description>WordPress plugin rules for security, readability, compatibility and maintainability.</description>
+
+    <file>.</file>
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/node_modules/*</exclude-pattern>
+    <exclude-pattern>*/build/*</exclude-pattern>
+    <exclude-pattern>*/dist/*</exclude-pattern>
+    <exclude-pattern>*/coverage/*</exclude-pattern>
+    <exclude-pattern>*/assets/*</exclude-pattern>
+    <exclude-pattern>*/tests/*</exclude-pattern>
+    <exclude-pattern>*/.stubs/*</exclude-pattern>
+    <exclude-pattern>*/.php-cs-fixer.dist.php</exclude-pattern>
+    <exclude-pattern>*/phpstan-bootstrap.php</exclude-pattern>
+
+    <arg name="extensions" value="php"/>
+    <arg name="parallel" value="8"/>
+    <arg value="ps"/>
+
+    <config name="minimum_supported_wp_version" value="6.4"/>
+    <config name="testVersion" value="8.5-"/>
+
+    <rule ref="WordPress"/>
+    <rule ref="WordPress-Extra"/>
+    <rule ref="PHPCompatibilityWP"/>
+
+    <!-- Every global in this plugin is prefixed cjw_/CJW_; CampType is the one shared enum. -->
+    <rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+        <properties>
+            <property name="prefixes" type="array">
+                <element value="cjw_"/>
+                <element value="CJW_"/>
+                <element value="CampType"/>
+            </property>
+        </properties>
+    </rule>
+
+    <!-- Formatting is owned by PHP-CS-Fixer; PHPCS focuses on WordPress safety/compatibility. -->
+    <rule ref="Generic.Classes.OpeningBraceSameLine.BraceOnNewLine">
+        <severity>0</severity>
+    </rule>
+    <rule ref="Generic.Functions.OpeningFunctionBraceKernighanRitchie.BraceOnNewLine">
+        <severity>0</severity>
+    </rule>
+    <rule ref="Generic.WhiteSpace.DisallowSpaceIndent">
+        <severity>0</severity>
+    </rule>
+    <rule ref="Generic.WhiteSpace.ScopeIndent">
+        <severity>0</severity>
+    </rule>
+    <rule ref="Generic.WhiteSpace.ArbitraryParenthesesSpacing">
+        <severity>0</severity>
+    </rule>
+    <rule ref="Generic.Formatting.MultipleStatementAlignment">
+        <severity>0</severity>
+    </rule>
+    <rule ref="PEAR.Functions.FunctionCallSignature">
+        <severity>0</severity>
+    </rule>
+    <rule ref="Squiz.Commenting">
+        <severity>0</severity>
+    </rule>
+    <rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing">
+        <severity>0</severity>
+    </rule>
+    <rule ref="Squiz.ControlStructures.ControlSignature.SpaceAfterCloseParenthesis">
+        <severity>0</severity>
+    </rule>
+    <rule ref="NormalizedArrays.Arrays.ArrayBraceSpacing">
+        <severity>0</severity>
+    </rule>
+    <rule ref="Universal.Arrays.DisallowShortArraySyntax">
+        <severity>0</severity>
+    </rule>
+    <rule ref="Universal.Operators.DisallowShortTernary">
+        <severity>0</severity>
+    </rule>
+    <rule ref="WordPress.Arrays.MultipleStatementAlignment">
+        <severity>0</severity>
+    </rule>
+    <rule ref="WordPress.Arrays.ArrayKeySpacingRestrictions">
+        <severity>0</severity>
+    </rule>
+    <rule ref="WordPress.Files.FileName">
+        <severity>0</severity>
+    </rule>
+    <rule ref="WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid">
+        <severity>0</severity>
+    </rule>
+    <rule ref="WordPress.NamingConventions.ValidVariableName">
+        <severity>0</severity>
+    </rule>
+    <rule ref="WordPress.WhiteSpace">
+        <severity>0</severity>
+    </rule>
+    <rule ref="Universal.NamingConventions.NoReservedKeywordParameterNames">
+        <severity>0</severity>
+    </rule>
+
+    <!-- Common practical overrides. Tighten or remove these as your codebase matures. -->
+    <rule ref="WordPress.Files.FileName.NotHyphenatedLowercase">
+        <severity>0</severity>
+    </rule>
+    <rule ref="WordPress.PHP.YodaConditions.NotYoda">
+        <severity>0</severity>
+    </rule>
+</ruleset>
