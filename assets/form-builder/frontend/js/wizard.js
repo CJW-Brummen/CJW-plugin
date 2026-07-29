@@ -31,7 +31,9 @@ document.addEventListener("DOMContentLoaded", () => {
 		let fields = form.querySelectorAll(`[name="${CSS.escape(directName)}"]`);
 
 		if (fields.length === 0) {
-			fields = form.querySelectorAll(`[name="${CSS.escape(`${directName}[]`)}"]`);
+			fields = form.querySelectorAll(
+				`[name="${CSS.escape(`${directName}[]`)}"]`,
+			);
 		}
 
 		if (fields.length === 0) {
@@ -59,9 +61,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	function matchesCondition(actualValue, operator, expectedValue) {
 		if (Array.isArray(actualValue)) {
-			const normalizedExpected = String(expectedValue ?? "").trim().toLowerCase();
+			const normalizedExpected = String(expectedValue ?? "")
+				.trim()
+				.toLowerCase();
 			const normalizedValues = actualValue.map((value) =>
-				String(value ?? "").trim().toLowerCase(),
+				String(value ?? "")
+					.trim()
+					.toLowerCase(),
 			);
 
 			switch (operator) {
@@ -80,8 +86,12 @@ document.addEventListener("DOMContentLoaded", () => {
 			}
 		}
 
-		const normalizedActual = String(actualValue ?? "").trim().toLowerCase();
-		const normalizedExpected = String(expectedValue ?? "").trim().toLowerCase();
+		const normalizedActual = String(actualValue ?? "")
+			.trim()
+			.toLowerCase();
+		const normalizedExpected = String(expectedValue ?? "")
+			.trim()
+			.toLowerCase();
 
 		switch (operator) {
 			case "not_equals":
@@ -102,7 +112,8 @@ document.addEventListener("DOMContentLoaded", () => {
 	function updateConditionalFields(form) {
 		form.querySelectorAll("[data-condition-field]").forEach((element) => {
 			const field = element.getAttribute("data-condition-field") || "";
-			const operator = element.getAttribute("data-condition-operator") || "equals";
+			const operator =
+				element.getAttribute("data-condition-operator") || "equals";
 			const expectedValue = element.getAttribute("data-condition-value") || "";
 			const isVisible = matchesCondition(
 				getFieldValue(form, field, element),
@@ -112,25 +123,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
 			element.style.display = isVisible ? "" : "none";
 
-			element
-				.querySelectorAll("input, select, textarea")
-				.forEach((input) => {
-					if (input.type === "hidden") {
-						return;
-					}
+			element.querySelectorAll("input, select, textarea").forEach((input) => {
+				if (input.type === "hidden") {
+					return;
+				}
 
-					if (isVisible) {
-						if (input.dataset.wasRequired === "1") {
-							input.required = true;
-						}
-						return;
+				if (isVisible) {
+					if (input.dataset.wasRequired === "1") {
+						input.required = true;
 					}
+					return;
+				}
 
-					if (input.required) {
-						input.dataset.wasRequired = "1";
-					}
-					input.required = false;
-				});
+				if (input.required) {
+					input.dataset.wasRequired = "1";
+				}
+				input.required = false;
+			});
 		});
 	}
 
@@ -165,14 +174,17 @@ document.addEventListener("DOMContentLoaded", () => {
 			button.addEventListener("click", (event) => {
 				event.preventDefault();
 				const repeaterId = button.getAttribute("data-repeater");
-				const container = form.querySelector(`#repeater-${CSS.escape(repeaterId)}`);
+				const container = form.querySelector(
+					`#repeater-${CSS.escape(repeaterId)}`,
+				);
 
 				if (!container) {
 					return;
 				}
 
 				const itemsContainer = container.querySelector(".cjw-repeater-items");
-				const maxEntries = parseInt(container.getAttribute("data-max-entries"), 10) || 0;
+				const maxEntries =
+					parseInt(container.getAttribute("data-max-entries"), 10) || 0;
 				const rows = itemsContainer.querySelectorAll(".cjw-repeater-row");
 
 				if (maxEntries > 0 && rows.length >= maxEntries) {
@@ -201,7 +213,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 				if (
 					maxEntries > 0 &&
-					itemsContainer.querySelectorAll(".cjw-repeater-row").length >= maxEntries
+					itemsContainer.querySelectorAll(".cjw-repeater-row").length >=
+						maxEntries
 				) {
 					button.style.display = "none";
 				}
@@ -232,11 +245,13 @@ document.addEventListener("DOMContentLoaded", () => {
 			reindexRepeater(container);
 
 			const addButton = container.querySelector(".cjw-add-repeater-row");
-			const maxEntries = parseInt(container.getAttribute("data-max-entries"), 10) || 0;
+			const maxEntries =
+				parseInt(container.getAttribute("data-max-entries"), 10) || 0;
 			if (
 				addButton &&
 				(maxEntries === 0 ||
-					itemsContainer.querySelectorAll(".cjw-repeater-row").length < maxEntries)
+					itemsContainer.querySelectorAll(".cjw-repeater-row").length <
+						maxEntries)
 			) {
 				addButton.style.display = "inline-block";
 			}
@@ -246,11 +261,11 @@ document.addEventListener("DOMContentLoaded", () => {
 	}
 
 	wizardForms.forEach((form) => {
-		form.querySelectorAll("input[required], select[required], textarea[required]").forEach(
-			(input) => {
+		form
+			.querySelectorAll("input[required], select[required], textarea[required]")
+			.forEach((input) => {
 				input.dataset.wasRequired = "1";
-			},
-		);
+			});
 
 		wireRepeaterButtons(form);
 

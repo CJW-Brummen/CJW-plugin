@@ -107,7 +107,9 @@
 		fieldIndex,
 		context,
 	) {
-		const showCaret = ["radio", "checkbox_group", "repeater"].includes(field.type);
+		const showCaret = ["radio", "checkbox_group", "repeater"].includes(
+			field.type,
+		);
 		const features =
 			Builder.FIELD_FEATURES[field.type] || Builder.FIELD_FEATURES.text;
 		const fieldTypeLabel = features.label || "Veld";
@@ -244,7 +246,6 @@
 			});
 		}
 
-
 		element.querySelector(".cjw-remove-field").addEventListener("click", () => {
 			fields.splice(fieldIndex, 1);
 			context.render();
@@ -257,97 +258,107 @@
 		if (field.type === "radio") {
 			field.options = Array.isArray(field.options) ? field.options : [];
 
-			element.querySelector(".cjw-add-radio-option").addEventListener("click", () => {
-				field.options.push(Builder.createDefaultRadioOption(field.options.length + 1));
-				context.render();
-				context.syncData();
-			});
-
-			element.querySelectorAll(".cjw-radio-option-editor").forEach((optionElement) => {
-				const optionIndex = parseInt(optionElement.dataset.optionIndex, 10);
-				const option = field.options[optionIndex];
-
-				if (!option || typeof option !== "object") {
-					field.options[optionIndex] = {
-						label: Builder.getRadioOptionLabel(option),
-						value: Builder.getRadioOptionValue(option),
-						default: false,
-						fields: [],
-					};
-				}
-
-				const normalizedOption = field.options[optionIndex];
-
-				optionElement
-					.querySelector(".cjw-radio-option-label")
-					.addEventListener("input", (event) => {
-						normalizedOption.label = event.target.value;
-						if (!normalizedOption.value) {
-							normalizedOption.value = event.target.value;
-						}
-						context.syncData();
-					});
-
-				optionElement
-					.querySelector(".cjw-radio-option-value")
-					.addEventListener("input", (event) => {
-						normalizedOption.value = event.target.value;
-						context.syncData();
-					});
-
-				optionElement
-					.querySelector(".cjw-radio-option-default")
-					.addEventListener("change", (event) => {
-						field.options.forEach((entry) => {
-							if (entry && typeof entry === "object") {
-								entry.default = false;
-							}
-						});
-						normalizedOption.default = event.target.checked;
-						context.render();
-						context.syncData();
-					});
-
-				optionElement
-					.querySelector(".cjw-remove-radio-option")
-					.addEventListener("click", () => {
-						field.options.splice(optionIndex, 1);
-						context.render();
-						context.syncData();
-					});
-
-				optionElement
-					.querySelector(".cjw-add-radio-option-field")
-					.addEventListener("click", () => {
-						normalizedOption.fields = Array.isArray(normalizedOption.fields)
-							? normalizedOption.fields
-							: [];
-						normalizedOption.fields.push({
-							...Builder.createDefaultField("option"),
-							type: "checkbox_group",
-							required: false,
-							options: [
-								Builder.createDefaultCheckboxGroupOption(1),
-								Builder.createDefaultCheckboxGroupOption(2),
-							],
-						});
-						context.render();
-						context.syncData();
-					});
-
-				const subfieldList = optionElement.querySelector(
-					".cjw-radio-option-subfield-list",
-				);
-				if (subfieldList) {
-					subfieldList.innerHTML = "";
-					Builder.renderFields(normalizedOption.fields || [], subfieldList, context);
-					Builder.wireDropZone(
-						subfieldList,
-						() => normalizedOption.fields || [],
-						context,
+			element
+				.querySelector(".cjw-add-radio-option")
+				.addEventListener("click", () => {
+					field.options.push(
+						Builder.createDefaultRadioOption(field.options.length + 1),
 					);
-				}
-			});
+					context.render();
+					context.syncData();
+				});
+
+			element
+				.querySelectorAll(".cjw-radio-option-editor")
+				.forEach((optionElement) => {
+					const optionIndex = parseInt(optionElement.dataset.optionIndex, 10);
+					const option = field.options[optionIndex];
+
+					if (!option || typeof option !== "object") {
+						field.options[optionIndex] = {
+							label: Builder.getRadioOptionLabel(option),
+							value: Builder.getRadioOptionValue(option),
+							default: false,
+							fields: [],
+						};
+					}
+
+					const normalizedOption = field.options[optionIndex];
+
+					optionElement
+						.querySelector(".cjw-radio-option-label")
+						.addEventListener("input", (event) => {
+							normalizedOption.label = event.target.value;
+							if (!normalizedOption.value) {
+								normalizedOption.value = event.target.value;
+							}
+							context.syncData();
+						});
+
+					optionElement
+						.querySelector(".cjw-radio-option-value")
+						.addEventListener("input", (event) => {
+							normalizedOption.value = event.target.value;
+							context.syncData();
+						});
+
+					optionElement
+						.querySelector(".cjw-radio-option-default")
+						.addEventListener("change", (event) => {
+							field.options.forEach((entry) => {
+								if (entry && typeof entry === "object") {
+									entry.default = false;
+								}
+							});
+							normalizedOption.default = event.target.checked;
+							context.render();
+							context.syncData();
+						});
+
+					optionElement
+						.querySelector(".cjw-remove-radio-option")
+						.addEventListener("click", () => {
+							field.options.splice(optionIndex, 1);
+							context.render();
+							context.syncData();
+						});
+
+					optionElement
+						.querySelector(".cjw-add-radio-option-field")
+						.addEventListener("click", () => {
+							normalizedOption.fields = Array.isArray(normalizedOption.fields)
+								? normalizedOption.fields
+								: [];
+							normalizedOption.fields.push({
+								...Builder.createDefaultField("option"),
+								type: "checkbox_group",
+								required: false,
+								options: [
+									Builder.createDefaultCheckboxGroupOption(1),
+									Builder.createDefaultCheckboxGroupOption(2),
+								],
+							});
+							context.render();
+							context.syncData();
+						});
+
+					const subfieldList = optionElement.querySelector(
+						".cjw-radio-option-subfield-list",
+					);
+					if (subfieldList) {
+						subfieldList.innerHTML = "";
+						Builder.renderFields(
+							normalizedOption.fields || [],
+							subfieldList,
+							context,
+						);
+						Builder.wireDropZone(
+							subfieldList,
+							() => normalizedOption.fields || [],
+							context,
+						);
+					}
+				});
 		}
 
 		if (field.type === "checkbox_group") {

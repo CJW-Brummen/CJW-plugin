@@ -58,7 +58,10 @@
 				});
 			}
 
-			if (normalized.type === "checkbox_group" && Array.isArray(field.options)) {
+			if (
+				normalized.type === "checkbox_group" &&
+				Array.isArray(field.options)
+			) {
 				normalized.options = field.options.map((option) => {
 					if (!option || typeof option !== "object") {
 						return option;

@@ -2,7 +2,11 @@
 	window.CJWBuilder = window.CJWBuilder || {};
 	const Builder = window.CJWBuilder;
 
-	Builder.wireDragHandlers = function wireDragHandlers(element, field, context) {
+	Builder.wireDragHandlers = function wireDragHandlers(
+		element,
+		field,
+		context,
+	) {
 		element.addEventListener("dragstart", (event) => {
 			event.dataTransfer.setData("text/plain", field._uid);
 			element.classList.add("cjw-dragging");
@@ -33,13 +37,17 @@
 				return;
 			}
 
-			const movedItem = Builder.findAndRemove(context.config.steps, draggingUid);
+			const movedItem = Builder.findAndRemove(
+				context.config.steps,
+				draggingUid,
+			);
 			if (!movedItem) {
 				return;
 			}
 
 			const rect = element.getBoundingClientRect();
-			const position = event.clientY - rect.top > rect.height / 2 ? "after" : "before";
+			const position =
+				event.clientY - rect.top > rect.height / 2 ? "after" : "before";
 			Builder.insertAt(context.config.steps, movedItem, field._uid, position);
 			context.render();
 			context.syncData();
@@ -67,7 +75,10 @@
 			}
 
 			const draggingUid = event.dataTransfer.getData("text/plain");
-			const movedItem = Builder.findAndRemove(context.config.steps, draggingUid);
+			const movedItem = Builder.findAndRemove(
+				context.config.steps,
+				draggingUid,
+			);
 			if (!movedItem) {
 				return;
 			}

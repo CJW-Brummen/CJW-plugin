@@ -77,7 +77,9 @@
 		return String(option || "");
 	};
 
-	Builder.createDefaultRadioOption = function createDefaultRadioOption(index = 1) {
+	Builder.createDefaultRadioOption = function createDefaultRadioOption(
+		index = 1,
+	) {
 		const label = `Optie ${index}`;
 
 		return {

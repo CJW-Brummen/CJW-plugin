@@ -130,8 +130,11 @@
 			.map((option, index) => {
 				const label = Builder.getRadioOptionLabel(option);
 				const value = Builder.getRadioOptionValue(option);
-				const isDefault = Boolean(option && typeof option === "object" && option.default);
-				const fields = option && typeof option === "object" ? option.fields || [] : [];
+				const isDefault = Boolean(
+					option && typeof option === "object" && option.default,
+				);
+				const fields =
+					option && typeof option === "object" ? option.fields || [] : [];
 				const optionUid =
 					option && typeof option === "object" && option._uid
 						? option._uid
@@ -174,7 +177,9 @@
 		`;
 	};
 
-	Builder.renderCheckboxGroupOptions = function renderCheckboxGroupOptions(field) {
+	Builder.renderCheckboxGroupOptions = function renderCheckboxGroupOptions(
+		field,
+	) {
 		const options = Array.isArray(field.options) ? field.options : [];
 		const optionRows = options
 			.map((option, index) => {
