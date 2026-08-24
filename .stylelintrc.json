@@ -1,0 +1,21 @@
+{
+    "extends": [
+        "stylelint-config-standard"
+    ],
+    "ignoreFiles": [
+        "**/*.min.css"
+    ],
+"rules": {
+        "alpha-value-notation": null,
+        "color-function-alias-notation": null,
+        "color-function-notation": null,
+        "color-hex-length": null,
+        "custom-property-pattern": null,
+        "declaration-block-single-line-max-declarations": null,
+        "keyframes-name-pattern": null,
+        "keyframe-selector-notation": null,
+        "media-feature-range-notation": null,
+        "rule-empty-line-before": null,
+        "selector-class-pattern": null
+    }
+}

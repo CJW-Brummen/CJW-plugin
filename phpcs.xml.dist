@@ -36,6 +36,15 @@
         </properties>
     </rule>
 
+    <!-- Verify that the text_domain is set to the desired text-domain. -->
+    <rule ref="WordPress.WP.I18n">
+        <properties>
+            <property name="text_domain" type="array">
+                <element value="cjw"/>
+            </property>
+        </properties>
+    </rule>
+
     <!-- Formatting is owned by PHP-CS-Fixer; PHPCS focuses on WordPress safety/compatibility. -->
     <rule ref="Generic.Classes.OpeningBraceSameLine.BraceOnNewLine">
         <severity>0</severity>
