@@ -196,8 +196,10 @@ final class CJW_Summer_Camp_Dashboard_Widget
             $links[] = [admin_url('edit.php?post_type=cjw_wizard'), __('Formulieren', 'cjw')];
         }
 
-        if (post_type_exists('cjw_wizard_submission')) {
-            $links[] = [admin_url('edit.php?post_type=cjw_wizard_submission'), __('Inzendingen', 'cjw')];
+        // Spelled out rather than read from CJW_Wizard_Submission_Repository:
+        // the summer-camp module does not reach into the form-builder module.
+        if (post_type_exists('cjw_wizard_entry')) {
+            $links[] = [admin_url('edit.php?post_type=cjw_wizard_entry'), __('Inzendingen', 'cjw')];
         }
 
         $links[] = [admin_url('edit.php?post_type=page'), __('Pagina’s', 'cjw')];

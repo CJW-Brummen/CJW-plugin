@@ -8,7 +8,7 @@ migration is required — every persistent key is unchanged.
 | Kind | Value |
 | --- | --- |
 | Option | `cjw_summer_camp_settings` |
-| Post types | `cjw_wizard`, `cjw_wizard_submission` |
+| Post types | `cjw_wizard` (see "Submissions post type" below for the other one) |
 | Post meta | `_cjw_wizard_config`, `_cjw_wizard_settings`, `_cjw_wizard_payload`, `_cjw_wizard_snapshot`, `_cjw_wizard_id` |
 | Shortcode | `[cjw_wizard]` |
 | Admin page | `admin.php?page=cjw-summer-camp` |
@@ -57,20 +57,39 @@ The three text domains (`cjw-common`, `cjw-summer-camp`, `cjw-form-builder`)
 became one: `cjw`. Only `.pot` templates existed and no compiled `.po`/`.mo`
 files, so no translations were lost. Regenerate with `composer make-pot`.
 
-## Known pre-existing bug, not fixed here
+## Submissions post type
+
+The submissions post type was renamed from `cjw_wizard_submission` to
+**`cjw_wizard_entry`**. This is the one persistent key the merge does not keep
+identical, and it is deliberate.
 
 `cjw_wizard_submission` is **21 characters**. WordPress limits post type names
-to 20, so `register_post_type()` has always returned
-`post_type_length_invalid` and the submissions post type has never registered.
-Saved submissions are therefore not listed in wp-admin. This dates back to the
-form builder's initial commit and is unrelated to the merge; it is preserved
-verbatim so the merge stays behaviour-for-behaviour.
+to 20, so `register_post_type()` always returned `post_type_length_invalid` and
+the post type never registered. `wp_insert_post()` does not care, so
+submissions were written to `wp_posts` and were simply unreachable in wp-admin —
+the CSV export was the only way to them, and only because `get_posts()` queries
+by the raw string. The bug dates back to the form builder's initial commit.
 
-Fixing it means renaming the post type to at most 20 characters, for example
-`cjw_wizard_entry`, plus a one-off update of existing rows:
+`PostTypeNameTest` asserts the name stays inside the 20-character limit, so this
+cannot regress silently the way it did the first time.
+
+### No data migration ships with this
+
+Because the post type never registered, the only rows that could exist under the
+old name are ones the broken build wrote. There are none: the local site has 0,
+and the site is pre-launch, so no real registration was ever taken. Shipping a
+migration for a case that cannot occur would be code nobody can test and nobody
+will ever exercise, so there isn't one.
+
+If a row ever does turn up under the old name — check with:
+
+```sql
+SELECT COUNT(*) FROM wp_posts WHERE post_type = 'cjw_wizard_submission';
+```
+
+then move it by hand. Take a database backup first, and flush the object cache
+afterwards:
 
 ```sql
 UPDATE wp_posts SET post_type = 'cjw_wizard_entry' WHERE post_type = 'cjw_wizard_submission';
 ```
-
-Check the row count on production before deciding — the local site has 0.

@@ -205,4 +205,5 @@ require_once __DIR__ . '/../inc/form-builder/frontend/class-wizard-validator.php
 require_once __DIR__ . '/../inc/form-builder/frontend/class-wizard-engine.php';
 require_once __DIR__ . '/../inc/form-builder/frontend/class-wizard-renderer.php';
 require_once __DIR__ . '/../inc/form-builder/submissions/class-wizard-submission-repository.php';
+require_once __DIR__ . '/../inc/form-builder/submissions/class-wizard-submission-exporter.php';
 require_once __DIR__ . '/support/TestCase.php';

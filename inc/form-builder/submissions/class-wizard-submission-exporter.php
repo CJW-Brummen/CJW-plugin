@@ -123,15 +123,40 @@ final class CJW_Wizard_Submission_Exporter
             exit;
         }
 
-        fputcsv($output, $headers);
+        fputcsv($output, array_map([ self::class, 'escape_csv_cell' ], $headers));
         foreach ($rows as $row) {
             $csv_row = [];
             foreach ($headers as $header) {
-                $csv_row[] = $row[ $header ] ?? '';
+                $csv_row[] = self::escape_csv_cell((string) ($row[ $header ] ?? ''));
             }
             fputcsv($output, $csv_row);
         }
 
         exit;
+    }
+
+    /**
+     * Neutralises spreadsheet formula injection in a single cell.
+     *
+     * Submissions arrive through a public, unauthenticated form, so any value
+     * may begin with a character that Excel, LibreOffice Calc and Google Sheets
+     * read as the start of a formula. `=cmd|'/c calc'!A1` entered as a child's
+     * name executes when an organiser opens the export. Prefixing an apostrophe
+     * forces the cell to literal text in all three, and they strip it again on
+     * display.
+     *
+     * Numeric values are returned untouched so that a legitimate negative
+     * number does not collect a stray apostrophe: `-5` is a formula to no
+     * spreadsheet, and anything genuinely hostile fails is_numeric().
+     *
+     * @param string $value Raw cell value.
+     */
+    public static function escape_csv_cell(string $value): string
+    {
+        if ($value === '' || is_numeric($value)) {
+            return $value;
+        }
+
+        return str_contains("=+-@\t\r", $value[0]) ? "'" . $value : $value;
     }
 }

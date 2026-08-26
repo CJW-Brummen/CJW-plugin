@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-28T12:02:02+00:00\n"
+"POT-Creation-Date: 2026-08-26T15:02:07+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: cjw\n"
@@ -143,7 +143,7 @@ msgstr ""
 #: inc/form-builder/admin/class-wizard-post-type.php:23
 #: inc/form-builder/submissions/class-wizard-submission-admin.php:65
 #: inc/form-builder/submissions/class-wizard-submission-exporter.php:62
-#: inc/form-builder/submissions/class-wizard-submission-repository.php:22
+#: inc/form-builder/submissions/class-wizard-submission-repository.php:33
 msgid "Formulier"
 msgstr ""
 
@@ -377,13 +377,13 @@ msgid "Bekijk alle inzendingen: %s"
 msgstr ""
 
 #. translators: 1: form title, 2: submission date and time.
-#: inc/form-builder/submissions/class-wizard-submission-repository.php:21
+#: inc/form-builder/submissions/class-wizard-submission-repository.php:32
 #, php-format
 msgid "%1$s - %2$s"
 msgstr ""
 
 #: inc/form-builder/submissions/class-wizard-submissions-post-type.php:22
-#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:200
+#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:202
 msgid "Inzendingen"
 msgstr ""
 
@@ -478,20 +478,20 @@ msgstr ""
 msgid "Sponsoren"
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:203
+#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:205
 msgid "Pagina’s"
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:237
+#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:239
 msgid "afgelopen"
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:241
+#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:243
 msgid "nu bezig"
 msgstr ""
 
 #. translators: %d: number of days until the camp starts.
-#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:248
+#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:250
 #, php-format
 msgid "nog %d dag te gaan"
 msgid_plural "nog %d dagen te gaan"

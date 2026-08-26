@@ -25,7 +25,7 @@ final class CJW_Wizard_Submission_Admin
     public function register_meta_boxes(): void
     {
         add_meta_box(
-            'cjw_wizard_submission_data',
+            'cjw_wizard_entry_data',
             __('Inzendingsgegevens', 'cjw'),
             [ $this, 'render_submission_meta_box' ],
             CJW_Wizard_Submission_Repository::POST_TYPE,

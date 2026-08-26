@@ -8,7 +8,18 @@ if (!defined('ABSPATH')) {
 
 final class CJW_Wizard_Submission_Repository
 {
-    public const string POST_TYPE = 'cjw_wizard_submission';
+    /**
+     * The submissions post type.
+     *
+     * WordPress caps post type names at 20 characters. The original name,
+     * `cjw_wizard_submission`, was 21, so register_post_type() always returned
+     * post_type_length_invalid and the submissions screen never existed --
+     * submissions were saved to wp_posts and were simply unreachable in
+     * wp-admin. Any name set here must stay within the limit;
+     * PostTypeNameTest asserts it.
+     */
+    public const string POST_TYPE = 'cjw_wizard_entry';
+
     public const string META_WIZARD_ID = '_cjw_wizard_id';
     public const string META_PAYLOAD = '_cjw_wizard_payload';
     public const string META_SNAPSHOT = '_cjw_wizard_snapshot';
