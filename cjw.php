@@ -8,7 +8,7 @@
  * Plugin URI:        https://cjw-brummen.nl/
  * Description:       Zomerkampinstellingen, formulierbouwer en gedeelde services voor CJW Brummen.
  * Version:           2.0.0
- * Requires at least: 6.0
+ * Requires at least: 6.6
  * Requires PHP:      8.5
  * Author:            Imre Boersma
  * Author URI:        https://imreboersma.nl

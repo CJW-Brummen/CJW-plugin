@@ -50,10 +50,19 @@ final class CJW_Plugin
     /**
      * Registers the single text domain for the whole plugin.
      *
+     * Plugin Check discourages this call because WordPress.org-hosted plugins
+     * get their translations loaded automatically. This plugin is not on
+     * WordPress.org and ships its own `languages/` directory, and
+     * WP_Textdomain_Registry only learns about a bundled language directory
+     * through load_plugin_textdomain(). Without this call, just-in-time loading
+     * would look in wp-content/languages/plugins/ only and never find the
+     * translations shipped inside the plugin.
+     *
      * @return void
      */
     public static function loadTextdomain(): void
     {
+        // phpcs:ignore PluginCheck.CodeAnalysis.DiscouragedFunctions.load_plugin_textdomainFound -- Self-hosted plugin with bundled translations; see the docblock above.
         load_plugin_textdomain('cjw', false, dirname(plugin_basename(CJW_FILE)) . '/languages');
     }
 

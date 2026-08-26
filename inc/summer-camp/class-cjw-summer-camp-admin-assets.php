@@ -38,7 +38,7 @@ final class CJW_Summer_Camp_Admin_Assets
 
         wp_enqueue_script(
             'flatpickr',
-            CJW_URL . 'assets/summer-camp/vendor/flatpickr.min.js',
+            CJW_URL . 'assets/summer-camp/lib/flatpickr.min.js',
             [],
             '4.6.13',
             true
@@ -46,7 +46,7 @@ final class CJW_Summer_Camp_Admin_Assets
 
         wp_enqueue_style(
             'flatpickr',
-            CJW_URL . 'assets/summer-camp/vendor/flatpickr.min.css',
+            CJW_URL . 'assets/summer-camp/lib/flatpickr.min.css',
             [],
             '4.6.13'
         );
