@@ -113,6 +113,18 @@ document.addEventListener("DOMContentLoaded", () => {
 		summerCampToggle.addEventListener("change", syncSummerCampWrapper);
 		syncSummerCampWrapper();
 	}
+
+	const confirmationToggle = document.getElementById("cjw-wizard-setting-send_parent_confirmation");
+	const confirmationWrapper = document.getElementById("cjw-wizard-parent-confirmation-wrapper");
+
+	if (confirmationToggle && confirmationWrapper) {
+		const syncConfirmationWrapper = () => {
+			confirmationWrapper.style.display = confirmationToggle.checked ? "" : "none";
+		};
+
+		confirmationToggle.addEventListener("change", syncConfirmationWrapper);
+		syncConfirmationWrapper();
+	}
 });
 JS
         );

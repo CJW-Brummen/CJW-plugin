@@ -8,6 +8,11 @@ if (! defined('ABSPATH')) {
 
 final class CJW_Wizard_Config_Normalizer
 {
+    /**
+     * Brings a stored configuration up to the shape the rest of the code expects.
+     *
+     * @return array<string, mixed>
+     */
     public static function normalize(mixed $config): array
     {
         if (! is_array($config)) {
@@ -20,6 +25,11 @@ final class CJW_Wizard_Config_Normalizer
         ];
     }
 
+    /**
+     * The configuration a form starts life with.
+     *
+     * @return array<string, mixed>
+     */
     public static function empty(): array
     {
         return [
@@ -28,6 +38,11 @@ final class CJW_Wizard_Config_Normalizer
         ];
     }
 
+    /**
+     * Normalizes every step, dropping anything that is not one.
+     *
+     * @return array<string, mixed>
+     */
     private static function normalizeSteps(mixed $steps): array
     {
         if (! is_array($steps)) {
@@ -53,6 +68,11 @@ final class CJW_Wizard_Config_Normalizer
         return $normalized;
     }
 
+    /**
+     * Normalizes one step and the fields under it.
+     *
+     * @return array<string, mixed>
+     */
     private static function normalizeStep(mixed $step, string $stepKey): array
     {
         if (! is_array($step)) {
@@ -69,6 +89,11 @@ final class CJW_Wizard_Config_Normalizer
         ];
     }
 
+    /**
+     * Normalizes a list of fields, giving each a key it can be addressed by.
+     *
+     * @return array<int, array<string, mixed>>
+     */
     private static function normalizeFields(mixed $fields): array
     {
         if (! is_array($fields)) {
@@ -84,6 +109,11 @@ final class CJW_Wizard_Config_Normalizer
         return $normalized;
     }
 
+    /**
+     * Normalizes one field, and anything nested inside it.
+     *
+     * @return array<string, mixed>
+     */
     private static function normalizeField(mixed $field, string $fallbackKey): array
     {
         if (is_string($field)) {
@@ -125,6 +155,13 @@ final class CJW_Wizard_Config_Normalizer
             $normalized['options'] = self::normalizeCheckboxOptions($field['options'] ?? []);
         }
 
+        // What the field means, for the list columns, the roster and capacity.
+        // Unknown values are dropped rather than stored, so a hand-edited config
+        // cannot invent a role the code will later look for and never find.
+        $normalized['role'] = CJW_Wizard_Field_Roles::isValid($field['role'] ?? '')
+            ? (string) $field['role']
+            : '';
+
         foreach ([ 'min_length', 'max_length', 'min_date', 'max_date', 'date_after_field', 'date_before_field' ] as $property) {
             if (array_key_exists($property, $field)) {
                 $normalized[ $property ] = is_int($field[ $property ]) ? $field[ $property ] : (string) $field[ $property ];
@@ -134,6 +171,11 @@ final class CJW_Wizard_Config_Normalizer
         return $normalized;
     }
 
+    /**
+     * Normalizes a show-when condition to field, operator and value.
+     *
+     * @return array<string, mixed>
+     */
     private static function normalizeCondition(mixed $condition): array
     {
         if (! is_array($condition)) {
@@ -154,6 +196,11 @@ final class CJW_Wizard_Config_Normalizer
         ];
     }
 
+    /**
+     * Normalizes radio options, which may be plain strings or full option arrays.
+     *
+     * @return array<int, array<string, mixed>|string>
+     */
     private static function normalizeRadioOptions(mixed $options): array
     {
         if (! is_array($options)) {
@@ -181,6 +228,11 @@ final class CJW_Wizard_Config_Normalizer
         ));
     }
 
+    /**
+     * Normalizes checkbox options, which may be plain strings or full option arrays.
+     *
+     * @return array<int, array<string, string>|string>
+     */
     private static function normalizeCheckboxOptions(mixed $options): array
     {
         if (! is_array($options)) {

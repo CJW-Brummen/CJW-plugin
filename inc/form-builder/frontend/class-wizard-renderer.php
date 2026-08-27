@@ -8,6 +8,11 @@ if (!defined('ABSPATH')) {
 
 final class CJW_Wizard_Renderer
 {
+    /**
+     * Holds the configuration being rendered.
+     *
+     * @param array<string, mixed> $config
+     */
     public function __construct(
         private array $config
     ) {
@@ -20,8 +25,9 @@ final class CJW_Wizard_Renderer
      * @param array                $state  Current wizard state.
      * @param array<string,string> $errors Validation errors.
      * @param string               $token  Current session token.
+     * @param array<string, mixed> $state
      */
-    public function render(array $state, array $errors = [], string $token = ''): void
+    public function render(array $state, array $errors = [], string $token = '', string $trapFields = ''): void
     {
         $stepKeys = array_keys($this->config['steps'] ?? []);
         $stepIndex = max(0, (int) ($state['step'] ?? 0));
@@ -59,6 +65,31 @@ final class CJW_Wizard_Renderer
         echo '<form method="post" action="' . esc_url($this->getFormActionUrl($token)) . '" class="cjw-wizard-form">';
         echo '<input type="hidden" name="cjw_wizard_token" value="' . esc_attr($token) . '">';
         wp_nonce_field('cjw_wizard_submit_' . $token, 'cjw_wizard_nonce');
+
+        // Anti-abuse hidden fields, pre-escaped by CJW_Wizard_Guard::trapFields().
+        // Passed in rather than built here so the renderer stays unit-testable
+        // without the guard and the WordPress functions it depends on.
+        if ($trapFields !== '') {
+            echo wp_kses(
+                $trapFields,
+                [
+                    'div' => [
+                        'class' => [],
+                        'aria-hidden' => [],
+                        'style' => [],
+                    ],
+                    'label' => [ 'for' => [] ],
+                    'input' => [
+                        'type' => [],
+                        'id' => [],
+                        'name' => [],
+                        'value' => [],
+                        'tabindex' => [],
+                        'autocomplete' => [],
+                    ],
+                ]
+            );
+        }
 
         if ($isSummary) {
             $this->renderSummary($stateData);
@@ -124,6 +155,7 @@ final class CJW_Wizard_Renderer
      * Renders the summary view.
      *
      * @param array $data Current wizard data.
+     * @param array<string, mixed> $data
      */
     private function renderSummary(array $data): void
     {
@@ -139,6 +171,8 @@ final class CJW_Wizard_Renderer
      * @param array                $data   Current wizard data.
      * @param array<string,string> $errors Validation errors.
      * @param string               $namePrefix Field name prefix.
+     * @param array<string, mixed> $data
+     * @param array<string, mixed> $field
      */
     private function renderComponent(array $field, array $data, array $errors, string $namePrefix = 'cjw_field_'): void
     {
@@ -182,6 +216,9 @@ final class CJW_Wizard_Renderer
      * @param string      $namePrefix Field name prefix.
      * @param array       $data       Current wizard data.
      * @param array       $errors     Validation errors.
+     * @param array<string, mixed> $data
+     * @param array<string, string> $errors
+     * @param array<string, mixed> $field
      */
     private function renderField(array $field, mixed $value, ?string $error, string $namePrefix, array $data, array $errors = []): void
     {
@@ -301,6 +338,8 @@ final class CJW_Wizard_Renderer
      * @param mixed                $values Current repeater values.
      * @param array                $data   Current wizard data.
      * @param array<string,string> $errors Validation errors.
+     * @param array<string, mixed> $data
+     * @param array<string, mixed> $field
      */
     private function renderRepeater(array $field, mixed $values, array $data, array $errors): void
     {
@@ -350,6 +389,7 @@ final class CJW_Wizard_Renderer
      * Renders nested summary lists.
      *
      * @param array $data Current wizard data.
+     * @param array<string, mixed> $data
      */
     private function renderSummaryList(array $data): void
     {
@@ -375,6 +415,10 @@ final class CJW_Wizard_Renderer
 
     /**
      * Flattens the entire form config into a lookup of key => label.
+     *
+     * @param array<int, mixed> $steps
+     *
+     * @return array<string, mixed>
      */
     private function flattenFieldLabels(array $steps): array
     {
@@ -387,6 +431,12 @@ final class CJW_Wizard_Renderer
         return $map;
     }
 
+    /**
+     * Records one field's label, and those of anything nested inside it.
+     *
+     * @param array<string, mixed> $field
+     * @param array<string, mixed> $map
+     */
     private function mapFieldLabel(array $field, array &$map): void
     {
         $key = (string) ($field['key'] ?? '');
@@ -415,6 +465,11 @@ final class CJW_Wizard_Renderer
         }
     }
 
+    /**
+     * The stored value for a radio field, whichever option shape the form uses.
+     *
+     * @param array<string, mixed> $field
+     */
     private function resolveRadioValue(array $field, mixed $value): string
     {
         $currentValue = is_array($value) ? '' : (string) ($value ?? '');
@@ -434,6 +489,11 @@ final class CJW_Wizard_Renderer
         return '';
     }
 
+    /**
+     * Normalizes one radio option to a value and a label.
+     *
+     * @return array<string, mixed>
+     */
     private function normalizeRadioOption(mixed $option): array
     {
         if (is_array($option)) {
@@ -459,6 +519,11 @@ final class CJW_Wizard_Renderer
         ];
     }
 
+    /**
+     * Normalizes one checkbox option to a value and a label.
+     *
+     * @return array<string, mixed>
+     */
     private function normalizeCheckboxOption(mixed $option): array
     {
         if (is_array($option)) {
@@ -489,7 +554,11 @@ final class CJW_Wizard_Renderer
      */
     private function getFormActionUrl(string $token): string
     {
-        return $token === '' ? add_query_arg() : add_query_arg('token', $token);
+        // The token is carried by the hidden field and the session cookie, never
+        // by the URL: a link to a half-filled registration must not resume it.
+        unset($token);
+
+        return remove_query_arg([ 'token', 'reset_wizard', '_cjw_reset_nonce' ]);
     }
 
     /**
@@ -497,12 +566,7 @@ final class CJW_Wizard_Renderer
      */
     private function getResetUrl(string $token): string
     {
-        $url = add_query_arg(
-            [
-                'reset_wizard' => '1',
-                'token' => $token,
-            ]
-        );
+        $url = add_query_arg('reset_wizard', '1', remove_query_arg([ 'token', '_cjw_reset_nonce' ]));
 
         return wp_nonce_url($url, 'cjw_wizard_reset_' . $token, '_cjw_reset_nonce');
     }
@@ -531,6 +595,8 @@ final class CJW_Wizard_Renderer
 
     /**
      * Serializes a field condition into data attributes for front-end toggling.
+     *
+     * @param array<string, mixed> $node
      */
     private function buildConditionAttributes(array $node): string
     {
@@ -548,6 +614,11 @@ final class CJW_Wizard_Renderer
         );
     }
 
+    /**
+     * This form's settings, over the defaults.
+     *
+     * @return array<string, mixed>
+     */
     private function getSettings(): array
     {
         return cjw_localize_value(wp_parse_args(

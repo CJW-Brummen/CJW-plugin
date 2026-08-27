@@ -17,7 +17,7 @@ final class CJW_Wizard_Config
      * Get the configuration for a specific wizard.
      *
      * @param int|null $wizard_id The ID of the cjw_wizard post.
-     * @return array
+     * @return array<string, mixed>
      */
     public static function get(?int $wizard_id = null): array
     {

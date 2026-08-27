@@ -28,6 +28,9 @@ final class CJW_Activator
      */
     public static function activate(): void
     {
+        CJW_Roles::install();
+        CJW_Wizard_Submission_Retention::schedule();
+
         $existing = get_option(CJW_Summer_Camp_Service::OPTION_KEY, null);
 
         if (!is_array($existing)) {

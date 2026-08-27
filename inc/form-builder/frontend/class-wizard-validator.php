@@ -8,6 +8,11 @@ if (! defined('ABSPATH')) {
 
 final class CJW_Wizard_Validator
 {
+    /**
+     * Holds the configuration being validated against.
+     *
+     * @param array<string, mixed> $config
+     */
     public function __construct(
         private array $config
     ) {
@@ -20,6 +25,8 @@ final class CJW_Wizard_Validator
      * @param string $stepKey       Current step key.
      * @param array  $submittedData Submitted fields for the current request.
      * @param array  $allData       Full wizard state data after merging the request.
+     * @param array<string, mixed> $allData
+     * @param array<string, mixed> $submittedData
      *
      * @return array<string, string>
      */
@@ -43,6 +50,10 @@ final class CJW_Wizard_Validator
      * @param array                $allData       Full wizard state data.
      * @param array                $errors       Collected errors.
      * @param string               $prefix        Error key prefix for nested fields.
+     * @param array<string, mixed> $allData
+     * @param array<string, mixed> $component
+     * @param array<string, string> $errors
+     * @param array<string, mixed> $submittedData
      */
     private function validateComponent(array $component, array $submittedData, array $allData, array &$errors, string $prefix = ''): void
     {
@@ -129,6 +140,9 @@ final class CJW_Wizard_Validator
      * @param array                $allData   Full wizard state data.
      * @param array                $errors    Collected errors.
      * @param string               $prefix    Error prefix for nesting.
+     * @param array<string, mixed> $allData
+     * @param array<string, mixed> $component
+     * @param array<string, string> $errors
      */
     private function validateRepeater(array $component, mixed $value, array $allData, array &$errors, string $prefix): void
     {
@@ -183,6 +197,8 @@ final class CJW_Wizard_Validator
      * @param string               $value     Submitted value.
      * @param array                $errors    Collected errors.
      * @param string               $errorKey  Error key.
+     * @param array<string, mixed> $component
+     * @param array<string, string> $errors
      */
     private function validateLength(array $component, string $value, array &$errors, string $errorKey): void
     {
@@ -216,6 +232,9 @@ final class CJW_Wizard_Validator
      * @param array                $allData   Full wizard state data.
      * @param array                $errors    Collected errors.
      * @param string               $errorKey  Error key.
+     * @param array<string, mixed> $allData
+     * @param array<string, mixed> $component
+     * @param array<string, string> $errors
      */
     private function validateDateField(array $component, string $value, array $allData, array &$errors, string $errorKey): void
     {
@@ -296,6 +315,8 @@ final class CJW_Wizard_Validator
 
     /**
      * Returns whether a repeater row is fully empty.
+     *
+     * @param array<string, mixed> $row
      */
     private function isRowEmpty(array $row): bool
     {
@@ -308,6 +329,12 @@ final class CJW_Wizard_Validator
         return true;
     }
 
+    /**
+     * Checks a checkbox group against its options and its required flag.
+     *
+     * @param array<string, mixed> $component
+     * @param array<string, string> $errors
+     */
     private function validateCheckboxGroup(array $component, mixed $value, array &$errors, string $errorKey): void
     {
         $selectedValues = is_array($value)
@@ -336,6 +363,11 @@ final class CJW_Wizard_Validator
         }
     }
 
+    /**
+     * Normalizes radio options so a submitted value can be checked against them.
+     *
+     * @return array<int, array<string, mixed>>
+     */
     private function normalizeRadioOptions(mixed $options): array
     {
         if (! is_array($options)) {
@@ -367,6 +399,11 @@ final class CJW_Wizard_Validator
         ));
     }
 
+    /**
+     * Normalizes checkbox options so submitted values can be checked against them.
+     *
+     * @return array<int, array<string, string>>
+     */
     private function normalizeCheckboxOptions(mixed $options): array
     {
         if (! is_array($options)) {

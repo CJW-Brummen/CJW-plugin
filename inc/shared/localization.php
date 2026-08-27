@@ -17,6 +17,7 @@ if (! function_exists('cjw_localize_value')) {
      * @param mixed       $value  Value to localize.
      * @param array       $args   Optional formatting arguments.
      * @param string|null $locale Locale to prefer. Defaults to WordPress' locale.
+     * @param array<string, mixed> $args
      *
      * @return mixed
      */
@@ -82,6 +83,8 @@ if (! function_exists('cjw_select_locale_value')) {
      * @param array  $value  Candidate localized values.
      * @param string $locale Normalized locale.
      * @param array  $args   Optional fallback arguments.
+     * @param array<string, mixed> $args
+     * @param array<string, mixed> $value
      *
      * @return array{found: bool, value: mixed}
      */
@@ -132,6 +135,8 @@ if (! function_exists('cjw_select_locale_value')) {
 if (! function_exists('cjw_is_locale_map')) {
     /**
      * Checks whether an array only contains locale/fallback keys.
+     *
+     * @param array<string, mixed> $value
      */
     function cjw_is_locale_map(array $value): bool
     {
@@ -164,6 +169,8 @@ if (! function_exists('cjw_is_locale_map')) {
 if (! function_exists('cjw_localize_date_value')) {
     /**
      * Formats a date-like value with WordPress' localized date formatter.
+     *
+     * @param array<string, mixed> $args
      */
     function cjw_localize_date_value(mixed $value, array $args = [], ?string $locale = null): string
     {
@@ -245,6 +252,8 @@ if (! function_exists('cjw_parse_date_value')) {
 if (! function_exists('cjw_localize_number_value')) {
     /**
      * Formats a numeric value with WordPress' number formatter.
+     *
+     * @param array<string, mixed> $args
      */
     function cjw_localize_number_value(mixed $value, array $args = []): string
     {
@@ -265,6 +274,8 @@ if (! function_exists('cjw_localize_number_value')) {
 if (! function_exists('cjw_localize_currency_value')) {
     /**
      * Formats a numeric value as a localized currency string.
+     *
+     * @param array<string, mixed> $args
      */
     function cjw_localize_currency_value(mixed $value, array $args = []): string
     {
