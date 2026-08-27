@@ -173,7 +173,9 @@ final class RendererTest extends CJW_TestCase
         );
         $output = (string) ob_get_clean();
 
-        $this->assertStringContainsString('value="Ja" checked="checked"', $output);
+        // WordPress's own format: a leading space and single quotes. This used
+        // to assert checked="checked", which was the test shim's invention.
+        $this->assertStringContainsString('value="Ja"  checked=\'checked\'', $output);
         $this->assertStringContainsString('class="cjw-radio-option-children indented-checkboxes"', $output);
         $this->assertStringContainsString('data-condition-field="drive"', $output);
         $this->assertStringContainsString('name="cjw_field_drive_days[]"', $output);

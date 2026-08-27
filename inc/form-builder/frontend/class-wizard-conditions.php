@@ -13,6 +13,8 @@ final class CJW_Wizard_Conditions
      *
      * @param array $config Wizard configuration.
      * @param array $data   Current wizard data.
+     * @param array<string, mixed> $config
+     * @param array<string, mixed> $data
      *
      * @return array<int, string>
      */
@@ -34,6 +36,8 @@ final class CJW_Wizard_Conditions
      *
      * @param array $node Step or field configuration.
      * @param array $data Current wizard data.
+     * @param array<string, mixed> $data
+     * @param array<string, mixed> $node
      */
     public static function isVisible(array $node, array $data): bool
     {
@@ -51,6 +55,8 @@ final class CJW_Wizard_Conditions
      *
      * @param array $condition Condition configuration.
      * @param array $data      Current wizard data.
+     * @param array<string, mixed> $condition
+     * @param array<string, mixed> $data
      */
     public static function matches(array $condition, array $data): bool
     {
@@ -74,6 +80,7 @@ final class CJW_Wizard_Conditions
      *
      * @param array  $data Current wizard data.
      * @param string $path Dot-notation path.
+     * @param array<string, mixed> $data
      *
      * @return mixed
      */
