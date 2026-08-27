@@ -142,6 +142,13 @@ final class AdminListTableTest extends CJW_IntegrationTestCase
         $type = CJW_Wizard_Submission_Repository::POST_TYPE;
 
         $this->assertFalse(post_type_supports($type, 'title'));
-        $this->assertSame('Inzending bekijken', get_post_type_object($type)->labels->edit_item);
+
+        // The invariant is that the heading does not promise an edit, not that
+        // it uses one particular word -- the labels are copy, and copy gets
+        // rewritten.
+        $label = get_post_type_object($type)->labels->edit_item;
+
+        $this->assertStringNotContainsStringIgnoringCase('bewerk', $label);
+        $this->assertStringContainsStringIgnoringCase('bekijk', $label);
     }
 }
