@@ -19,8 +19,9 @@ final class CJW_Summer_Camp_Sponsor_Admin
     /**
      * Registers the sponsor admin hooks.
      *
-     * Must run on every request (not admin-only): the register_post_type_args
-     * filter also affects the post type on the frontend and in REST requests.
+     * Polish only, on top of a post type the plugin now registers itself. The
+     * page-attributes support this used to bolt on through
+     * register_post_type_args is declared at registration instead.
      *
      * @return void
      */
@@ -28,42 +29,11 @@ final class CJW_Summer_Camp_Sponsor_Admin
     {
         $instance = new self();
 
-        add_filter('register_post_type_args', [$instance, 'filterPostTypeArgs'], 10, 2);
         add_filter('manage_sponsor_posts_columns', [$instance, 'columns']);
         add_action('manage_sponsor_posts_custom_column', [$instance, 'renderColumn'], 10, 2);
         add_filter('manage_edit-sponsor_sortable_columns', [$instance, 'sortableColumns']);
         add_action('pre_get_posts', [$instance, 'defaultOrder']);
         add_action('admin_notices', [$instance, 'missingLogoNotice']);
-    }
-
-    /**
-     * Adds page-attributes support so sponsors can be ordered via the menu_order field.
-     *
-     * @param array  $args      Post type registration arguments.
-     * @param string $post_type Post type name.
-     * @param array<string, mixed> $args
-     *
-     * @return array<string, mixed>
-     */
-    public function filterPostTypeArgs(array $args, string $post_type): array
-    {
-        if ($post_type !== self::POST_TYPE) {
-            return $args;
-        }
-
-        $supports = $args['supports'] ?? ['title', 'editor'];
-
-        if (!is_array($supports)) {
-            return $args;
-        }
-
-        if (!in_array('page-attributes', $supports, true)) {
-            $supports[] = 'page-attributes';
-        }
-
-        $args['supports'] = $supports;
-
-        return $args;
     }
 
     /**

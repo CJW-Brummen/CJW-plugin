@@ -51,6 +51,7 @@ final class CJW_Summer_Camp_Module
         // Must run unconditionally at boot: the sponsor admin attaches a
         // register_post_type_args filter that has to be in place before the
         // sponsor post type registers (also on the front end and REST).
+        CJW_Summer_Camp_Sponsor_Post_Type::init();
         CJW_Summer_Camp_Sponsor_Admin::init();
         CJW_Summer_Camp_Dashboard_Widget::init();
         CJW_Summer_Camp_Site_Health::init();
@@ -84,6 +85,7 @@ final class CJW_Summer_Camp_Module
         require_once CJW_DIR . 'inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php';
         require_once CJW_DIR . 'inc/summer-camp/admin/class-cjw-summer-camp-site-health.php';
         require_once CJW_DIR . 'inc/summer-camp/admin/class-cjw-summer-camp-help-tabs.php';
+        require_once CJW_DIR . 'inc/summer-camp/class-cjw-summer-camp-sponsor-post-type.php';
         require_once CJW_DIR . 'inc/summer-camp/admin/class-cjw-summer-camp-sponsor-admin.php';
     }
 }
