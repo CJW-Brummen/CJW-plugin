@@ -30,6 +30,8 @@ final class CJW_Wizard_Post_Type
                 'show_in_menu' => true,
                 'menu_icon' => 'dashicons-forms',
                 'supports' => [ 'title' ],
+                'capabilities' => CJW_Roles::postTypeCapabilities(),
+                'map_meta_cap' => true,
             ]
         );
     }

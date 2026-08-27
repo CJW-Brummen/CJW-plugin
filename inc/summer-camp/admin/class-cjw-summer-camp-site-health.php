@@ -25,8 +25,9 @@ final class CJW_Summer_Camp_Site_Health
      * Adds the summer-camp tests to the Site Health test list.
      *
      * @param array $tests Registered Site Health tests.
+     * @param array<string, mixed> $tests
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function registerTests(array $tests): array
     {
@@ -69,7 +70,7 @@ final class CJW_Summer_Camp_Site_Health
     /**
      * Checks that both camp dates are set and the end date is not before the start date.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function testCampDates(): array
     {
@@ -113,7 +114,7 @@ final class CJW_Summer_Camp_Site_Health
     /**
      * Checks that the registration deadline is set and does not fall after the camp start date.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function testRegistrationDeadline(): array
     {
@@ -153,7 +154,7 @@ final class CJW_Summer_Camp_Site_Health
     /**
      * Checks that a valid public contact e-mail address is configured.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function testContactEmail(): array
     {
@@ -185,7 +186,7 @@ final class CJW_Summer_Camp_Site_Health
     /**
      * Checks that every published sponsor has a featured image (logo).
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function testSponsorLogos(): array
     {
@@ -237,7 +238,7 @@ final class CJW_Summer_Camp_Site_Health
     /**
      * Checks that at least one photo is chosen for the kampplakboek photo wall.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function testPolaroids(): array
     {
@@ -270,7 +271,7 @@ final class CJW_Summer_Camp_Site_Health
      * @param string $description Result description (HTML).
      * @param string $actions     Optional actions markup (HTML).
      *
-     * @return array
+     * @return array<string, mixed>
      */
     private function result(string $test, string $label, string $status, string $description, string $actions = ''): array
     {

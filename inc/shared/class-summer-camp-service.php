@@ -30,6 +30,7 @@ class CJW_Summer_Camp_Service
         'camp_location' => '',
         'registration_deadline' => '',
         'registration_active' => false,
+        'retention_months' => 12,
         'early_bird_start' => '',
         'early_bird_end' => '',
         'price_week_early' => 0,
@@ -104,7 +105,7 @@ class CJW_Summer_Camp_Service
      * Returns the complete default settings array.
      *
      * @param bool $generateLateRegistrationToken Whether to generate a new late-registration token.
-     * @return array
+     * @return array<string, mixed>
      */
     public static function defaults(bool $generateLateRegistrationToken = false): array
     {
@@ -122,6 +123,11 @@ class CJW_Summer_Camp_Service
      *
      * @var array
      */
+    /**
+     * Loads the camp settings once, so every reader sees the same year.
+     *
+     * @var array<string, mixed>
+     */
     private array $settings;
 
     /**
@@ -135,7 +141,7 @@ class CJW_Summer_Camp_Service
     /**
      * Loads settings from the database and merges them with defaults.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     private function load(): array
     {
@@ -191,6 +197,36 @@ class CJW_Summer_Camp_Service
     public function getEndDate(): ?DateTimeImmutable
     {
         return $this->toDate($this->settings['end_date']);
+    }
+
+    /**
+     * How many months after the camp ends a registration is kept.
+     *
+     * Zero means keep indefinitely. Registrations hold identifying data about
+     * children, so the AVG expects a defined period rather than "forever"; the
+     * default of twelve months carries the camp to just before the next season,
+     * which is the last point the previous year's list is genuinely useful.
+     *
+     * @return int
+     */
+    public function getRetentionMonths(): int
+    {
+        return self::sanitizeRetentionMonths($this->settings['retention_months'] ?? self::DEFAULTS['retention_months']);
+    }
+
+    /**
+     * Clamps the retention period to something sane.
+     *
+     * Capped at ten years so a stray keystroke cannot turn "delete eventually"
+     * into "never" without the organiser choosing that explicitly.
+     *
+     * @param mixed $value Raw setting value.
+     *
+     * @return int
+     */
+    private static function sanitizeRetentionMonths(mixed $value): int
+    {
+        return max(0, min(120, (int) $value));
     }
 
     /**
@@ -430,7 +466,7 @@ class CJW_Summer_Camp_Service
     /**
      * Returns all values needed by the theme hero.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function getHeroConfig(): array
     {
@@ -552,7 +588,7 @@ class CJW_Summer_Camp_Service
     /**
      * Returns the primary hero call-to-action.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function getPrimaryHeroCta(): array
     {
@@ -565,7 +601,7 @@ class CJW_Summer_Camp_Service
     /**
      * Returns the secondary hero call-to-action.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function getSecondaryHeroCta(): array
     {
@@ -578,7 +614,7 @@ class CJW_Summer_Camp_Service
     /**
      * Returns the configured public theme colors.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function getThemeColors(): array
     {
@@ -868,7 +904,7 @@ class CJW_Summer_Camp_Service
     /**
      * Retrieves the list of drive dates (ritten).
      *
-     * @return array
+     * @return array<int, array<string, mixed>>
      */
     public function getDriveDates(): array
     {
@@ -884,8 +920,9 @@ class CJW_Summer_Camp_Service
      * Sanitizes raw input data for saving to the WordPress settings.
      *
      * @param array $input The raw input array.
+     * @param array<string, mixed> $input
      *
-     * @return array The sanitized array.
+     * @return array<string, mixed> The sanitized array.
      */
     public static function sanitize(array $input): array
     {
@@ -896,6 +933,7 @@ class CJW_Summer_Camp_Service
             'camp_location' => sanitize_text_field($input['camp_location'] ?? ''),
             'registration_deadline' => sanitize_text_field($input['registration_deadline'] ?? ''),
             'registration_active' => !empty($input['registration_active']),
+            'retention_months' => self::sanitizeRetentionMonths($input['retention_months'] ?? self::DEFAULTS['retention_months']),
             'early_bird_start' => sanitize_text_field($input['early_bird_start'] ?? ''),
             'early_bird_end' => sanitize_text_field($input['early_bird_end'] ?? ''),
             'price_week_early' => (int) ($input['price_week_early'] ?? 0),
@@ -956,6 +994,7 @@ class CJW_Summer_Camp_Service
      * Sanitizes the fixed photo-wall polaroid slots.
      *
      * @param array $input Raw settings input.
+     * @param array<string, mixed> $input
      *
      * @return array<string, int|string>
      */
@@ -1117,6 +1156,7 @@ class CJW_Summer_Camp_Service
      * Sanitizes late-registration token input and regenerates it when requested.
      *
      * @param array $input Raw settings input.
+     * @param array<string, mixed> $input
      *
      * @return string
      */
@@ -1148,7 +1188,7 @@ class CJW_Summer_Camp_Service
      *
      * @param mixed $rows Raw repeater data.
      *
-     * @return array
+     * @return array<int, array<string, string>>
      */
     private static function sanitizeDriveDates(mixed $rows): array
     {

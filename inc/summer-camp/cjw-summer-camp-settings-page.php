@@ -53,6 +53,7 @@ class CJW_Summer_Camp_Settings_Page
             'registration_deadline',
             'registration_closed_text',
             'registration_active',
+            'retention_months',
             'late_registration_link',
             'late_registration_token',
         ],
@@ -135,7 +136,7 @@ class CJW_Summer_Camp_Settings_Page
         add_action('admin_init', [$this, 'register']);
 
         // Editors lack manage_options, so options.php must accept edit_pages for this group.
-        add_filter('option_page_capability_cjw_group', static fn(): string => 'edit_pages');
+        add_filter('option_page_capability_cjw_group', static fn(): string => CJW_Roles::CAPABILITY);
     }
 
     /**
@@ -148,7 +149,7 @@ class CJW_Summer_Camp_Settings_Page
         add_menu_page(
             __('Zomerkamp instellingen', 'cjw'),
             __('Zomerkamp', 'cjw'),
-            'edit_pages',
+            CJW_Roles::CAPABILITY,
             self::PAGE_SLUG,
             [$this, 'render'],
             'dashicons-palmtree',
@@ -314,6 +315,18 @@ class CJW_Summer_Camp_Settings_Page
             'registration_active',
             __('Inschrijvingen open', 'cjw'),
             new CJW_Checkbox_Field('registration_active', '', self::OPTION_KEY, __('Vink aan om de inschrijvingen te openen. Haal het vinkje weg om de inschrijvingen direct te sluiten, ook vóór de deadline.', 'cjw')),
+            'general'
+        );
+        $this->add(
+            'retention_months',
+            __('Inschrijvingen bewaren (maanden)', 'cjw'),
+            new CJW_Input_Field(
+                'retention_months',
+                '',
+                self::OPTION_KEY,
+                'number',
+                description: __('Aantal maanden ná de einddatum van het kamp dat inschrijvingen bewaard blijven. Daarna worden de persoonsgegevens automatisch gewist; het aantal inschrijvingen per jaar blijft bewaard. Inschrijvingen bevatten gegevens van kinderen, dus bewaar ze niet langer dan nodig. Standaard 12 maanden, net tot vóór het volgende kamp. Vul 0 in om nooit automatisch te wissen.', 'cjw')
+            ),
             'general'
         );
         $this->add(
@@ -723,7 +736,7 @@ class CJW_Summer_Camp_Settings_Page
      *
      * @param mixed $input The raw input value.
      *
-     * @return array The sanitized array.
+     * @return array<string, mixed> The sanitized array.
      */
     public function validateAndSanitize(mixed $input): array
     {
@@ -750,8 +763,9 @@ class CJW_Summer_Camp_Settings_Page
      * Merges previously saved values for fields hidden by inactive tabs.
      *
      * @param array $input The submitted settings for the active tab.
+     * @param array<string, mixed> $input
      *
-     * @return array
+     * @return array<string, mixed>
      */
     private function mergeInactiveTabSettings(array $input): array
     {
@@ -789,7 +803,7 @@ class CJW_Summer_Camp_Settings_Page
      */
     public function render(): void
     {
-        if (!current_user_can('edit_pages')) {
+        if (!CJW_Roles::currentUserCan()) {
             wp_die(esc_html__('Je hebt geen toestemming om deze instellingen te bekijken.', 'cjw'));
         }
 

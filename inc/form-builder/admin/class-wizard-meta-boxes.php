@@ -119,7 +119,7 @@ final class CJW_Wizard_Meta_Boxes
         echo '</div>';
 
         echo '<hr>';
-        echo '<p><strong>' . esc_html__('E-mail & export', 'cjw') . '</strong><br><span class="description">' . esc_html__('Voorbereid voor latere verwerking van inzendingen.', 'cjw') . '</span></p>';
+        echo '<p><strong>' . esc_html__('E-mail & export', 'cjw') . '</strong><br><span class="description">' . esc_html__('Voorbereid voor latere verwerking van inschrijvingen.', 'cjw') . '</span></p>';
 
         $this->render_checkbox_setting(
             'send_admin_notification',
@@ -141,6 +141,31 @@ final class CJW_Wizard_Meta_Boxes
             __('Voorbereiden voor CSV-export', 'cjw'),
             $settings['enable_csv_export']
         );
+
+        echo '<hr>';
+        echo '<p><strong>' . esc_html__('Bevestiging naar de ouder', 'cjw') . '</strong></p>';
+
+        $this->render_checkbox_setting(
+            'send_parent_confirmation',
+            __('Stuur een bevestiging naar de ouder', 'cjw'),
+            $settings['send_parent_confirmation']
+        );
+        echo '<p class="description">' . esc_html__('Staat uit tot e-mail betrouwbaar verstuurd wordt: een bevestiging die niet aankomt is erger dan geen bevestiging. Het e-mailadres wordt gehaald uit het veld met type E-mail.', 'cjw') . '</p>';
+
+        echo '<div id="cjw-wizard-parent-confirmation-wrapper"' . ($settings['send_parent_confirmation'] ? '' : ' style="display:none;"') . '>';
+        $this->render_text_setting(
+            'parent_confirmation_subject',
+            __('Onderwerp', 'cjw'),
+            $settings['parent_confirmation_subject'],
+            __('Leeg laten voor een standaardonderwerp.', 'cjw')
+        );
+        $this->render_textarea_setting(
+            'parent_confirmation_body',
+            __('Bericht', 'cjw'),
+            $settings['parent_confirmation_body'],
+            __('Leeg laten voor een standaardtekst. Tokens zoals {camp_date_range} en {camp_price_week} worden ingevuld.', 'cjw')
+        );
+        echo '</div>';
 
         echo '</div>';
     }

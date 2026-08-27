@@ -9,8 +9,18 @@ if (! defined('ABSPATH')) {
 final class CJW_Wizard_Summer_Camp_Context
 {
     private ?object $camp;
+    /**
+     * Holds the form configuration the camp tokens are applied to.
+     *
+     * @var array<string, mixed>
+     */
     private array $settings;
 
+    /**
+     * Holds the form configuration the camp tokens are applied to.
+     *
+     * @param array<string, mixed> $config
+     */
     public function __construct(array $config)
     {
         $this->settings = wp_parse_args(
@@ -44,6 +54,13 @@ final class CJW_Wizard_Summer_Camp_Context
         return trim(wp_strip_all_tags((string) $this->camp->getIntroText())) !== '';
     }
 
+    /**
+     * Replaces every camp token in a configuration with this year's value.
+     *
+     * @param array<string, mixed> $config
+     *
+     * @return array<string, mixed>
+     */
     public function applyTokens(array $config): array
     {
         $config = cjw_localize_value($config);
@@ -87,6 +104,11 @@ final class CJW_Wizard_Summer_Camp_Context
         return $html;
     }
 
+    /**
+     * Token name => the value it stands for this camp year.
+     *
+     * @return array<string, mixed>
+     */
     private function tokens(): array
     {
         $start = method_exists($this->camp, 'getStartDate') ? $this->camp->getStartDate() : null;
@@ -135,6 +157,11 @@ final class CJW_Wizard_Summer_Camp_Context
         return sanitize_text_field(wp_unslash((string) $_GET[ $query_arg ]));
     }
 
+    /**
+     * Replaces tokens in a value, walking into arrays.
+     *
+     * @param array<string, mixed> $tokens
+     */
     private function replaceTokens(mixed $value, array $tokens): mixed
     {
         if (is_string($value)) {

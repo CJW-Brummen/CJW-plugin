@@ -80,16 +80,15 @@ final readonly class CJW_Test_Summer_Camp_Service
     }
 }
 
-function cjw_summer_camp(): object
-{
-    return $GLOBALS['cjw_test_summer_camp'];
-}
-
 final class SummerCampContextTest extends CJW_TestCase
 {
     protected function tearDown(): void
     {
         unset($_GET['cjw_late_registration']);
+
+        // The stand-in is global; leaving it behind would hand this fake camp to
+        // every test that runs afterwards.
+        unset($GLOBALS['cjw_test_summer_camp']);
     }
 
     public function testReplacesSummerCampTokensWhenEnabled(): void

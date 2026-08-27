@@ -10,6 +10,11 @@ final class CJW_Wizard_Settings
 {
     public const string META_KEY = '_cjw_wizard_settings';
 
+    /**
+     * The settings saved on one form, merged over the defaults.
+     *
+     * @return array<string, mixed>
+     */
     public function get(int $post_id): array
     {
         return wp_parse_args(
@@ -18,6 +23,11 @@ final class CJW_Wizard_Settings
         );
     }
 
+    /**
+     * Cleans submitted settings before they are stored.
+     *
+     * @return array<string, mixed>
+     */
     public function sanitize(mixed $settings): array
     {
         if (! is_array($settings)) {
@@ -37,6 +47,13 @@ final class CJW_Wizard_Settings
             'send_admin_notification' => ! empty($settings['send_admin_notification']),
             'notification_email' => $this->sanitize_notification_email($settings['notification_email'] ?? null),
             'enable_csv_export' => ! empty($settings['enable_csv_export']),
+            'send_parent_confirmation' => ! empty($settings['send_parent_confirmation']),
+            'parent_confirmation_subject' => sanitize_text_field(
+                is_scalar($settings['parent_confirmation_subject'] ?? null) ? (string) $settings['parent_confirmation_subject'] : ''
+            ),
+            'parent_confirmation_body' => sanitize_textarea_field(
+                is_scalar($settings['parent_confirmation_body'] ?? null) ? (string) $settings['parent_confirmation_body'] : ''
+            ),
         ];
     }
 

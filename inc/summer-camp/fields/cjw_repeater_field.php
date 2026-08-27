@@ -75,6 +75,7 @@ class CJW_Repeater_Field extends CJW_Field
      *
      * @param int   $index The row index.
      * @param array $value The current values for this row.
+     * @param array<string, mixed> $value
      *
      * @return void
      */

@@ -155,9 +155,9 @@ final class CJW_Summer_Camp_Help_Tabs
     {
         $screen->add_help_tab([
             'id' => 'cjw-summer-camp-forms',
-            'title' => __('Formulieren en inzendingen', 'cjw'),
+            'title' => __('Formulieren en Inschrijvingen', 'cjw'),
             'content' => '<p>' . esc_html__('Hier beheer je de inschrijfformulieren van het zomerkamp. Publiceer een formulier om het op de website te kunnen gebruiken.', 'cjw') . '</p>'
-                . '<p>' . esc_html__('Binnengekomen inschrijvingen vind je onder “Inzendingen” in dit menu. Daar bekijk je elke inzending en exporteer je alle inzendingen als CSV-bestand.', 'cjw') . '</p>',
+                . '<p>' . esc_html__('Binnengekomen inschrijvingen vind je onder “Inschrijvingen” in dit menu. Daar bekijk je elke inschrijving en exporteer je alle inschrijvingen als CSV-bestand.', 'cjw') . '</p>',
         ]);
 
         $this->addSidebar($screen);

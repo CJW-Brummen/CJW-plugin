@@ -41,8 +41,9 @@ final class CJW_Summer_Camp_Sponsor_Admin
      *
      * @param array  $args      Post type registration arguments.
      * @param string $post_type Post type name.
+     * @param array<string, mixed> $args
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function filterPostTypeArgs(array $args, string $post_type): array
     {
@@ -69,8 +70,9 @@ final class CJW_Summer_Camp_Sponsor_Admin
      * Adds the logo and order columns to the sponsor list table.
      *
      * @param array $columns List table columns.
+     * @param array<string, mixed> $columns
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function columns(array $columns): array
     {
@@ -126,8 +128,9 @@ final class CJW_Summer_Camp_Sponsor_Admin
      * Makes the order column sortable on menu_order.
      *
      * @param array $columns Sortable columns.
+     * @param array<string, mixed> $columns
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function sortableColumns(array $columns): array
     {

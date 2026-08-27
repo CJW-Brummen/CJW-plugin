@@ -8,6 +8,11 @@ if (! defined('ABSPATH')) {
 
 final class CJW_Wizard_Defaults
 {
+    /**
+     * The settings a form falls back to when it has none of its own.
+     *
+     * @return array<string, mixed>
+     */
     public static function settings(): array
     {
         return [
@@ -21,6 +26,10 @@ final class CJW_Wizard_Defaults
             'send_admin_notification' => false,
             'notification_email' => '',
             'enable_csv_export' => false,
+            // Off by default on purpose: see CJW_Wizard_Submission_Confirmation.
+            'send_parent_confirmation' => false,
+            'parent_confirmation_subject' => '',
+            'parent_confirmation_body' => '',
         ];
     }
 }

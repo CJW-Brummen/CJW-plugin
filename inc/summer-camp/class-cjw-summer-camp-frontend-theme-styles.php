@@ -85,10 +85,11 @@ final class CJW_Summer_Camp_Frontend_Theme_Styles
 
             if ($post instanceof WP_Post) {
                 $content = (string) $post->post_content;
+                // Two of the four clauses here did nothing: "cjw" was
+                // tested twice, and "cjw/hero" is a substring of it, so it
+                // could never be the clause that decided the answer.
                 $should_render = $should_render
                     || has_block('core/pattern', $post)
-                    || str_contains($content, 'cjw/hero')
-                    || str_contains($content, 'cjw')
                     || str_contains($content, 'cjw');
             }
         }

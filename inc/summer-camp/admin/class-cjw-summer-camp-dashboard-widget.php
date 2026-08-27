@@ -33,7 +33,7 @@ final class CJW_Summer_Camp_Dashboard_Widget
      */
     public function register(): void
     {
-        if (!current_user_can('edit_pages') || !function_exists('cjw_summer_camp')) {
+        if (!CJW_Roles::currentUserCan() || !function_exists('cjw_summer_camp')) {
             return;
         }
 
@@ -199,7 +199,7 @@ final class CJW_Summer_Camp_Dashboard_Widget
         // Spelled out rather than read from CJW_Wizard_Submission_Repository:
         // the summer-camp module does not reach into the form-builder module.
         if (post_type_exists('cjw_wizard_entry')) {
-            $links[] = [admin_url('edit.php?post_type=cjw_wizard_entry'), __('Inzendingen', 'cjw')];
+            $links[] = [admin_url('edit.php?post_type=cjw_wizard_entry'), __('Inschrijvingen', 'cjw')];
         }
 
         $links[] = [admin_url('edit.php?post_type=page'), __('Pagina’s', 'cjw')];
