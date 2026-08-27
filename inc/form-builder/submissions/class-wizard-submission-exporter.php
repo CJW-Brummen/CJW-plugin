@@ -27,7 +27,7 @@ final class CJW_Wizard_Submission_Exporter
             'edit.php?post_type=cjw_wizard',
             __('CSV Export', 'cjw'),
             __('CSV Export', 'cjw'),
-            'edit_posts',
+            CJW_Roles::CAPABILITY,
             'cjw-wizard-export',
             [ $this, 'render_export_page' ]
         );
@@ -35,7 +35,7 @@ final class CJW_Wizard_Submission_Exporter
 
     public function render_export_page(): void
     {
-        if (! current_user_can('edit_posts')) {
+        if (! CJW_Roles::currentUserCan()) {
             return;
         }
 
@@ -52,7 +52,7 @@ final class CJW_Wizard_Submission_Exporter
         ?>
 		<div class="wrap">
 			<h1><?php esc_html_e('CSV Export', 'cjw'); ?></h1>
-			<p><?php esc_html_e('Download inzendingen van een formulier als CSV.', 'cjw'); ?></p>
+			<p><?php esc_html_e('Download inschrijvingen van een formulier als CSV.', 'cjw'); ?></p>
 			<form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
 				<?php wp_nonce_field('cjw_wizard_export_csv', 'cjw_wizard_export_nonce'); ?>
 				<input type="hidden" name="action" value="cjw_wizard_export_csv">
@@ -81,7 +81,7 @@ final class CJW_Wizard_Submission_Exporter
 
     public function handle_export(): void
     {
-        if (! current_user_can('edit_posts')) {
+        if (! CJW_Roles::currentUserCan()) {
             wp_die(esc_html__('Geen toegang.', 'cjw'));
         }
 

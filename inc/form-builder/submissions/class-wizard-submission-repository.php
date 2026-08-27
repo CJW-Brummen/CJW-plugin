@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-final class CJW_Wizard_Submission_Repository
+final class CJW_Wizard_Submission_Repository implements CJW_Wizard_Submission_Store
 {
     /**
      * The submissions post type.
@@ -24,33 +24,259 @@ final class CJW_Wizard_Submission_Repository
     public const string META_PAYLOAD = '_cjw_wizard_payload';
     public const string META_SNAPSHOT = '_cjw_wizard_snapshot';
 
+    /**
+     * The registering parent's e-mail address, lifted out of the payload.
+     *
+     * WordPress's privacy tools answer an access or deletion request by e-mail
+     * address, but a payload is keyed by whatever the form happens to ask, so
+     * there is nothing to look the person up by. Recording the address once at
+     * submission time turns both requests into an exact meta query instead of a
+     * scan through every stored payload.
+     */
+    public const string META_EMAIL = '_cjw_wizard_email';
+
+    /**
+     * Camp year, kept so anonymised rows can still be counted.
+     */
+    public const string META_CAMP_YEAR = '_cjw_wizard_camp_year';
+
+    /**
+     * Date the row was stripped of personal data, if it has been.
+     */
+    public const string META_ANONYMISED = '_cjw_wizard_anonymised';
+
+    /**
+     * The child's name, lifted out of the payload via its field role.
+     *
+     * Personal data: removed by anonymise() along with everything else.
+     */
+    public const string META_CHILD_NAME = '_cjw_wizard_child_name';
+
+    /**
+     * Which camp the registration is for. Not personal, so it survives
+     * anonymisation and keeps the yearly counts meaningful.
+     */
+    public const string META_CAMP_TYPE = '_cjw_wizard_camp_type';
+
+    /**
+     * Internal notes an organiser adds. Never shown to the parent.
+     */
+    public const string META_NOTES = '_cjw_wizard_notes';
+
+    /**
+     * Every status a submission we still hold data for can be in.
+     *
+     * Spelled out rather than using `'any'`, which sounds like "everything" and
+     * is not: WP_Query expands `any` to every status that is not
+     * `exclude_from_search`, and register_post_status() defaults that flag to
+     * the status's `internal` flag -- which trash sets. So `'any'` silently
+     * omits the trash, and an organiser deleting a registration in wp-admin
+     * would move a child's name, address and medical notes somewhere the
+     * retention sweep and an erasure request could both never reach.
+     *
+     * @var array<int, string>
+     */
+    private const array ALL_STATUSES = [
+        CJW_Wizard_Submission_Status::NEW,
+        CJW_Wizard_Submission_Status::CONFIRMED,
+        CJW_Wizard_Submission_Status::PAID,
+        CJW_Wizard_Submission_Status::CANCELLED,
+        'publish',
+        'draft',
+        'pending',
+        'private',
+        'future',
+        'trash',
+    ];
+
+    /**
+     * Stores a completed registration and everything needed to read it back.
+     *
+     * @param array<string, mixed> $config
+     * @param array<string, mixed> $data
+     */
     public function save(int $wizard_id, array $config, array $data): int
     {
-        $wizard_title = get_the_title($wizard_id);
-        $submission_title = sprintf(
-            /* translators: 1: form title, 2: submission date and time. */
-            __('%1$s - %2$s', 'cjw'),
-            $wizard_title !== '' ? $wizard_title : __('Formulier', 'cjw'),
-            wp_date('Y-m-d H:i:s')
-        );
+        $childNames = CJW_Wizard_Field_Roles::childNames($config, $data);
 
         $submission_id = wp_insert_post([
             'post_type' => self::POST_TYPE,
-            'post_status' => 'publish',
-            'post_title' => $submission_title,
+            'post_status' => CJW_Wizard_Submission_Status::DEFAULT,
+            'post_title' => __('Inschrijving', 'cjw'),
         ], true);
 
         if (is_wp_error($submission_id)) {
             return 0;
         }
 
+        $this->name_after_itself((int) $submission_id);
+
         update_post_meta($submission_id, self::META_WIZARD_ID, $wizard_id);
         update_post_meta($submission_id, self::META_PAYLOAD, wp_json_encode($data, JSON_UNESCAPED_UNICODE));
         update_post_meta($submission_id, self::META_SNAPSHOT, wp_json_encode($config, JSON_UNESCAPED_UNICODE));
+        update_post_meta($submission_id, self::META_CAMP_YEAR, $this->campYear());
+
+        $email = self::findEmail($config, $data);
+
+        if ($email !== '') {
+            update_post_meta($submission_id, self::META_EMAIL, $email);
+        }
+
+        if ($childNames !== []) {
+            update_post_meta($submission_id, self::META_CHILD_NAME, implode(', ', $childNames));
+        }
+
+        // One row per camp, not one joined string: a submission can hold two
+        // children going to different camps, and filtering by camp has to match
+        // either of them.
+        foreach (array_unique(CJW_Wizard_Field_Roles::valuesFor($config, $data, CJW_Wizard_Field_Roles::CAMP_TYPE)) as $campType) {
+            add_post_meta($submission_id, self::META_CAMP_TYPE, $campType);
+        }
 
         return (int) $submission_id;
     }
 
+    /**
+     * Titles a submission after its own id.
+     *
+     * The children's names used to be the title, which read well but put
+     * personal data into the post title and the slug derived from it -- so
+     * every erasure had to rewrite both, and the name lived on in any URL that
+     * had been copied out. The number identifies the registration just as well
+     * for the one job a title has here: being quoted in a mail or over the
+     * phone. Who is actually coming is answered by the Naam column and the
+     * detail page, both of which read the payload.
+     *
+     * The id only exists after the insert, hence the second write.
+     *
+     * @param int $submission_id Submission post id.
+     */
+    private function name_after_itself(int $submission_id): void
+    {
+        wp_update_post([
+            'ID' => $submission_id,
+            'post_title' => sprintf(
+                /* translators: %d: submission number. */
+                __('Inschrijving #%d', 'cjw'),
+                $submission_id
+            ),
+            'post_name' => 'inschrijving-' . $submission_id,
+        ]);
+    }
+
+    /**
+     * Finds the registering parent's e-mail address in a submission.
+     *
+     * Prefers a field the form actually declares as `email`, in the order the
+     * form asks them, so a parent's address wins over a second contact's. Falls
+     * back to the first value that looks like an address at all, for forms built
+     * before the field type existed or where the builder used a plain text field.
+     *
+     * @param array $config Form configuration.
+     * @param array $data   Submitted payload.
+     * @param array<string, mixed> $config
+     * @param array<string, mixed> $data
+     */
+    public static function findEmail(array $config, array $data): string
+    {
+        $flat = (new self())->flatten_data($data);
+
+        foreach (self::emailFieldKeys($config['steps'] ?? []) as $key) {
+            foreach ($flat as $column => $value) {
+                if (($column === $key || str_ends_with($column, ".{$key}")) && is_email($value)) {
+                    return sanitize_email($value);
+                }
+            }
+        }
+
+        foreach ($flat as $value) {
+            if (is_email($value)) {
+                return sanitize_email($value);
+            }
+        }
+
+        return '';
+    }
+
+    /**
+     * Keys of every field the form declares as an e-mail field, in form order.
+     *
+     * @param mixed $steps Configured steps.
+     *
+     * @return array<int, string>
+     */
+    private static function emailFieldKeys(mixed $steps): array
+    {
+        $keys = [];
+
+        if (! is_array($steps)) {
+            return $keys;
+        }
+
+        foreach ($steps as $step) {
+            $keys = [ ...$keys, ...self::emailKeysInFields(is_array($step['fields'] ?? null) ? $step['fields'] : []) ];
+        }
+
+        return $keys;
+    }
+
+    /**
+     * Collects e-mail field keys from one level of fields and everything nested
+     * under it.
+     *
+     * @param array $fields Field configuration.
+     * @param array<int, mixed> $fields
+     *
+     * @return array<int, string>
+     */
+    private static function emailKeysInFields(array $fields): array
+    {
+        $keys = [];
+
+        foreach ($fields as $field) {
+            if (! is_array($field)) {
+                continue;
+            }
+
+            if (($field['type'] ?? '') === 'email' && ($field['key'] ?? '') !== '') {
+                $keys[] = (string) $field['key'];
+            }
+
+            if (is_array($field['fields'] ?? null)) {
+                $keys = [ ...$keys, ...self::emailKeysInFields($field['fields']) ];
+            }
+
+            foreach (is_array($field['options'] ?? null) ? $field['options'] : [] as $option) {
+                if (is_array($option) && is_array($option['fields'] ?? null)) {
+                    $keys = [ ...$keys, ...self::emailKeysInFields($option['fields']) ];
+                }
+            }
+        }
+
+        return $keys;
+    }
+
+    /**
+     * The camp year to file this submission under.
+     */
+    private function campYear(): string
+    {
+        if (function_exists('cjw_summer_camp')) {
+            $start = cjw_summer_camp()->getStartDate();
+
+            if ($start instanceof DateTimeImmutable) {
+                return $start->format('Y');
+            }
+        }
+
+        return wp_date('Y');
+    }
+
+    /**
+     * The answers a parent gave, as they were submitted.
+     *
+     * @return array<string, mixed>
+     */
     public function get_payload(int $submission_id): array
     {
         $payload = get_post_meta($submission_id, self::META_PAYLOAD, true);
@@ -70,21 +296,229 @@ final class CJW_Wizard_Submission_Repository
         return (int) get_post_meta($submission_id, self::META_WIZARD_ID, true);
     }
 
+    /**
+     * Every registration made through one form, newest first.
+     *
+     * @return array<int, WP_Post>
+     */
     public function get_by_wizard(int $wizard_id): array
     {
         return get_posts([
             'post_type' => self::POST_TYPE,
-            'post_status' => 'publish',
+            'post_status' => self::ALL_STATUSES,
             'numberposts' => -1,
             // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- Submissions are stored as a custom post type and scoped by the owning form id.
             'meta_key' => self::META_WIZARD_ID,
             // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- This admin/export query intentionally filters submissions for one form.
-            'meta_value' => $wizard_id,
+            'meta_value' => (string) $wizard_id,
             'orderby' => 'date',
             'order' => 'DESC',
         ]);
     }
 
+    /**
+     * Every submission belonging to one e-mail address.
+     *
+     * @param string $email Address to match.
+     *
+     * @return array<int, WP_Post>
+     */
+    public function get_by_email(string $email): array
+    {
+        $email = sanitize_email($email);
+
+        if (! is_email($email)) {
+            return [];
+        }
+
+        return get_posts([
+            'post_type' => self::POST_TYPE,
+            'post_status' => self::ALL_STATUSES,
+            'numberposts' => -1,
+            // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- An access or erasure request is by definition a lookup by address; the meta exists for exactly this.
+            'meta_key' => self::META_EMAIL,
+            // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- See above.
+            'meta_value' => $email,
+            'orderby' => 'date',
+            'order' => 'DESC',
+        ]);
+    }
+
+    /**
+     * Strips a submission of everything that identifies anybody, keeping the row.
+     *
+     * The camp legitimately wants to know it ran for 74 children in 2026 long
+     * after it has any business holding their names. Deleting the row would take
+     * that history with it, so the payload, the config snapshot and the address
+     * go, and the date, the form it belonged to and the camp year stay.
+     *
+     * Idempotent: anonymising an already-anonymised row changes nothing.
+     *
+     * @param int $submission_id Submission post id.
+     *
+     * @return bool Whether anything was removed.
+     */
+    public function anonymise(int $submission_id): bool
+    {
+        if ($this->is_anonymised($submission_id)) {
+            return false;
+        }
+
+        delete_post_meta($submission_id, self::META_PAYLOAD);
+        delete_post_meta($submission_id, self::META_SNAPSHOT);
+        delete_post_meta($submission_id, self::META_EMAIL);
+        delete_post_meta($submission_id, self::META_CHILD_NAME);
+        delete_post_meta($submission_id, self::META_NOTES);
+        // META_CAMP_TYPE deliberately survives: it identifies nobody, and it is
+        // what keeps "74 registrations for the 2026 week camp" answerable after
+        // the personal data is gone.
+
+        update_post_meta($submission_id, self::META_ANONYMISED, wp_date('Y-m-d'));
+
+        // post_status is passed back unchanged: wp_update_post() would otherwise
+        // restore a trashed row to draft, undoing an organiser's deletion as a
+        // side effect of scrubbing it.
+        // The slug is rewritten too. Rows saved before titles became numbers
+        // still carry a slug derived from a child's name, and replacing only
+        // the title would leave that name behind in post_name.
+        wp_update_post([
+            'ID' => $submission_id,
+            'post_status' => get_post_status($submission_id),
+            'post_name' => 'cjw-entry-' . $submission_id,
+            'post_title' => sprintf(
+                /* translators: %s: camp year the anonymised submission belonged to. */
+                __('Gewiste inschrijving (%s)', 'cjw'),
+                $this->get_camp_year($submission_id)
+            ),
+        ]);
+
+        return true;
+    }
+
+    /**
+     * Whether a submission has already had its personal data removed.
+     */
+    public function is_anonymised(int $submission_id): bool
+    {
+        return (string) get_post_meta($submission_id, self::META_ANONYMISED, true) !== '';
+    }
+
+    /**
+     * The camp year a submission belongs to.
+     */
+    public function get_camp_year(int $submission_id): string
+    {
+        return (string) get_post_meta($submission_id, self::META_CAMP_YEAR, true);
+    }
+
+    /**
+     * The child's name, if the form marked a field with that role.
+     */
+    public function get_child_name(int $submission_id): string
+    {
+        return (string) get_post_meta($submission_id, self::META_CHILD_NAME, true);
+    }
+
+    /**
+     * Which camp the registration is for, if the form marked a field.
+     */
+    public function get_camp_type(int $submission_id): string
+    {
+        // Deliberately not $single: a submission can hold two children going to
+        // different camps, so every row matters.
+        $types = get_post_meta($submission_id, self::META_CAMP_TYPE, false);
+
+        return is_array($types) ? implode(', ', array_map('strval', $types)) : '';
+    }
+
+    /**
+     * Internal notes on a submission.
+     */
+    public function get_notes(int $submission_id): string
+    {
+        return (string) get_post_meta($submission_id, self::META_NOTES, true);
+    }
+
+    /**
+     * The distinct camp types that have actually been registered for.
+     *
+     * Read from the submissions rather than from a fixed list, because what a
+     * form calls its camps is the form's business -- one might offer "week" and
+     * "weekend", another "Kamp 1" and "Kamp 2".
+     *
+     * @return array<int, string>
+     */
+    public function known_camp_types(): array
+    {
+        global $wpdb;
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Distinct values of one meta key; no core API returns that. Cached in the transient below.
+        $cached = get_transient('cjw_wizard_camp_types');
+
+        if (is_array($cached)) {
+            return $cached;
+        }
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- See above.
+        $types = $wpdb->get_col(
+            $wpdb->prepare(
+                "SELECT DISTINCT meta_value FROM {$wpdb->postmeta} WHERE meta_key = %s AND meta_value <> '' ORDER BY meta_value ASC",
+                self::META_CAMP_TYPE
+            )
+        );
+
+        $types = array_map('strval', is_array($types) ? $types : []);
+
+        set_transient('cjw_wizard_camp_types', $types, HOUR_IN_SECONDS);
+
+        return $types;
+    }
+
+    /**
+     * The stored e-mail address for a submission, if it still has one.
+     */
+    public function get_email(int $submission_id): string
+    {
+        return (string) get_post_meta($submission_id, self::META_EMAIL, true);
+    }
+
+    /**
+     * Submissions still holding personal data that were taken before a cut-off.
+     *
+     * @param DateTimeImmutable $before Anything older than this is expired.
+     * @param int               $limit  Maximum rows to return.
+     *
+     * @return array<int, WP_Post>
+     */
+    public function get_expired(DateTimeImmutable $before, int $limit = 100): array
+    {
+        return get_posts([
+            'post_type' => self::POST_TYPE,
+            'post_status' => self::ALL_STATUSES,
+            'numberposts' => $limit,
+            'orderby' => 'date',
+            'order' => 'ASC',
+            'date_query' => [
+                [
+                    'before' => $before->format('Y-m-d H:i:s'),
+                    'inclusive' => true,
+                ],
+            ],
+            // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- The sweep must find rows that have never been anonymised, and absence of a meta key is the only way to express that. It runs once a day on cron, batched.
+            'meta_query' => [
+                [
+                    'key' => self::META_ANONYMISED,
+                    'compare' => 'NOT EXISTS',
+                ],
+            ],
+        ]);
+    }
+
+    /**
+     * Flattens a nested payload to dot-notation keys, for the CSV export.
+     *
+     * @param array<string, mixed> $data
+     */
     public function flatten_data(array $data, string $prefix = ''): array
     {
         $flattened = [];
