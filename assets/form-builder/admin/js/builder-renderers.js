@@ -154,6 +154,19 @@
 				</div>
 				<div class="cjw-field-actions">
 					${
+						features.role === false
+							? ""
+							: `<label class="cjw-inline-label">Betekenis
+								<select class="cjw-field-role">
+									${Builder.FIELD_ROLES.map(
+										(role) =>
+											`<option value="${role.value}" ${(field.role || "") === role.value ? "selected" : ""}>${Builder.escapeHtml(role.label)}</option>`,
+									).join("")}
+								</select>
+							   </label>
+							   <span class="cjw-field-divider"></span>`
+					}
+					${
 						features.required
 							? `<label class="cjw-inline-checkbox"><input type="checkbox" class="cjw-field-required" ${field.required ? "checked" : ""}> Verplicht</label>
 							   <span class="cjw-field-divider"></span>`
@@ -237,6 +250,14 @@
 				context.render();
 				context.syncData();
 			});
+
+		const roleInput = element.querySelector(".cjw-field-role");
+		if (roleInput) {
+			roleInput.addEventListener("change", (event) => {
+				field.role = event.target.value;
+				context.syncData();
+			});
+		}
 
 		const requiredInput = element.querySelector(".cjw-field-required");
 		if (requiredInput) {

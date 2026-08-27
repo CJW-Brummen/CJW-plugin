@@ -11,6 +11,21 @@
 		{ value: "not_empty", label: "is niet leeg" },
 	];
 
+	/*
+	 * What a field means, as opposed to what it looks like. Optional: a form
+	 * that marks nothing still works, it just cannot fill the list columns or
+	 * count places that depend on knowing which answer is which.
+	 */
+	Builder.FIELD_ROLES = [
+		{ value: "", label: "— geen —" },
+		{ value: "child_name", label: "Voornaam van het kind" },
+		{ value: "child_infix", label: "Tussenvoegsel van het kind" },
+		{ value: "child_last_name", label: "Achternaam van het kind" },
+		{ value: "birth_date", label: "Geboortedatum" },
+		{ value: "camp_type", label: "Type kamp" },
+		{ value: "photo_consent", label: "Toestemming foto's" },
+	];
+
 	Builder.FIELD_FEATURES = {
 		text: { label: "Tekstveld", required: true, validation: true },
 		email: { label: "E-mail", required: true, validation: true },
@@ -29,13 +44,14 @@
 			options: true,
 		},
 		textarea: { label: "Tekstvak", required: true, validation: true },
-		heading: { label: "Koptekst", required: false, validation: false },
-		html: { label: "HTML-uitleg", required: false, validation: false },
+		heading: { label: "Koptekst", required: false, validation: false, role: false },
+		html: { label: "HTML-uitleg", required: false, validation: false, role: false },
 		repeater: {
 			label: "Herhaler",
 			required: false,
 			validation: false,
 			repeater: true,
+			role: false,
 		},
 	};
 
