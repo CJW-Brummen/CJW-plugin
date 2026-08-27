@@ -43,6 +43,10 @@ final class CJW_Plugin
 
         add_action('init', [self::class, 'loadTextdomain']);
 
+        if (is_admin()) {
+            (new CJW_Roles_Notice())->init();
+        }
+
         CJW_Summer_Camp_Module::boot();
         CJW_Form_Builder_Module::boot();
     }
@@ -74,6 +78,8 @@ final class CJW_Plugin
     private static function loadShared(): void
     {
         require_once CJW_DIR . 'inc/shared/class-camp-type.php';
+        require_once CJW_DIR . 'inc/shared/class-cjw-roles.php';
+        require_once CJW_DIR . 'inc/shared/class-cjw-roles-notice.php';
         require_once CJW_DIR . 'inc/shared/localization.php';
         require_once CJW_DIR . 'inc/shared/class-summer-camp-service.php';
         require_once CJW_DIR . 'inc/shared/functions.php';
