@@ -896,6 +896,7 @@ class CJW_Summer_Camp_Settings_Page
         $this->renderToolNotice();
 
         CJW_Summer_Camp_Mail::renderPanel();
+        CJW_Summer_Camp_Digest::renderPanel();
         CJW_Summer_Camp_Settings_History::renderPanel();
         CJW_Summer_Camp_Year::renderPanel();
     }
@@ -919,6 +920,10 @@ class CJW_Summer_Camp_Settings_Page
             'restore_failed' => ['error', __('Die versie kon niet worden teruggezet. Ververs de pagina en probeer het opnieuw.', 'cjw')],
             'imported' => ['success', __('De instellingen uit het bestand zijn ingelezen.', 'cjw')],
             'import_failed' => ['error', __('Dat bestand kon niet worden ingelezen. Kies een bestand dat eerder met “Download de instellingen” is gemaakt.', 'cjw')],
+            'digest_on' => ['success', __('Het weekbericht staat aan. Is er niets te melden, dan komt er die week geen mail.', 'cjw')],
+            'digest_off' => ['success', __('Het weekbericht staat uit.', 'cjw')],
+            'digest_sent' => ['success', __('Het voorbeeld is verstuurd naar iedereen die het kamp beheert.', 'cjw')],
+            'digest_failed' => ['error', __('Het voorbeeld kon niet worden verstuurd. Controleer hierboven of de website wel mail kan versturen.', 'cjw')],
             'year_started' => ['success', __('Het nieuwe kampjaar is gestart. Vul de nieuwe kampdata in en zet de inschrijvingen open zodra je zover bent.', 'cjw')],
             'year_not_confirmed' => ['error', __('Er is niets veranderd: het ingetypte jaartal klopte niet.', 'cjw')],
         ];

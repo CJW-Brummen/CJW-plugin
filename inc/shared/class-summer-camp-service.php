@@ -133,9 +133,54 @@ class CJW_Summer_Camp_Service
     /**
      * Initializes the service and loads current settings.
      */
+    /**
+     * The shared instance, held here rather than in cjw_summer_camp() so it can
+     * be thrown away when the settings change.
+     *
+     * A static inside that function could not be: settings written during a
+     * request -- by the settings form, by starting a new camp year, by
+     * restoring an older version -- stayed invisible for the rest of it, and
+     * whatever ran next answered from the values that had just been replaced.
+     */
+    private static ?self $instance = null;
+
     public function __construct()
     {
         $this->settings = $this->load();
+    }
+
+    /**
+     * The shared summer camp service.
+     */
+    public static function instance(): self
+    {
+        return self::$instance ??= new self();
+    }
+
+    /**
+     * Throws the shared instance away, so the next caller reads the database.
+     *
+     * @return void
+     */
+    public static function flush(): void
+    {
+        self::$instance = null;
+    }
+
+    /**
+     * Keeps the shared instance honest about the option behind it.
+     *
+     * @return void
+     */
+    public static function watchSettings(): void
+    {
+        foreach ([
+            'add_option_' . self::OPTION_KEY,
+            'update_option_' . self::OPTION_KEY,
+            'delete_option_' . self::OPTION_KEY,
+        ] as $hook) {
+            add_action($hook, [ self::class, 'flush' ], 10, 0);
+        }
     }
 
     /**

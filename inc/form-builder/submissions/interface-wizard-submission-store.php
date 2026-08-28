@@ -78,6 +78,24 @@ interface CJW_Wizard_Submission_Store
     public function get_for_camp_year_upto(string $year, int $limit = 100): array;
 
     /**
+     * A camp year's registrations counted per camp, excluding cancellations.
+     *
+     * @param string $year Camp year, four digits.
+     *
+     * @return array<string, int> Camp type to count, plus a 'total' key.
+     */
+    public function count_by_camp_type(string $year): array;
+
+    /**
+     * How many registrations arrived since a moment, whatever their status.
+     *
+     * @param DateTimeImmutable $since Start of the window.
+     *
+     * @return int
+     */
+    public function count_since(DateTimeImmutable $since): int;
+
+    /**
      * How many rows get_for_camp_year_upto() would reach in total.
      *
      * @param string $year Camp year, four digits.

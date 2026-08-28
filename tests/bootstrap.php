@@ -738,6 +738,7 @@ if (! function_exists('get_post')) {
 }
 
 require_once __DIR__ . '/../inc/form-builder/submissions/class-wizard-year-rollover.php';
+require_once __DIR__ . '/../inc/form-builder/submissions/class-wizard-submission-digest.php';
 require_once __DIR__ . '/../inc/summer-camp/admin/class-cjw-summer-camp-mail.php';
 require_once __DIR__ . '/../inc/summer-camp/admin/class-cjw-summer-camp-settings-history.php';
 require_once __DIR__ . '/../inc/summer-camp/admin/class-cjw-summer-camp-year.php';

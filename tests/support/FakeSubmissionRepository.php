@@ -119,6 +119,34 @@ final class FakeSubmissionRepository implements CJW_Wizard_Submission_Store
         return array_slice($matches, 0, $limit);
     }
 
+    /**
+     * @return array<string, int>
+     */
+    public function count_by_camp_type(string $year): array
+    {
+        $counted = array_filter(
+            $this->rows,
+            static fn(array $row): bool => (int) $row['year'] === (int) $year
+        );
+
+        if ($counted === []) {
+            return [];
+        }
+
+        return [ 'week' => count($counted), 'total' => count($counted) ];
+    }
+
+    /**
+     * Every seeded row counts: the fake has no dates, and a test that cares
+     * about the window says so by seeding only what belongs in it.
+     */
+    public function count_since(DateTimeImmutable $since): int
+    {
+        unset($since);
+
+        return count($this->rows);
+    }
+
     public function count_for_camp_year_upto(string $year): int
     {
         return count($this->get_for_camp_year_upto($year, PHP_INT_MAX));

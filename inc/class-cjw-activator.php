@@ -31,6 +31,12 @@ final class CJW_Activator
         CJW_Roles::install();
         CJW_Wizard_Submission_Retention::schedule();
 
+        // Only when somebody switched it on: activation is not consent to
+        // start mailing people.
+        if (CJW_Summer_Camp_Digest::isEnabled()) {
+            CJW_Summer_Camp_Digest::schedule();
+        }
+
         $existing = get_option(CJW_Summer_Camp_Service::OPTION_KEY, null);
 
         if (!is_array($existing)) {

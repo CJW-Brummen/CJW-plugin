@@ -16,6 +16,7 @@ final class CJW_Wizard_Submissions
     private CJW_Wizard_Submission_Privacy $privacy;
     private CJW_Wizard_Submission_Retention $retention;
     private CJW_Wizard_Year_Rollover $rollover;
+    private CJW_Wizard_Submission_Digest $digest;
     private CJW_Wizard_Submission_Status $status;
     private CJW_Wizard_Submission_Confirmation $confirmation;
     private CJW_Wizard_Children_Page $children;
@@ -30,6 +31,7 @@ final class CJW_Wizard_Submissions
         $this->privacy = new CJW_Wizard_Submission_Privacy($this->repository);
         $this->retention = new CJW_Wizard_Submission_Retention($this->repository);
         $this->rollover = new CJW_Wizard_Year_Rollover($this->repository);
+        $this->digest = new CJW_Wizard_Submission_Digest($this->repository);
         $this->status = new CJW_Wizard_Submission_Status();
         $this->confirmation = new CJW_Wizard_Submission_Confirmation();
         $this->children = new CJW_Wizard_Children_Page($this->repository);
@@ -43,6 +45,7 @@ final class CJW_Wizard_Submissions
         $this->privacy->init();
         $this->retention->init();
         $this->rollover->init();
+        $this->digest->init();
         $this->status->init();
         $this->children->init();
     }

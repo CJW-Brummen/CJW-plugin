@@ -163,6 +163,34 @@ final class CJW_Roles
     }
 
     /**
+     * Everyone who may see camp data.
+     *
+     * Anyone holding the capability, which is Kampbeheerders and
+     * administrators. Deliberately asked as "who holds the capability" rather
+     * than "who has the role": an administrator who granted it to a second role
+     * meant that, and a list that ignored them would quietly leave somebody out.
+     *
+     * @return array<int, WP_User>
+     */
+    public static function campManagers(): array
+    {
+        $managers = [];
+
+        // 'fields' => 'ID' (string) returns a flat list of ids. The array form
+        // returns stdClass rows and poisons the user meta cache for every later
+        // query in the request.
+        foreach (get_users([ 'fields' => 'ID' ]) as $userId) {
+            $user = get_userdata((int) $userId);
+
+            if ($user instanceof WP_User && $user->has_cap(self::CAPABILITY)) {
+                $managers[] = $user;
+            }
+        }
+
+        return $managers;
+    }
+
+    /**
      * Users who could reach camp data under the old `edit_posts` gate but
      * cannot under the new one.
      *

@@ -547,6 +547,117 @@ final class CJW_Wizard_Submission_Repository implements CJW_Wizard_Submission_St
     }
 
     /**
+     * This camp year's registrations, counted per camp.
+     *
+     * Cancelled rows are left out, unlike count_since(): a running total is
+     * read as "how many are coming", and a withdrawn registration is not.
+     *
+     * The counts do not necessarily add up to the total, and that is not a bug:
+     * one registration can cover two children going to different camps, so it
+     * is counted under both. The total counts registrations; the breakdown
+     * counts places.
+     *
+     * @param string $year Camp year, four digits.
+     *
+     * @return array<string, int> Camp type to count, plus a 'total' key.
+     */
+    public function count_by_camp_type(string $year): array
+    {
+        if (!preg_match('/^\d{4}$/', $year)) {
+            return [];
+        }
+
+        $total = $this->countMatching([
+            [
+                'key' => self::META_CAMP_YEAR,
+                'value' => $year,
+            ],
+        ]);
+
+        if ($total < 1) {
+            return [];
+        }
+
+        $counts = [];
+
+        foreach ($this->known_camp_types() as $camp) {
+            $count = $this->countMatching([
+                [
+                    'key' => self::META_CAMP_YEAR,
+                    'value' => $year,
+                ],
+                [
+                    'key' => self::META_CAMP_TYPE,
+                    'value' => $camp,
+                ],
+            ]);
+
+            if ($count > 0) {
+                $counts[$camp] = $count;
+            }
+        }
+
+        $counts['total'] = $total;
+
+        return $counts;
+    }
+
+    /**
+     * Counts live registrations matching a meta query.
+     *
+     * Cancelled is excluded here rather than by the callers, because every
+     * question this answers is a question about who is coming.
+     *
+     * @param array<int, array<string, mixed>> $meta_query
+     */
+    private function countMatching(array $meta_query): int
+    {
+        $statuses = array_values(array_filter(
+            self::ALL_STATUSES,
+            static fn(string $status): bool => $status !== CJW_Wizard_Submission_Status::CANCELLED
+        ));
+
+        $query = new WP_Query([
+            'post_type' => self::POST_TYPE,
+            'post_status' => $statuses,
+            'posts_per_page' => 1,
+            'fields' => 'ids',
+            'no_found_rows' => false,
+            'ignore_sticky_posts' => true,
+            // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Runs once a week on cron, over one camp year.
+            'meta_query' => $meta_query,
+        ]);
+
+        return (int) $query->found_posts;
+    }
+
+    /**
+     * How many registrations arrived since a moment.
+     *
+     * Counts every status including cancelled: the weekly report is about what
+     * came in, and a registration withdrawn on Thursday still happened.
+     */
+    public function count_since(DateTimeImmutable $since): int
+    {
+        $query = new WP_Query([
+            'post_type' => self::POST_TYPE,
+            'post_status' => self::ALL_STATUSES,
+            'posts_per_page' => 1,
+            'fields' => 'ids',
+            'no_found_rows' => false,
+            'ignore_sticky_posts' => true,
+            'date_query' => [
+                [
+                    'after' => $since->format('Y-m-d H:i:s'),
+                    'inclusive' => true,
+                ],
+            ],
+        ]);
+
+        return (int) $query->found_posts;
+    }
+
+    /**
      * How many registrations get_for_camp_year_upto() would eventually reach.
      *
      * Separate from the fetch because the number is wanted before anything is
