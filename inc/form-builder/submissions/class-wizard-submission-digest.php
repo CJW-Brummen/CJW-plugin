@@ -119,14 +119,29 @@ final class CJW_Wizard_Submission_Digest
         // Only worth breaking down when there is more than one camp to break it
         // into; otherwise it repeats the line above in different words.
         if (count($counts) > 1) {
+            $parts = [];
+
             foreach ($counts as $camp => $count) {
-                $lines[] = sprintf(
-                    /* translators: 1: camp name, 2: number of registrations. */
-                    __('%1$s: %2$d', 'cjw'),
-                    $camp,
-                    $count
+                // Count first. The camp names carry their own age range and
+                // price ("Weekkamp (10 t/m 17 jaar) - EUR 101"), so a number
+                // appended to one runs straight into it.
+                $parts[] = sprintf(
+                    /* translators: 1: number of children signed up, 2: camp name. */
+                    __('%1$d × %2$s', 'cjw'),
+                    $count,
+                    $camp
                 );
             }
+
+            // Said outright, because these numbers can add up to more than the
+            // total above and a reader who spots that without being told
+            // concludes the site cannot count. One registration covering two
+            // children in different camps is counted under both.
+            $lines[] = sprintf(
+                /* translators: %s: per-camp counts, already joined. */
+                __('Aangemeld per kamp: %s. Eén inschrijving kan twee kinderen voor verschillende kampen bevatten, dus deze aantallen kunnen samen hoger uitkomen dan het totaal.', 'cjw'),
+                implode(', ', $parts)
+            );
         }
 
         return $lines;

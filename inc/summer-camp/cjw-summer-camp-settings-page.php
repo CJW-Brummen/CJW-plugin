@@ -122,6 +122,7 @@ class CJW_Summer_Camp_Settings_Page
             'social_instagram',
             'footer_about',
             'footer_org',
+            'support_contact',
         ],
     ];
 
@@ -724,6 +725,13 @@ class CJW_Summer_Camp_Settings_Page
             'footer_org',
             __('Organisatienaam (footer)', 'cjw'),
             new CJW_Input_Field('footer_org', '', self::OPTION_KEY, description: __('Naam van de organisatie zoals die onderaan in de voettekst staat, bijvoorbeeld “CJW Brummen”.', 'cjw')),
+            'website',
+            'website_contact'
+        );
+        $this->add(
+            'support_contact',
+            __('Wie onderhoudt de website', 'cjw'),
+            new CJW_Input_Field('support_contact', '', self::OPTION_KEY, description: __('Naam, telefoonnummer en e-mailadres van wie je belt als de website zelf stuk is. Deze gegevens staan nergens op de openbare site; ze staan in de Handleiding, zodat de volgende vrijwilliger weet bij wie hij moet zijn.', 'cjw')),
             'website',
             'website_contact'
         );
