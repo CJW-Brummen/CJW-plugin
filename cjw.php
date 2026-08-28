@@ -52,3 +52,4 @@ register_activation_hook(CJW_FILE, [CJW_Activator::class, 'activate']);
 // firing a hook nothing listens to until someone clears it by hand.
 register_deactivation_hook(CJW_FILE, [CJW_Wizard_Submission_Retention::class, 'unschedule']);
 register_deactivation_hook(CJW_FILE, [CJW_Summer_Camp_Digest::class, 'unschedule']);
+register_deactivation_hook(CJW_FILE, [CJW_Wizard_Birthday_Mailer::class, 'unschedule']);

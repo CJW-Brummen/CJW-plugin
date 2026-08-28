@@ -152,20 +152,24 @@ final class CJW_Wizard_Meta_Boxes
         );
         echo '<p class="description">' . esc_html__('Staat uit tot e-mail betrouwbaar verstuurd wordt: een bevestiging die niet aankomt is erger dan geen bevestiging. Het e-mailadres wordt gehaald uit het veld met type E-mail.', 'cjw') . '</p>';
 
-        echo '<div id="cjw-wizard-parent-confirmation-wrapper"' . ($settings['send_parent_confirmation'] ? '' : ' style="display:none;"') . '>';
-        $this->render_text_setting(
-            'parent_confirmation_subject',
-            __('Onderwerp', 'cjw'),
-            $settings['parent_confirmation_subject'],
-            __('Leeg laten voor een standaardonderwerp.', 'cjw')
+        // The copy itself is no longer here. It lived per form, which meant the
+        // one mail a parent actually reads could only be changed by whoever was
+        // editing the form -- and there is one form.
+        printf(
+            '<p class="description">%s</p>',
+            wp_kses(
+                sprintf(
+                    /* translators: %s: link to the Mails screen. */
+                    esc_html__('De tekst van deze mail schrijf je op %s.', 'cjw'),
+                    sprintf(
+                        '<a href="%s">%s</a>',
+                        esc_url(admin_url('admin.php?page=' . CJW_Summer_Camp_Mails_Page::PAGE_SLUG)),
+                        esc_html__('Zomerkamp → Mails', 'cjw')
+                    )
+                ),
+                [ 'a' => [ 'href' => true ] ]
+            )
         );
-        $this->render_textarea_setting(
-            'parent_confirmation_body',
-            __('Bericht', 'cjw'),
-            $settings['parent_confirmation_body'],
-            __('Leeg laten voor een standaardtekst. Tokens zoals {camp_date_range} en {camp_price_week} worden ingevuld.', 'cjw')
-        );
-        echo '</div>';
 
         echo '</div>';
     }

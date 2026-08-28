@@ -17,6 +17,7 @@ final class CJW_Wizard_Submissions
     private CJW_Wizard_Submission_Retention $retention;
     private CJW_Wizard_Year_Rollover $rollover;
     private CJW_Wizard_Submission_Digest $digest;
+    private CJW_Wizard_Birthday_Mailer $birthdays;
     private CJW_Wizard_Submission_Status $status;
     private CJW_Wizard_Submission_Confirmation $confirmation;
     private CJW_Wizard_Children_Page $children;
@@ -32,6 +33,7 @@ final class CJW_Wizard_Submissions
         $this->retention = new CJW_Wizard_Submission_Retention($this->repository);
         $this->rollover = new CJW_Wizard_Year_Rollover($this->repository);
         $this->digest = new CJW_Wizard_Submission_Digest($this->repository);
+        $this->birthdays = new CJW_Wizard_Birthday_Mailer($this->repository);
         $this->status = new CJW_Wizard_Submission_Status();
         $this->confirmation = new CJW_Wizard_Submission_Confirmation();
         $this->children = new CJW_Wizard_Children_Page($this->repository);
@@ -46,6 +48,7 @@ final class CJW_Wizard_Submissions
         $this->retention->init();
         $this->rollover->init();
         $this->digest->init();
+        $this->birthdays->init();
         $this->status->init();
         $this->children->init();
     }
@@ -67,9 +70,9 @@ final class CJW_Wizard_Submissions
      * @param array<string, mixed> $config
      * @param array<string, mixed> $data
      */
-    public function maybe_notify_admin(int $wizard_id, array $config, array $data): void
+    public function maybe_notify_admin(int $wizard_id, array $config, array $data, int $submission_id = 0): void
     {
-        $this->notifier->maybe_notify_admin($wizard_id, $config, $data);
+        $this->notifier->maybe_notify_admin($wizard_id, $config, $data, $submission_id);
     }
 
     /**

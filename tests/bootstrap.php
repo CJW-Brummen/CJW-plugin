@@ -723,6 +723,68 @@ if (! function_exists('sanitize_hex_color')) {
     }
 }
 
+if (! function_exists('get_bloginfo')) {
+    function get_bloginfo(string $show = ''): string
+    {
+        return match ($show) {
+            'name' => 'CJW Brummen',
+            'description' => 'Zomerkamp',
+            default => '',
+        };
+    }
+}
+
+if (! function_exists('home_url')) {
+    function home_url(string $path = ''): string
+    {
+        return 'https://example.test' . $path;
+    }
+}
+
+if (! function_exists('wp_parse_url')) {
+    function wp_parse_url(string $url, int $component = -1): mixed
+    {
+        return parse_url($url, $component);
+    }
+}
+
+if (! function_exists('add_filter')) {
+    function add_filter(string $hook, callable $callback, int $priority = 10, int $args = 1): bool
+    {
+        return true;
+    }
+}
+
+if (! function_exists('remove_filter')) {
+    function remove_filter(string $hook, callable $callback, int $priority = 10): bool
+    {
+        return true;
+    }
+}
+
+if (! function_exists('add_action')) {
+    function add_action(string $hook, callable $callback, int $priority = 10, int $args = 1): bool
+    {
+        return true;
+    }
+}
+
+if (! function_exists('remove_action')) {
+    function remove_action(string $hook, callable $callback, int $priority = 10): bool
+    {
+        return true;
+    }
+}
+
+if (! function_exists('wpautop')) {
+    function wpautop(string $text): string
+    {
+        $parts = preg_split('/\n\s*\n/', trim($text)) ?: [];
+
+        return implode('', array_map(static fn(string $p): string => '<p>' . trim($p) . '</p>', $parts));
+    }
+}
+
 if (! function_exists('is_admin')) {
     function is_admin(): bool
     {
@@ -737,6 +799,11 @@ if (! function_exists('get_post')) {
     }
 }
 
+require_once __DIR__ . '/../inc/shared/class-cjw-mail-templates.php';
+require_once __DIR__ . '/../inc/shared/class-cjw-mail-tokens.php';
+require_once __DIR__ . '/../inc/shared/class-cjw-mailer.php';
+require_once __DIR__ . '/../inc/form-builder/domain/class-wizard-amount.php';
+require_once __DIR__ . '/../inc/form-builder/submissions/class-wizard-birthday-mailer.php';
 require_once __DIR__ . '/../inc/form-builder/submissions/class-wizard-year-rollover.php';
 require_once __DIR__ . '/../inc/form-builder/submissions/class-wizard-submission-digest.php';
 require_once __DIR__ . '/../inc/summer-camp/admin/class-cjw-summer-camp-mail.php';

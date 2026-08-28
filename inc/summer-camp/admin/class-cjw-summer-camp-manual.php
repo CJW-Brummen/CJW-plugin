@@ -66,6 +66,7 @@ final class CJW_Summer_Camp_Manual
             'jaar' => __('Het kampjaar in stappen', 'cjw'),
             'schermen' => __('Wat staat waar', 'cjw'),
             'inschrijvingen' => __('Inschrijvingen bekijken', 'cjw'),
+            'mails' => __('De mails aanpassen', 'cjw'),
             'misgaat' => __('Als er iets misgaat', 'cjw'),
             'techniek' => __('Eenmalig instellen', 'cjw'),
             'updates' => __('Updates', 'cjw'),
@@ -103,6 +104,7 @@ final class CJW_Summer_Camp_Manual
             $this->renderYear();
             $this->renderScreens();
             $this->renderSubmissions();
+            $this->renderMails();
             $this->renderTroubleshooting();
             $this->renderRunbook();
             $this->renderUpdates();
@@ -220,6 +222,11 @@ final class CJW_Summer_Camp_Manual
                 __('Loop het inschrijfformulier na op %s: kloppen de vragen, de kampkeuzes en de bedragen nog?', 'cjw'),
                 $this->link(__('Formulieren', 'cjw'), 'edit.php?post_type=cjw_wizard')
             ),
+            sprintf(
+                /* translators: %s: link to the Mails screen. */
+                __('Lees op %s de bevestigingsmail door: klopt de tekst nog, en staan de juiste bedragen en data erin? Met de knop “Opslaan en naar mijzelf sturen” zie je meteen hoe hij eruitziet.', 'cjw'),
+                $this->link(__('Zomerkamp → Mails', 'cjw'), 'admin.php?page=cjw-mails')
+            ),
             __('Stuur een testmail (Beheer-tabblad) en schrijf jezelf één keer proefin. Krijg je een bevestiging in je inbox? Dan werkt het.', 'cjw'),
         ]);
         ?>
@@ -294,6 +301,11 @@ final class CJW_Summer_Camp_Manual
                 __('Zomerkamp → Beheer', 'cjw'),
                 __('Geen instellingen maar knoppen: een testmail versturen, het weekbericht aanzetten, een eerdere versie van de instellingen terugzetten, en een nieuw kampjaar starten.', 'cjw'),
                 __('Nergens — dit tabblad verandert de website niet uit zichzelf.', 'cjw'),
+            ],
+            [
+                __('Zomerkamp → Mails', 'cjw'),
+                __('De teksten van de mails die de website verstuurt: de bevestiging aan de ouder, de verjaardagsmail en het bericht aan de organisatie.', 'cjw'),
+                __('In de mailbox van ouders en van de organisatie. De opmaak en de kleuren komen automatisch van de site.', 'cjw'),
             ],
             [
                 __('Sponsoren', 'cjw'),
@@ -374,6 +386,53 @@ final class CJW_Summer_Camp_Manual
             <li><?php esc_html_e('Het overzicht “Kinderen” zet alle kinderen onder elkaar in plaats van per inschrijving. Handig als één ouder twee kinderen heeft opgegeven.', 'cjw'); ?></li>
             <li><?php esc_html_e('Inschrijvingen worden vanzelf geanonimiseerd als ze oud genoeg zijn. Hoe lang ze bewaard blijven stel je in op het tabblad Algemeen, in maanden na afloop van het kamp.', 'cjw'); ?></li>
         </ul>
+        <?php
+
+        echo '</section>';
+    }
+
+    /**
+     * Writing the mails.
+     *
+     * @return void
+     */
+    private function renderMails(): void
+    {
+        $this->openChapter('mails', __('De mails aanpassen', 'cjw'));
+
+        ?>
+        <p>
+            <?php
+            echo wp_kses(
+                sprintf(
+                    /* translators: %s: link to the Mails screen. */
+                    __('De website verstuurt drie mails, en je kunt ze alle drie zelf schrijven op %s. Je hebt daar geen programmeur voor nodig.', 'cjw'),
+                    $this->link(__('Zomerkamp → Mails', 'cjw'), 'admin.php?page=cjw-mails')
+                ),
+                [ 'a' => [ 'href' => true ] ]
+            );
+            ?>
+        </p>
+
+        <ul class="cjw-manual__list">
+            <li><strong><?php esc_html_e('Bevestiging aan de ouder', 'cjw'); ?></strong> — <?php esc_html_e('gaat naar de ouder zodra iemand zich inschrijft. Dit is de enige mail die een ouder van de website krijgt.', 'cjw'); ?></li>
+            <li><strong><?php esc_html_e('Verjaardagsmail', 'cjw'); ?></strong> — <?php esc_html_e('gaat op de verjaardag van een ingeschreven kind naar het adres waarmee is ingeschreven. Zet hem aan op het tabblad Inhoud.', 'cjw'); ?></li>
+            <li><strong><?php esc_html_e('Bericht aan de organisatie', 'cjw'); ?></strong> — <?php esc_html_e('laat jullie weten dat er een inschrijving binnen is. Hier staan met opzet geen gegevens van kinderen in.', 'cjw'); ?></li>
+        </ul>
+
+        <h3><?php esc_html_e('Woorden die de website zelf invult', 'cjw'); ?></h3>
+        <p>
+            <?php esc_html_e('In de teksten kun je woorden tussen accolades gebruiken, zoals {child_names} of {camp_date_range}. Die vult de website in op het moment dat de mail verstuurd wordt. Zo staan de namen, data en bedragen er altijd goed in, zonder dat je ze elk jaar overtypt. Onder elk tekstvak staat precies welke woorden je in díe mail mag gebruiken.', 'cjw'); ?>
+        </p>
+
+        <h3><?php esc_html_e('Voordat je iets verstuurt', 'cjw'); ?></h3>
+        <ul class="cjw-manual__list">
+            <li><?php esc_html_e('Klap “Bekijk een voorbeeld” open. Je ziet de mail met verzonnen gegevens, dus zonder echte kindgegevens op je scherm.', 'cjw'); ?></li>
+            <li><?php esc_html_e('Klik op “Opslaan en naar mijzelf sturen”. Dan weet je zeker hoe hij eruitziet in een echte mailbox.', 'cjw'); ?></li>
+            <li><?php esc_html_e('Maak je een tekstvak leeg, dan komt de standaardtekst terug. Je kunt dus niets onherstelbaar wissen.', 'cjw'); ?></li>
+        </ul>
+
+        <p><?php esc_html_e('De kleuren en de opmaak van de mails komen automatisch van de website. Je hoeft daar niets voor te doen — pas je op het tabblad Thema de kleuren aan, dan veranderen de mails mee.', 'cjw'); ?></p>
         <?php
 
         echo '</section>';

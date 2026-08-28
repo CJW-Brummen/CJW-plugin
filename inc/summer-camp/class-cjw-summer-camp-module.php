@@ -63,6 +63,7 @@ final class CJW_Summer_Camp_Module
         CJW_Summer_Camp_Year::init();
         CJW_Summer_Camp_Digest::init();
         CJW_Summer_Camp_Manual::init();
+        CJW_Summer_Camp_Mails_Page::init();
         CJW_Summer_Camp_Site_Health::init();
         CJW_Summer_Camp_Help_Tabs::init();
     }
@@ -97,6 +98,7 @@ final class CJW_Summer_Camp_Module
         require_once CJW_DIR . 'inc/summer-camp/admin/class-cjw-summer-camp-year.php';
         require_once CJW_DIR . 'inc/summer-camp/admin/class-cjw-summer-camp-digest.php';
         require_once CJW_DIR . 'inc/summer-camp/admin/class-cjw-summer-camp-manual.php';
+        require_once CJW_DIR . 'inc/summer-camp/admin/class-cjw-summer-camp-mails-page.php';
         require_once CJW_DIR . 'inc/summer-camp/admin/class-cjw-summer-camp-site-health.php';
         require_once CJW_DIR . 'inc/summer-camp/admin/class-cjw-summer-camp-help-tabs.php';
         require_once CJW_DIR . 'inc/summer-camp/class-cjw-summer-camp-sponsor-post-type.php';

@@ -28,8 +28,6 @@ final class CJW_Wizard_Defaults
             'enable_csv_export' => false,
             // Off by default on purpose: see CJW_Wizard_Submission_Confirmation.
             'send_parent_confirmation' => false,
-            'parent_confirmation_subject' => '',
-            'parent_confirmation_body' => '',
         ];
     }
 }

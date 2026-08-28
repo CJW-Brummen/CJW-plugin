@@ -48,12 +48,6 @@ final class CJW_Wizard_Settings
             'notification_email' => $this->sanitize_notification_email($settings['notification_email'] ?? null),
             'enable_csv_export' => ! empty($settings['enable_csv_export']),
             'send_parent_confirmation' => ! empty($settings['send_parent_confirmation']),
-            'parent_confirmation_subject' => sanitize_text_field(
-                is_scalar($settings['parent_confirmation_subject'] ?? null) ? (string) $settings['parent_confirmation_subject'] : ''
-            ),
-            'parent_confirmation_body' => sanitize_textarea_field(
-                is_scalar($settings['parent_confirmation_body'] ?? null) ? (string) $settings['parent_confirmation_body'] : ''
-            ),
         ];
     }
 

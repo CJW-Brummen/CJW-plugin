@@ -43,7 +43,11 @@ class CJW_Summer_Camp_Service
         'intro_text' => '',
         'drive_dates' => [],
         'birthday_mail_enabled' => false,
+        // No longer edited on the settings screen: the copy moved to the Mails
+        // screen. The key stays so the value survives until the migration has
+        // read it, and so an older export can still be imported.
         'birthday_mail_text' => '',
+        'mail_templates' => [],
         'theme_year' => '',
         'theme_name' => '',
         'hero_title' => '',
@@ -1007,6 +1011,7 @@ class CJW_Summer_Camp_Service
             'drive_dates' => self::sanitizeDriveDates($input['drive_dates'] ?? []),
             'birthday_mail_enabled' => !empty($input['birthday_mail_enabled']),
             'birthday_mail_text' => wp_kses_post($input['birthday_mail_text'] ?? ''),
+            'mail_templates' => CJW_Mail_Templates::sanitize($input['mail_templates'] ?? []),
             'theme_year' => self::sanitizeYear($input['theme_year'] ?? ''),
             'theme_name' => sanitize_text_field($input['theme_name'] ?? ''),
             'hero_title' => sanitize_text_field($input['hero_title'] ?? ''),

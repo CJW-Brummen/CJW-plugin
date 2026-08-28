@@ -126,7 +126,7 @@ final class RegistrationFlowTest extends CJW_IntegrationTestCase
         $toParent = array_values(array_filter($sent, static fn(array $m): bool => in_array(self::PARENT_EMAIL, (array) $m['to'], true)));
 
         $this->assertCount(1, $toParent);
-        $this->assertSame('Bevestiging inschrijving CJW', $toParent[0]['subject']);
+        $this->assertSame('Bevestiging van je inschrijving', $toParent[0]['subject']);
         $this->assertStringContainsString('Bedankt voor je inschrijving.', $toParent[0]['message']);
     }
 

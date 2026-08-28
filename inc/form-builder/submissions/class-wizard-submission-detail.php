@@ -152,11 +152,10 @@ final class CJW_Wizard_Submission_Detail
     }
 
     /**
-     * The total the parent owes, and where the figure came from.
+     * The total the parent owes, rendered for this screen.
      *
-     * The camp label the parent chose usually carries its own price -- that is
-     * the number they actually saw and agreed to, so it wins over the Tarieven
-     * setting, which can drift out of step with the form.
+     * The arithmetic lives in CJW_Wizard_Amount, because the confirmation mail
+     * quotes the same figure and two implementations would drift.
      *
      * @param array $children Child records.
      * @param array $payload  Submitted answers.
@@ -165,36 +164,22 @@ final class CJW_Wizard_Submission_Detail
      */
     private function amount(array $children, array $payload): string
     {
-        $total = 0;
-        $unpriced = 0;
-
-        foreach ($children as $child) {
-            $price = $this->priceFromLabel((string) $child['camp']);
-
-            if ($price === null) {
-                ++$unpriced;
-                continue;
-            }
-
-            $total += $price;
-        }
-
-        $donation = (int) preg_replace('/[^0-9]/', '', (string) ($payload['donatie'] ?? ''));
+        $amount = CJW_Wizard_Amount::of($children, $payload);
         $parts = [];
 
-        if ($total > 0) {
+        if ($amount['camp'] > 0) {
             $parts[] = sprintf(
                 /* translators: %s: camp fee in euros. */
                 esc_html__('€%s kampgeld', 'cjw'),
-                esc_html(number_format_i18n($total))
+                esc_html(number_format_i18n($amount['camp']))
             );
         }
 
-        if ($donation > 0) {
+        if ($amount['donation'] > 0) {
             $parts[] = sprintf(
                 /* translators: %s: donation in euros. */
                 esc_html__('€%s donatie', 'cjw'),
-                esc_html(number_format_i18n($donation))
+                esc_html(number_format_i18n($amount['donation']))
             );
         }
 
@@ -202,33 +187,21 @@ final class CJW_Wizard_Submission_Detail
             return '—';
         }
 
-        $sum = '<strong>€' . esc_html(number_format_i18n($total + $donation)) . '</strong>';
+        $sum = '<strong>€' . esc_html(number_format_i18n($amount['total'])) . '</strong>';
 
         if (count($parts) > 1) {
             $sum .= '<br><span class="cjw-muted">' . implode(' + ', $parts) . '</span>';
         }
 
-        if ($unpriced > 0) {
+        if ($amount['unpriced'] > 0) {
             $sum .= '<br><span class="cjw-muted">' . esc_html(sprintf(
                 /* translators: %d: number of children whose camp carries no price. */
-                _n('%d kamp zonder prijs in de naam', '%d kampen zonder prijs in de naam', $unpriced, 'cjw'),
-                $unpriced
+                _n('%d kamp zonder prijs in de naam', '%d kampen zonder prijs in de naam', $amount['unpriced'], 'cjw'),
+                $amount['unpriced']
             )) . '</span>';
         }
 
         return $sum;
-    }
-
-    /**
-     * Reads a price out of a camp label such as "Weekkamp (10 t/m 17 jaar) - €101".
-     */
-    private function priceFromLabel(string $label): ?int
-    {
-        if (preg_match('/€\s*([0-9]+(?:[.,][0-9]{2})?)/u', $label, $match) !== 1) {
-            return null;
-        }
-
-        return (int) round((float) str_replace(',', '.', $match[1]));
     }
 
     /**
@@ -534,9 +507,6 @@ final class CJW_Wizard_Submission_Detail
      */
     private function config(int $submissionId): array
     {
-        $snapshot = get_post_meta($submissionId, CJW_Wizard_Submission_Repository::META_SNAPSHOT, true);
-        $config = is_string($snapshot) ? json_decode($snapshot, true) : null;
-
-        return is_array($config) ? $config : [];
+        return $this->repository->get_config($submissionId);
     }
 }

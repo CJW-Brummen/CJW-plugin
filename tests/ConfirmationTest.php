@@ -27,6 +27,10 @@ final class ConfirmationTest extends CJW_TestCase
         $GLOBALS['cjw_test_mail'] = [];
         $GLOBALS['cjw_test_post_meta'] = [];
 
+        // Templates live in the camp settings option, so a test that writes one
+        // would otherwise hand it to every test that runs after it.
+        unset($GLOBALS['cjw_test_options']);
+
         parent::tearDown();
     }
 
@@ -141,21 +145,55 @@ final class ConfirmationTest extends CJW_TestCase
         );
     }
 
-    public function testTheCampsOwnCopyIsUsedWhenSet(): void
+    /**
+     * The copy used to live in each form's own settings, which meant the one
+     * mail a parent reads could only be changed by whoever was editing the
+     * form. It now comes from the Mails screen, for every form.
+     */
+    public function testTheCopyComesFromTheCentralTemplate(): void
     {
-        (new CJW_Wizard_Submission_Confirmation())->maybe_send(
+        CJW_Mail_Templates::save([
+            CJW_Mail_Templates::CONFIRMATION => [
+                'subject' => 'Tot ziens op kamp!',
+                'body' => '<p>We zien {child_names} graag in juli.</p>',
+            ],
+        ]);
+
+        new CJW_Wizard_Submission_Confirmation()->maybe_send(
             1,
             2,
-            $this->config([
-                'send_parent_confirmation' => true,
-                'parent_confirmation_subject' => 'Tot ziens op kamp!',
-                'parent_confirmation_body' => 'We zien Anna graag in juli.',
-            ]),
+            $this->config([ 'send_parent_confirmation' => true ]),
             $this->payload()
         );
 
         $this->assertSame('Tot ziens op kamp!', $GLOBALS['cjw_test_mail'][0]['subject']);
-        $this->assertStringContainsString('We zien Anna graag in juli.', $GLOBALS['cjw_test_mail'][0]['body']);
+        $this->assertStringContainsString('graag in juli', $GLOBALS['cjw_test_mail'][0]['body']);
+
+        // And the token resolved from the registration rather than travelling
+        // as literal braces.
+        $this->assertStringContainsString('Anna de Vries', $GLOBALS['cjw_test_mail'][0]['body']);
+        $this->assertStringNotContainsString('{child_names}', $GLOBALS['cjw_test_mail'][0]['body']);
+    }
+
+    /**
+     * Clearing a field restores the shipped copy rather than sending an empty
+     * message — a blank mail is the one outcome nobody intends.
+     */
+    public function testAnEmptyTemplateFallsBackToTheDefault(): void
+    {
+        CJW_Mail_Templates::save([
+            CJW_Mail_Templates::CONFIRMATION => [ 'subject' => '', 'body' => '' ],
+        ]);
+
+        new CJW_Wizard_Submission_Confirmation()->maybe_send(
+            1,
+            2,
+            $this->config([ 'send_parent_confirmation' => true ]),
+            $this->payload()
+        );
+
+        $this->assertNotSame('', $GLOBALS['cjw_test_mail'][0]['subject']);
+        $this->assertStringContainsString('inschrijving', strtolower($GLOBALS['cjw_test_mail'][0]['body']));
     }
 
     public function testThereIsAlwaysASubjectAndABodyEvenWithNoCopyWritten(): void

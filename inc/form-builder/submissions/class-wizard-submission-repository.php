@@ -261,15 +261,7 @@ final class CJW_Wizard_Submission_Repository implements CJW_Wizard_Submission_St
      */
     private function campYear(): string
     {
-        if (function_exists('cjw_summer_camp')) {
-            $start = cjw_summer_camp()->getStartDate();
-
-            if ($start instanceof DateTimeImmutable) {
-                return $start->format('Y');
-            }
-        }
-
-        return wp_date('Y');
+        return self::currentCampYear();
     }
 
     /**
@@ -289,6 +281,71 @@ final class CJW_Wizard_Submission_Repository implements CJW_Wizard_Submission_St
         }
 
         return [];
+    }
+
+    /**
+     * The form configuration as it was when this registration was made.
+     *
+     * A form edited afterwards must not change what an old submission means, so
+     * every screen and every mail reads the snapshot rather than the live form.
+     *
+     * @return array<string, mixed>
+     */
+    public function get_config(int $submission_id): array
+    {
+        $snapshot = get_post_meta($submission_id, self::META_SNAPSHOT, true);
+        $config = is_string($snapshot) ? json_decode($snapshot, true) : null;
+
+        return is_array($config) ? $config : [];
+    }
+
+    /**
+     * Registrations filed under one camp year that still hold personal data.
+     *
+     * Exactly that year, unlike get_for_camp_year_upto(): the birthday mail is
+     * about the children coming to this camp, not everyone who ever came.
+     *
+     * @return WP_Post[]
+     */
+    public function get_for_camp_year(string $year, int $limit = 500): array
+    {
+        if (!preg_match('/^\d{4}$/', $year)) {
+            return [];
+        }
+
+        return get_posts([
+            'post_type' => self::POST_TYPE,
+            'post_status' => self::ALL_STATUSES,
+            'numberposts' => $limit,
+            // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Runs once a day on cron, over one camp year.
+            'meta_query' => [
+                'relation' => 'AND',
+                [
+                    'key' => self::META_CAMP_YEAR,
+                    'value' => $year,
+                ],
+                [
+                    'key' => self::META_ANONYMISED,
+                    'compare' => 'NOT EXISTS',
+                ],
+            ],
+        ]);
+    }
+
+    /**
+     * The camp year now running, for callers that file or read by it.
+     */
+    public static function currentCampYear(): string
+    {
+        if (function_exists('cjw_summer_camp')) {
+            $start = cjw_summer_camp()->getStartDate();
+
+            if ($start instanceof DateTimeImmutable) {
+                return $start->format('Y');
+            }
+        }
+
+        return wp_date('Y');
     }
 
     public function get_wizard_id(int $submission_id): int
