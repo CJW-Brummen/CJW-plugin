@@ -29,6 +29,17 @@ final class CJW_Wizard_Submission_Confirmation
      */
     public const string META_RESULT = '_cjw_wizard_confirmation';
 
+    /**
+     * When that happened, as a Unix timestamp.
+     *
+     * Separate from the result rather than folded into it: "verstuurd" answers
+     * a different question from "verstuurd op 14 juli om 14:03", and only the
+     * second one settles an argument with a parent who says they never got it.
+     * Rows written before this constant existed carry no time, and the screens
+     * fall back to the arrival date rather than inventing one.
+     */
+    public const string META_RESULT_TIME = '_cjw_wizard_confirmation_time';
+
     public const string SENT = 'sent';
     public const string NO_ADDRESS = 'no_address';
     public const string FAILED = 'failed';
@@ -59,7 +70,7 @@ final class CJW_Wizard_Submission_Confirmation
         if ($to === '' || ! is_email($to)) {
             // A form that confirms but never asks for an address is a
             // misconfiguration worth being able to see.
-            update_post_meta($submission_id, self::META_RESULT, self::NO_ADDRESS);
+            $this->record($submission_id, self::NO_ADDRESS);
 
             return self::NO_ADDRESS;
         }
@@ -77,9 +88,76 @@ final class CJW_Wizard_Submission_Confirmation
         $sent = wp_mail($to, $subject, $this->body($settings, $wizard_id));
         $result = $sent ? self::SENT : self::FAILED;
 
-        update_post_meta($submission_id, self::META_RESULT, $result);
+        $this->record($submission_id, $result);
 
         return $result;
+    }
+
+    /**
+     * What was recorded for a submission, or an empty string when this form
+     * does not send confirmations.
+     */
+    public static function result(int $submission_id): string
+    {
+        return (string) get_post_meta($submission_id, self::META_RESULT, true);
+    }
+
+    /**
+     * One sentence an organiser can act on, already escaped, or an empty string
+     * when there is nothing to say.
+     *
+     * Deliberately never renders "niets verstuurd" for a form that does not
+     * confirm: absence of a confirmation is only news when one was promised.
+     */
+    public static function summary(int $submission_id): string
+    {
+        $result = self::result($submission_id);
+
+        if ($result === '') {
+            return '';
+        }
+
+        $stamp = (int) get_post_meta($submission_id, self::META_RESULT_TIME, true);
+
+        // Rows predating META_RESULT_TIME: the mail went out during the same
+        // request that created the submission, so its arrival time is accurate
+        // to the second for every purpose this line serves.
+        if ($stamp < 1) {
+            $post = get_post($submission_id);
+            $stamp = $post instanceof WP_Post ? (int) get_post_timestamp($post) : 0;
+        }
+
+        $when = $stamp > 0 ? wp_date(__('j F Y \o\m H:i', 'cjw'), $stamp) : '';
+
+        return match ($result) {
+            self::SENT => $when !== ''
+                ? esc_html(sprintf(
+                    /* translators: %s: date and time the confirmation was sent. */
+                    __('Verstuurd op %s', 'cjw'),
+                    $when
+                ))
+                : esc_html__('Verstuurd', 'cjw'),
+            self::NO_ADDRESS => esc_html__('Niet verstuurd: dit formulier vroeg geen e-mailadres', 'cjw'),
+            self::FAILED => esc_html__('Versturen mislukt', 'cjw'),
+            default => '',
+        };
+    }
+
+    /**
+     * Whether the parent was promised a confirmation and did not get one.
+     */
+    public static function failed(int $submission_id): bool
+    {
+        return self::result($submission_id) === self::FAILED;
+    }
+
+    /**
+     * Stores the outcome and the moment it happened.
+     */
+    private function record(int $submission_id, string $result): void
+    {
+        update_post_meta($submission_id, self::META_RESULT, $result);
+        update_post_meta($submission_id, self::META_RESULT_TIME, time());
     }
 
     /**

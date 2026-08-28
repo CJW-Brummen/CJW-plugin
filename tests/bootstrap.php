@@ -335,6 +335,14 @@ if (! function_exists('wp_nonce_url')) {
     }
 }
 
+if (! defined('MINUTE_IN_SECONDS')) {
+    define('MINUTE_IN_SECONDS', 60);
+}
+
+if (! defined('MB_IN_BYTES')) {
+    define('MB_IN_BYTES', 1048576);
+}
+
 if (! defined('HOUR_IN_SECONDS')) {
     define('HOUR_IN_SECONDS', 3600);
 }
@@ -463,11 +471,60 @@ if (! function_exists('get_option')) {
 }
 
 if (! function_exists('update_option')) {
-    function update_option(string $option, mixed $value): bool
+    /*
+     * The third argument is WordPress's own: callers that store something the
+     * front end never reads pass autoload false. A two-argument shim would make
+     * those callers fatal here while working perfectly in production.
+     */
+    function update_option(string $option, mixed $value, ?bool $autoload = null): bool
     {
+        unset($autoload);
+
         $GLOBALS['cjw_test_options'][ $option ] = $value;
 
         return true;
+    }
+}
+
+if (! class_exists('WP_User')) {
+    /*
+     * Only the two properties this plugin reads off a user.
+     */
+    class WP_User
+    {
+        public int $ID = 0;
+        public string $display_name = '';
+        public string $user_email = '';
+
+        public function __construct(int $id = 0, string $display_name = '', string $user_email = '')
+        {
+            $this->ID = $id;
+            $this->display_name = $display_name;
+            $this->user_email = $user_email;
+        }
+    }
+}
+
+if (! function_exists('wp_get_current_user')) {
+    function wp_get_current_user(): WP_User
+    {
+        return $GLOBALS['cjw_test_current_user'] ?? new WP_User();
+    }
+}
+
+if (! function_exists('do_action')) {
+    /*
+     * Records rather than dispatches. Whether a listener actually runs is a
+     * question about WordPress, and it is answered in the integration suite
+     * against a real one; what a unit test can honestly check is that the
+     * announcement was made, with the right arguments.
+     */
+    function do_action(string $hook, mixed ...$args): void
+    {
+        $GLOBALS['cjw_test_actions'][] = [
+            'hook' => $hook,
+            'args' => $args,
+        ];
     }
 }
 
@@ -640,6 +697,48 @@ if (! function_exists('get_edit_post_link')) {
             : 'https://example.test/wp-admin/post.php?post=' . $post_id . '&action=edit';
     }
 }
+
+if (! function_exists('wp_schedule_single_event')) {
+    /*
+     * Records rather than schedules. Whether WP-Cron then runs it is a question
+     * about WordPress; what a unit test can check is that the work left over
+     * from a batch was handed on rather than dropped.
+     */
+    function wp_schedule_single_event(int $timestamp, string $hook, array $args = []): bool
+    {
+        $GLOBALS['cjw_test_scheduled'][] = [
+            'timestamp' => $timestamp,
+            'hook' => $hook,
+            'args' => $args,
+        ];
+
+        return true;
+    }
+}
+
+if (! function_exists('sanitize_hex_color')) {
+    function sanitize_hex_color(string $color): ?string
+    {
+        return preg_match('/^#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})$/', $color) === 1 ? $color : null;
+    }
+}
+
+if (! function_exists('is_admin')) {
+    function is_admin(): bool
+    {
+        return $GLOBALS['cjw_test_is_admin'] ?? false;
+    }
+}
+
+if (! function_exists('get_post')) {
+    function get_post(mixed $post = null): ?WP_Post
+    {
+        return is_int($post) ? new WP_Post($post) : null;
+    }
+}
+
+require_once __DIR__ . '/../inc/summer-camp/admin/class-cjw-summer-camp-mail.php';
+require_once __DIR__ . '/../inc/summer-camp/admin/class-cjw-summer-camp-settings-history.php';
 
 require_once __DIR__ . '/support/TestCase.php';
 require_once __DIR__ . '/support/FakeSubmissionRepository.php';

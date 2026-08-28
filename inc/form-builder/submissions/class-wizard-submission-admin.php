@@ -407,6 +407,17 @@ JS;
             case 'cjw_status':
                 // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- badge() escapes the colour and the label it builds.
                 echo CJW_Wizard_Submission_Status::badge((string) get_post_status($post_id));
+
+                // Only failures are shown here. A confirmation that went out is
+                // the expected case and belongs on the submission itself; a
+                // parent who was promised one and never got it is the row an
+                // organiser has to find without opening two hundred others.
+                if (CJW_Wizard_Submission_Confirmation::failed($post_id)) {
+                    printf(
+                        '<br><span style="color:#b32d2e;white-space:nowrap;">%s</span>',
+                        esc_html__('bevestiging mislukt', 'cjw')
+                    );
+                }
                 break;
 
             case 'cjw_camp':
