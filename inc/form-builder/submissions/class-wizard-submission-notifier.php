@@ -9,9 +9,18 @@ if (! defined('ABSPATH')) {
 /**
  * Tells an organiser that a registration arrived.
  *
- * Takes no repository. It used to, back when the mail listed every submitted
- * field; phase 3 reduced the body to "one arrived, here is where to read it",
- * which left the dependency injected and never read.
+ * Carries no submitted data, and the template it uses is not offered any. This
+ * mail used to list every answered field as plaintext -- names, birth dates,
+ * addresses and any medical or allergy note a camp form asks for -- to whatever
+ * inbox was configured. That copies children's personal data out of the one
+ * place it is governed and into mailboxes, phone notifications, forwarded
+ * threads and mail backups, none of which the retention sweep or an erasure
+ * request can reach.
+ *
+ * The rule is now enforced rather than remembered: the template's token list has
+ * no entry for a name or an address, and CJW_Mailer strips any token a template
+ * was not given. Somebody pasting {child_names} into this mail gets an empty
+ * space, not a child's name.
  */
 final class CJW_Wizard_Submission_Notifier
 {
@@ -21,9 +30,9 @@ final class CJW_Wizard_Submission_Notifier
      * @param array<string, mixed> $config
      * @param array<string, mixed> $data
      */
-    public function maybe_notify_admin(int $wizard_id, array $config, array $data): void
+    public function maybe_notify_admin(int $wizard_id, array $config, array $data, int $submission_id = 0): void
     {
-        // $data is intentionally not used: see build_email_body().
+        // $data is intentionally not used: this mail carries no answers.
         unset($data);
 
         $settings = $config['settings'] ?? [];
@@ -33,6 +42,7 @@ final class CJW_Wizard_Submission_Notifier
         }
 
         $to = sanitize_email((string) ($settings['notification_email'] ?? ''));
+
         if ($to === '') {
             $to = (string) get_option('admin_email');
         }
@@ -41,48 +51,11 @@ final class CJW_Wizard_Submission_Notifier
             return;
         }
 
-        $subject = sprintf(
-            /* translators: %s: form title. */
-            __('Nieuwe inzending voor %s', 'cjw'),
-            get_the_title($wizard_id)
-        );
-
-        wp_mail($to, $subject, $this->build_email_body($wizard_id));
-    }
-
-    /**
-     * Builds the notification body.
-     *
-     * Deliberately carries no submitted data. This mail used to list every
-     * answered field as plaintext -- names, birth dates, addresses and any
-     * medical or allergy note a camp form asks for -- to whatever inbox was
-     * configured. That copies children's personal data out of the one place it
-     * is governed and into mailboxes, phone notifications, forwarded threads and
-     * mail backups, none of which the retention sweep or an erasure request can
-     * reach. It also travelled over whatever unauthenticated mail the host
-     * happens to use.
-     *
-     * The notification now says only that a registration arrived, and where to
-     * read it.
-     *
-     * @param int $wizard_id Form post id.
-     */
-    private function build_email_body(int $wizard_id): string
-    {
-        return implode(PHP_EOL, [
-            sprintf(
-                /* translators: %s: form title. */
-                __('Er is een nieuwe inschrijving binnengekomen voor: %s', 'cjw'),
-                get_the_title($wizard_id)
-            ),
-            '',
-            __('De gegevens staan in de beveiligde omgeving en worden bewust niet meegestuurd in deze e-mail.', 'cjw'),
-            '',
-            sprintf(
-                /* translators: %s: admin submissions list URL. */
-                __('Bekijk de inschrijving: %s', 'cjw'),
-                admin_url('edit.php?post_type=' . CJW_Wizard_Submission_Repository::POST_TYPE)
-            ),
+        CJW_Mailer::send(CJW_Mail_Templates::NOTIFICATION, $to, [
+            '{form_title}' => (string) get_the_title($wizard_id),
+            '{registration_number}' => $submission_id > 0 ? (string) $submission_id : '',
+            '{submissions_url}' => admin_url('edit.php?post_type=' . CJW_Wizard_Submission_Repository::POST_TYPE),
+            ...CJW_Mail_Tokens::camp(),
         ]);
     }
 }

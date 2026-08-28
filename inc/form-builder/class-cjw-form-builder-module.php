@@ -141,6 +141,7 @@ final class CJW_Form_Builder_Module
         require_once CJW_DIR . 'inc/form-builder/admin/class-wizard-cpt.php';
         require_once CJW_DIR . 'inc/form-builder/domain/class-wizard-field-roles.php';
         require_once CJW_DIR . 'inc/form-builder/domain/class-wizard-defaults.php';
+        require_once CJW_DIR . 'inc/form-builder/domain/class-wizard-amount.php';
         require_once CJW_DIR . 'inc/form-builder/domain/class-wizard-config-normalizer.php';
         require_once CJW_DIR . 'inc/form-builder/domain/class-wizard-config.php';
         require_once CJW_DIR . 'inc/form-builder/integrations/class-summer-camp-context.php';
@@ -163,6 +164,7 @@ final class CJW_Form_Builder_Module
         require_once CJW_DIR . 'inc/form-builder/submissions/class-wizard-submission-retention.php';
         require_once CJW_DIR . 'inc/form-builder/submissions/class-wizard-year-rollover.php';
         require_once CJW_DIR . 'inc/form-builder/submissions/class-wizard-submission-digest.php';
+        require_once CJW_DIR . 'inc/form-builder/submissions/class-wizard-birthday-mailer.php';
         require_once CJW_DIR . 'inc/form-builder/submissions/class-wizard-submission-confirmation.php';
         require_once CJW_DIR . 'inc/form-builder/submissions/class-wizard-children-table.php';
         require_once CJW_DIR . 'inc/form-builder/submissions/class-wizard-children-page.php';
@@ -261,7 +263,7 @@ final class CJW_Form_Builder_Module
                 }
 
                 $submission_id = $this->submissions->save_submission($wizard_id, $config_data, $state['data'] ?? []);
-                $this->submissions->maybe_notify_admin($wizard_id, $config_data, $state['data'] ?? []);
+                $this->submissions->maybe_notify_admin($wizard_id, $config_data, $state['data'] ?? [], $submission_id);
                 $this->submissions->maybe_confirm_to_parent($submission_id, $wizard_id, $config_data, $state['data'] ?? []);
             }
         }

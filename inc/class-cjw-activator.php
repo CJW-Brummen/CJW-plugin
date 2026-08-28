@@ -30,6 +30,8 @@ final class CJW_Activator
     {
         CJW_Roles::install();
         CJW_Wizard_Submission_Retention::schedule();
+        CJW_Wizard_Birthday_Mailer::schedule();
+        CJW_Mail_Migration::run();
 
         // Only when somebody switched it on: activation is not consent to
         // start mailing people.

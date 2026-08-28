@@ -85,7 +85,6 @@ class CJW_Summer_Camp_Settings_Page
         'content' => [
             'intro_text',
             'birthday_mail_enabled',
-            'birthday_mail_text',
         ],
         'website' => [
             'theme_description',
@@ -491,13 +490,7 @@ class CJW_Summer_Camp_Settings_Page
         $this->add(
             'birthday_mail_enabled',
             __('Verjaardagsmail actief', 'cjw'),
-            new CJW_Checkbox_Field('birthday_mail_enabled', '', self::OPTION_KEY, __('Nog niet actief — deze instelling wordt gebruikt zodra de verjaardagsmail-functie beschikbaar is.', 'cjw')),
-            'content'
-        );
-        $this->add(
-            'birthday_mail_text',
-            __('Tekst verjaardagsmail', 'cjw'),
-            new CJW_Wysiwyg_Field('birthday_mail_text', '', self::OPTION_KEY, __('Nog niet actief — deze tekst wordt gebruikt zodra de verjaardagsmail-functie beschikbaar is.', 'cjw')),
+            new CJW_Checkbox_Field('birthday_mail_enabled', '', self::OPTION_KEY, __('Stuurt op de verjaardag van een ingeschreven kind een felicitatie naar het e-mailadres waarmee is ingeschreven. Alleen voor kinderen die dit kampjaar meegaan, en alleen zolang de inschrijving nog bewaard wordt. De tekst schrijf je bij Zomerkamp → Mails.', 'cjw')),
             'content'
         );
 

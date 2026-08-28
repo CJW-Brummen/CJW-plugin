@@ -83,6 +83,10 @@ final class CJW_Plugin
         require_once CJW_DIR . 'inc/shared/localization.php';
         require_once CJW_DIR . 'inc/shared/class-summer-camp-service.php';
         require_once CJW_DIR . 'inc/shared/functions.php';
+        require_once CJW_DIR . 'inc/shared/class-cjw-mail-templates.php';
+        require_once CJW_DIR . 'inc/shared/class-cjw-mail-tokens.php';
+        require_once CJW_DIR . 'inc/shared/class-cjw-mailer.php';
+        require_once CJW_DIR . 'inc/shared/class-cjw-mail-migration.php';
 
         require_once CJW_DIR . 'inc/summer-camp/class-cjw-summer-camp-module.php';
         require_once CJW_DIR . 'inc/form-builder/class-cjw-form-builder-module.php';

@@ -10,22 +10,34 @@ declare(strict_types=1);
  * That copies children's data out of the one place it is governed and into
  * mailboxes, phone notifications, forwarded threads and mail backups — none of
  * which the retention sweep or an erasure request can reach.
+ *
+ * The rule used to be kept by the notifier simply not reading the payload. Now
+ * that the copy is editable, that is no longer enough: somebody can type
+ * anything into the Mails screen. So the rule moved into the renderer, which
+ * only substitutes the tokens a template was given, and these tests assert the
+ * guarantee rather than the mechanism — they render the real template with
+ * personal values offered, and check none of them come out.
  */
 final class NotifierTest extends CJW_TestCase
 {
-    private function body(array $data): string
+    /**
+     * The notification as it would be sent, with personal tokens offered.
+     */
+    private function body(string $value = ''): string
     {
-        // setAccessible() is a no-op since PHP 8.1 and deprecated in 8.5.
-        $method = new ReflectionMethod(CJW_Wizard_Submission_Notifier::class, 'build_email_body');
+        $rendered = CJW_Mailer::render(CJW_Mail_Templates::NOTIFICATION, [
+            '{form_title}' => 'Inschrijfformulier',
+            '{registration_number}' => '226',
+            '{submissions_url}' => 'https://example.test/wp-admin/edit.php?post_type='
+                . CJW_Wizard_Submission_Repository::POST_TYPE,
+            // Offered deliberately. The notification's token list does not
+            // include these, so the renderer must drop them.
+            '{child_names}' => $value,
+            '{child_name}' => $value,
+            '{amount_due}' => $value,
+        ]);
 
-        $notifier = new CJW_Wizard_Submission_Notifier(new CJW_Wizard_Submission_Repository());
-
-        // The payload is deliberately not a parameter any more; passing it here
-        // would only prove the signature, so the guard is that these values
-        // cannot appear whatever was submitted.
-        unset($data);
-
-        return (string) $method->invoke($notifier, 1);
+        return $rendered['html'] . ' ' . $rendered['text'] . ' ' . $rendered['subject'];
     }
 
     /**
@@ -45,18 +57,39 @@ final class NotifierTest extends CJW_TestCase
     #[PHPUnit\Framework\Attributes\DataProvider('personalDataProvider')]
     public function testNoSubmittedValueEverReachesTheNotification(string $value): void
     {
-        $body = $this->body([ 'veld' => $value ]);
-
         $this->assertStringNotContainsString(
             $value,
-            $body,
+            $this->body($value),
             'Personal data must stay in the database, not travel by mail.'
         );
     }
 
+    /**
+     * The tokens are not merely unused — they are not on offer. A template that
+     * listed them would be one edit away from sending them.
+     */
+    public function testTheNotificationIsNotEvenOfferedPersonalTokens(): void
+    {
+        $tokens = array_keys(CJW_Mail_Templates::tokensFor(CJW_Mail_Templates::NOTIFICATION));
+
+        foreach ([ '{child_names}', '{child_name}', '{child_age}', '{amount_due}' ] as $forbidden) {
+            $this->assertNotContains($forbidden, $tokens, $forbidden . ' must not be available here.');
+        }
+    }
+
+    /**
+     * A token the template may not use has to disappear rather than travel as
+     * literal text: left in place, a later change to the allow-list would
+     * quietly start resolving it.
+     */
+    public function testAnUnavailableTokenIsRemovedRatherThanPrinted(): void
+    {
+        $this->assertStringNotContainsString('{child_names}', $this->body('Anna de Vries'));
+    }
+
     public function testTheNotificationStillSaysWhatHappenedAndWhereToLook(): void
     {
-        $body = $this->body([]);
+        $body = $this->body();
 
         $this->assertStringContainsString('inschrijving', strtolower($body), 'The organiser must know what arrived.');
         $this->assertStringContainsString('edit.php?post_type=', $body, 'And where to read it.');

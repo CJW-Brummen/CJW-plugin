@@ -13,11 +13,13 @@ if (! defined('ABSPATH')) {
  * no confirmation, no summary, no reference. Silence after a form is how people
  * conclude it failed, so they register again or telephone.
  *
- * Off by default, per form. That is deliberate rather than cautious: mail
- * deliverability is not solved yet -- there is no authenticated SMTP and no way
- * to test sending from the admin -- and a confirmation that silently fails to
- * arrive is worse than none, because it replaces "I heard nothing, I'll check"
- * with "it said it would confirm, so it must have worked".
+ * Off by default, per form. That is deliberate rather than cautious: a
+ * confirmation that silently fails to arrive is worse than none, because it
+ * replaces "I heard nothing, I'll check" with "it said it would confirm, so it
+ * must have worked".
+ *
+ * The copy is no longer per form. It lives on the Mails screen with the rest,
+ * where somebody who is not a developer can edit it and see what it will say.
  *
  * The outcome is recorded on the submission either way, so an organiser can see
  * that a parent was written to rather than assume it.
@@ -59,6 +61,8 @@ final class CJW_Wizard_Submission_Confirmation
      */
     public function maybe_send(int $submission_id, int $wizard_id, array $config, array $data): string
     {
+        unset($wizard_id);
+
         $settings = $config['settings'] ?? [];
 
         if (empty($settings['send_parent_confirmation'])) {
@@ -75,17 +79,12 @@ final class CJW_Wizard_Submission_Confirmation
             return self::NO_ADDRESS;
         }
 
-        $subject = trim((string) ($settings['parent_confirmation_subject'] ?? ''));
+        $sent = CJW_Mailer::send(
+            CJW_Mail_Templates::CONFIRMATION,
+            $to,
+            CJW_Mail_Tokens::registration($submission_id, $config, $data)
+        );
 
-        if ($subject === '') {
-            $subject = sprintf(
-                /* translators: %s: form title. */
-                __('Bevestiging van je inschrijving voor %s', 'cjw'),
-                get_the_title($wizard_id)
-            );
-        }
-
-        $sent = wp_mail($to, $subject, $this->body($settings, $wizard_id));
         $result = $sent ? self::SENT : self::FAILED;
 
         $this->record($submission_id, $result);
@@ -158,54 +157,5 @@ final class CJW_Wizard_Submission_Confirmation
     {
         update_post_meta($submission_id, self::META_RESULT, $result);
         update_post_meta($submission_id, self::META_RESULT_TIME, time());
-    }
-
-    /**
-     * The message body.
-     *
-     * Camp-specific detail comes from the form's own copy, which the summer-camp
-     * integration has already had a pass at -- so `{camp_start_date}` and
-     * `{camp_price_week}` are real values by the time they reach here.
-     *
-     * Unlike the organiser's notification, this mail legitimately carries the
-     * reader's own registration: it goes to the address they gave, about the
-     * child they entered. What it must not do is quote answers back
-     * indiscriminately, so it carries the camp's copy and nothing lifted from
-     * the payload.
-     *
-     * @param array $settings  Form settings.
-     * @param int   $wizard_id Form post id.
-     * @param array<string, mixed> $settings
-     */
-    private function body(array $settings, int $wizard_id): string
-    {
-        $copy = trim((string) ($settings['parent_confirmation_body'] ?? ''));
-
-        if ($copy === '') {
-            $copy = __('Bedankt voor je inschrijving. We hebben hem goed ontvangen en nemen contact met je op als er iets nodig is.', 'cjw');
-        }
-
-        $lines = [
-            $copy,
-            '',
-            sprintf(
-                /* translators: %s: form title. */
-                __('Inschrijving: %s', 'cjw'),
-                get_the_title($wizard_id)
-            ),
-        ];
-
-        $contact = function_exists('cjw_summer_camp') ? (string) cjw_summer_camp()->getContactEmail() : '';
-
-        if (is_email($contact)) {
-            $lines[] = '';
-            $lines[] = sprintf(
-                /* translators: %s: contact e-mail address. */
-                __('Vragen? Mail ons op %s.', 'cjw'),
-                $contact
-            );
-        }
-
-        return implode(PHP_EOL, $lines);
     }
 }
