@@ -200,3 +200,15 @@
 .cjw-tool-form label {
     font-weight: 600;
 }
+
+.cjw-media-field__warning {
+    background: #fcf9e8;
+    border-left: 4px solid #dba617;
+    color: #1d2327;
+    margin: 0;
+    padding: 8px 12px;
+}
+
+.cjw-media-field__warning.is-hidden {
+    display: none;
+}

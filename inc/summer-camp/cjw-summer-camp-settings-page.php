@@ -370,7 +370,15 @@ class CJW_Summer_Camp_Settings_Page
         $this->add(
             'hero_image_id',
             __('Hero afbeelding', 'cjw'),
-            new CJW_Media_Field('hero_image_id', '', self::OPTION_KEY, __('Grote sfeerfoto achter de tekst bovenaan de homepage. Kies een liggende foto van goede kwaliteit (minimaal 1600 pixels breed werkt het best).', 'cjw')),
+            new CJW_Media_Field(
+                'hero_image_id',
+                '',
+                self::OPTION_KEY,
+                __('Grote sfeerfoto achter de tekst bovenaan de homepage. Kies een liggende foto van goede kwaliteit (minimaal 1600 pixels breed werkt het best).', 'cjw'),
+                recommendedWidth: 2000,
+                recommendedHeight: 1125,
+                maxBytes: 800 * KB_IN_BYTES
+            ),
             'theme'
         );
         $this->add(
@@ -520,7 +528,16 @@ class CJW_Summer_Camp_Settings_Page
         $this->add(
             'intro_image_id',
             __('Introductiefoto homepage', 'cjw'),
-            new CJW_Media_Field('intro_image_id', '', self::OPTION_KEY, __('Sfeerfoto naast de welkomsttekst op de homepage. Laat leeg om geen foto te tonen.', 'cjw')),
+            new CJW_Media_Field(
+                'intro_image_id',
+                '',
+                self::OPTION_KEY,
+                __('Sfeerfoto naast de welkomsttekst op de homepage. Laat leeg om geen foto te tonen.', 'cjw'),
+                // The theme serves this one at WordPress's "large" size.
+                recommendedWidth: 1200,
+                recommendedHeight: 900,
+                maxBytes: 400 * KB_IN_BYTES
+            ),
             'website',
             'website_intro'
         );
@@ -609,7 +626,12 @@ class CJW_Summer_Camp_Settings_Page
                     '',
                     self::OPTION_KEY,
                     /* translators: %d: polaroid slot number. */
-                    sprintf(__('Foto %d in het plakboek. Liggende foto’s werken het best; de foto wordt automatisch bijgesneden. Laat leeg om deze plek in het plakboek leeg te laten.', 'cjw'), $slot)
+                    sprintf(__('Foto %d in het plakboek. Liggende foto’s werken het best; de foto wordt automatisch bijgesneden. Laat leeg om deze plek in het plakboek leeg te laten.', 'cjw'), $slot),
+                    // Matches the theme's registered cjw-polaroid crop exactly,
+                    // which is the size actually served on the front page.
+                    recommendedWidth: 900,
+                    recommendedHeight: 675,
+                    maxBytes: 300 * KB_IN_BYTES
                 ),
                 'website',
                 'website_photos'
