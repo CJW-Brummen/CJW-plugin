@@ -875,6 +875,7 @@ class CJW_Summer_Camp_Settings_Page
 
         CJW_Summer_Camp_Mail::renderPanel();
         CJW_Summer_Camp_Settings_History::renderPanel();
+        CJW_Summer_Camp_Year::renderPanel();
     }
 
     /**
@@ -896,6 +897,8 @@ class CJW_Summer_Camp_Settings_Page
             'restore_failed' => ['error', __('Die versie kon niet worden teruggezet. Ververs de pagina en probeer het opnieuw.', 'cjw')],
             'imported' => ['success', __('De instellingen uit het bestand zijn ingelezen.', 'cjw')],
             'import_failed' => ['error', __('Dat bestand kon niet worden ingelezen. Kies een bestand dat eerder met “Download de instellingen” is gemaakt.', 'cjw')],
+            'year_started' => ['success', __('Het nieuwe kampjaar is gestart. Vul de nieuwe kampdata in en zet de inschrijvingen open zodra je zover bent.', 'cjw')],
+            'year_not_confirmed' => ['error', __('Er is niets veranderd: het ingetypte jaartal klopte niet.', 'cjw')],
         ];
 
         if (!array_key_exists($result, $notices)) {

@@ -515,6 +515,90 @@ final class CJW_Wizard_Submission_Repository implements CJW_Wizard_Submission_St
     }
 
     /**
+     * Registrations belonging to a camp year or any year before it, that still
+     * hold personal data.
+     *
+     * Used when a new camp year is started: last year's registrations have done
+     * their job by then, and keeping children's details on the chance that
+     * somebody might want them is exactly what the retention rules exist to
+     * stop. Retention still runs on its own schedule; this is the same rule
+     * applied at the moment an organiser says the season is over.
+     *
+     * @param string $year  Camp year, four digits.
+     * @param int    $limit Rows to return.
+     *
+     * @return WP_Post[]
+     */
+    public function get_for_camp_year_upto(string $year, int $limit = 100): array
+    {
+        if (!preg_match('/^\d{4}$/', $year)) {
+            return [];
+        }
+
+        return get_posts([
+            'post_type' => self::POST_TYPE,
+            'post_status' => self::ALL_STATUSES,
+            'numberposts' => $limit,
+            'orderby' => 'date',
+            'order' => 'ASC',
+            // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Runs when an organiser starts a new camp year, batched, at most a few times a year.
+            'meta_query' => $this->campYearUptoQuery($year),
+        ]);
+    }
+
+    /**
+     * How many registrations get_for_camp_year_upto() would eventually reach.
+     *
+     * Separate from the fetch because the number is wanted before anything is
+     * changed: a button that says "247 inschrijvingen worden geanonimiseerd" is
+     * one somebody can decide about, and "weet je het zeker?" is not.
+     */
+    public function count_for_camp_year_upto(string $year): int
+    {
+        if (!preg_match('/^\d{4}$/', $year)) {
+            return 0;
+        }
+
+        $query = new WP_Query([
+            'post_type' => self::POST_TYPE,
+            'post_status' => self::ALL_STATUSES,
+            'posts_per_page' => 1,
+            'fields' => 'ids',
+            'no_found_rows' => false,
+            'ignore_sticky_posts' => true,
+            // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Admin-only count, see above.
+            'meta_query' => $this->campYearUptoQuery($year),
+        ]);
+
+        return (int) $query->found_posts;
+    }
+
+    /**
+     * The meta conditions shared by the two calls above.
+     *
+     * NUMERIC rather than string comparison: as text, '2026' sorts after
+     * '10000' and before '999', which is only ever wrong.
+     *
+     * @return array<int|string, mixed>
+     */
+    private function campYearUptoQuery(string $year): array
+    {
+        return [
+            'relation' => 'AND',
+            [
+                'key' => self::META_CAMP_YEAR,
+                'value' => $year,
+                'compare' => '<=',
+                'type' => 'NUMERIC',
+            ],
+            [
+                'key' => self::META_ANONYMISED,
+                'compare' => 'NOT EXISTS',
+            ],
+        ];
+    }
+
+    /**
      * Flattens a nested payload to dot-notation keys, for the CSV export.
      *
      * @param array<string, mixed> $data
