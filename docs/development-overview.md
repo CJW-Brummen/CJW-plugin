@@ -2,31 +2,53 @@
 
 This document is a short orientation guide for developers working on the plugin.
 
+**Looking for how to run the camp rather than how to change the code?** That is
+a different document, in Dutch, inside the admin: **Zomerkamp → Handleiding**.
+It covers the yearly cycle, what each screen controls, reading the
+registrations, what to do when something breaks, and the update policy. Keep it
+current there rather than here — the people who need it will never open this
+repository.
+
 ## Main folders
 
-`assets/admin/`
-- builder UI JavaScript and CSS for the wp-admin form editor
+The plugin is two modules under `inc/`, plus what they share. The form builder
+knows nothing about camps, and the summer-camp module knows nothing about
+registrations; where they need each other they use a hook.
 
-`assets/frontend/`
-- public-facing wizard JavaScript and CSS
+`inc/shared/`
+- the summer camp settings service, the capability map, localization helpers
 
-`inc/bootstrap/`
-- plugin bootstrapping and dependency loading
+`inc/form-builder/admin/`
+- post type setup, the builder screen, meta boxes, asset loading
 
-`inc/admin/`
-- WordPress admin concerns such as post type setup, meta boxes, and asset loading
-
-`inc/domain/`
+`inc/form-builder/domain/`
 - shared defaults, config loading, and runtime normalization
 
-`inc/frontend/`
+`inc/form-builder/frontend/`
 - runtime form rendering, navigation, validation, conditions, and session handling
 
-`inc/submissions/`
-- submission persistence, admin display, export, and notifications
+`inc/form-builder/submissions/`
+- submission persistence, admin display, export, notifications, retention
+
+`inc/summer-camp/`
+- the settings screen and its fields
+
+`inc/summer-camp/admin/`
+- dashboard widget, Site Health checks, help tabs, and the Beheer tab's actions:
+  mail testing, settings history, the new-camp-year action, the weekly digest,
+  and the Dutch manual
+
+`assets/form-builder/`
+- builder UI and public wizard JavaScript and CSS
+
+`assets/summer-camp/`
+- settings screen JavaScript and CSS
 
 `tests/`
-- PHPUnit-based automated tests with a lightweight WordPress shim
+- the fast suite, with a lightweight WordPress shim
+
+`tests/integration/`
+- the same plugin against a real WordPress install
 
 ## Data flow
 
@@ -45,10 +67,10 @@ The plugin’s main flow is:
 `docs/config-schema.md`
 - canonical reference for the saved and runtime config shape
 
-`inc/domain/class-wizard-defaults.php`
+`inc/form-builder/domain/class-wizard-defaults.php`
 - single source of truth for shared form-level default settings
 
-`inc/domain/class-wizard-config-normalizer.php`
+`inc/form-builder/domain/class-wizard-config-normalizer.php`
 - single place where saved builder config is normalized for runtime use
 
 `tests/README.md`
@@ -56,14 +78,14 @@ The plugin’s main flow is:
 
 ## Current testing approach
 
-Tests are written in PHPUnit and cover:
+There are two suites, and the split matters.
 
-- conditional logic
-- config normalization
-- step navigation
-- field validation
-- renderer output and completion flow
-- submission data flattening
-- shared defaults/settings behavior
+`composer test` runs the fast suite against a lightweight shim: pure logic, no
+database, milliseconds. `composer test:wp` runs the integration suite against a
+real WordPress install with a real database — capabilities, post types, hooks,
+cron, uploads and mail.
 
-This is currently a plugin-local PHPUnit setup, not the full official WordPress core integration test suite.
+The rule of thumb is that anything whose behaviour *is* WordPress belongs in the
+integration suite. A shim agrees with whoever wrote it, which is exactly how a
+capability map, a Quick Edit row action and a `checked()` helper all passed
+their tests while being wrong in production.
