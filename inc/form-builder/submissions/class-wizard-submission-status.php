@@ -210,6 +210,8 @@ final class CJW_Wizard_Submission_Status
         $current = self::isKnown($post->post_status) ? $post->post_status : self::DEFAULT;
         $timestamp = get_post_timestamp($post);
         $deleteLink = get_delete_post_link((int) $post->ID);
+        $confirmation = CJW_Wizard_Submission_Confirmation::summary((int) $post->ID);
+        $confirmationFailed = CJW_Wizard_Submission_Confirmation::failed((int) $post->ID);
 
         ?>
 		<div class="submitbox" id="submitpost">
@@ -218,6 +220,19 @@ final class CJW_Wizard_Submission_Status
 					<div class="misc-pub-section">
 						<?php esc_html_e('Ontvangen', 'cjw'); ?>:
 						<strong><?php echo esc_html(wp_date(__('j F Y \o\m H:i', 'cjw'), $timestamp)); ?></strong>
+					</div>
+				<?php endif; ?>
+
+				<?php if ($confirmation !== '') : ?>
+					<div class="misc-pub-section">
+						<?php esc_html_e('Bevestiging aan ouder', 'cjw'); ?>:
+						<strong<?php echo $confirmationFailed ? ' style="color:#b32d2e;"' : ''; ?>>
+							<?php
+                            // Escaped by summary(); echoing it raw keeps the
+                            // translated date from being escaped twice.
+                            echo $confirmation; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+							?>
+						</strong>
 					</div>
 				<?php endif; ?>
 

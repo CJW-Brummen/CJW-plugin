@@ -64,6 +64,11 @@ final class CJW_Summer_Camp_Site_Health
             'test' => [$this, 'testPolaroids'],
         ];
 
+        $tests['direct']['cjw_summer_camp_mail'] = [
+            'label' => __('Zomerkamp: e-mail', 'cjw'),
+            'test' => [$this, 'testMail'],
+        ];
+
         return $tests;
     }
 
@@ -259,6 +264,94 @@ final class CJW_Summer_Camp_Site_Health
             __('Het kampplakboek bevat foto’s', 'cjw'),
             'good',
             '<p>' . esc_html__('Er is minimaal één foto voor het kampplakboek op de homepage gekozen.', 'cjw') . '</p>'
+        );
+    }
+
+    /**
+     * Checks that somebody has established mail actually leaves this site.
+     *
+     * Deliberately reports on evidence rather than on configuration. A mail
+     * plugin being installed proves nothing; a test message that went out last
+     * month proves something. The failing case is graded critical because the
+     * cost lands on a parent who registers, hears nothing, and concludes it did
+     * not work.
+     *
+     * @return array<string, mixed>
+     */
+    public function testMail(): array
+    {
+        $test = 'cjw_summer_camp_mail';
+        $last = CJW_Summer_Camp_Mail::lastTest();
+        $configured = CJW_Summer_Camp_Mail::transportIsConfigured();
+
+        if ($last !== null && !$last['ok']) {
+            return $this->result(
+                $test,
+                __('De laatste testmail is niet aangekomen', 'cjw'),
+                'critical',
+                '<p>' . esc_html__('De website kon de laatste testmail niet versturen. Zolang dat zo is, krijgen ouders geen bevestiging van hun inschrijving en krijgt de organisatie geen bericht bij een nieuwe inschrijving.', 'cjw') . '</p>'
+                . ($last['error'] !== '' ? '<p><code>' . esc_html($last['error']) . '</code></p>' : ''),
+                $this->mailAction()
+            );
+        }
+
+        if ($last === null) {
+            return $this->result(
+                $test,
+                __('Er is nog nooit een testmail verstuurd', 'cjw'),
+                'recommended',
+                '<p>' . esc_html__('Niemand weet of deze website mail kan versturen. Dat blijkt pas als een ouder zich inschrijft en geen bevestiging krijgt. Stuur eenmalig een testmail om het zeker te weten.', 'cjw') . '</p>',
+                $this->mailAction()
+            );
+        }
+
+        if (!$configured) {
+            return $this->result(
+                $test,
+                __('Mail wordt verstuurd door de webserver zelf', 'cjw'),
+                'recommended',
+                '<p>' . esc_html__('De testmail is gelukt, maar er is geen mailplugin actief. De website verstuurt mail dan rechtstreeks via de webserver, en grote mailproviders zoals Gmail en Outlook weigeren die mail vaak of zetten hem in de map ongewenste mail. Dat gaat vooral mis bij ouders, niet bij de organisatie.', 'cjw') . '</p>',
+                $this->mailAction()
+            );
+        }
+
+        if (CJW_Summer_Camp_Mail::lastTestIsStale()) {
+            return $this->result(
+                $test,
+                __('De laatste testmail is lang geleden', 'cjw'),
+                'recommended',
+                '<p>' . esc_html(sprintf(
+                    /* translators: %s: date of the last successful test. */
+                    __('De laatste geslaagde testmail is van %s. Er is sindsdien een kampseizoen voorbij; test opnieuw voordat de inschrijvingen opengaan.', 'cjw'),
+                    wp_date((string) get_option('date_format'), $last['time'])
+                )) . '</p>',
+                $this->mailAction()
+            );
+        }
+
+        return $this->result(
+            $test,
+            __('De website kan mail versturen', 'cjw'),
+            'good',
+            '<p>' . esc_html(sprintf(
+                /* translators: %s: date of the last successful test. */
+                __('De laatste testmail is gelukt op %s, en er is een mailplugin actief die het versturen verzorgt.', 'cjw'),
+                wp_date((string) get_option('date_format'), $last['time'])
+            )) . '</p>'
+        );
+    }
+
+    /**
+     * Links to the Beheer tab, where the test button lives.
+     *
+     * @return string
+     */
+    private function mailAction(): string
+    {
+        return sprintf(
+            '<p><a href="%s">%s</a></p>',
+            esc_url(add_query_arg('tab', 'beheer', admin_url('admin.php?page=cjw-summer-camp'))),
+            esc_html__('Stuur een testmail', 'cjw')
         );
     }
 

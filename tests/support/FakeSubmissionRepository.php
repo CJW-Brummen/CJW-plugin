@@ -14,9 +14,9 @@ declare(strict_types=1);
 final class FakeSubmissionRepository implements CJW_Wizard_Submission_Store
 {
     /**
-     * id => ['email' => string, 'anonymised' => bool]
+     * id => ['email' => string, 'anonymised' => bool, 'year' => string]
      *
-     * @var array<int, array{email: string, anonymised: bool}>
+     * @var array<int, array{email: string, anonymised: bool, year: string}>
      */
     private array $rows = [];
 
@@ -30,13 +30,15 @@ final class FakeSubmissionRepository implements CJW_Wizard_Submission_Store
     /**
      * @param int    $count How many submissions to seed.
      * @param string $email Address they all belong to.
+     * @param string $year  Camp year they are filed under.
      */
-    public function seed(int $count, string $email): void
+    public function seed(int $count, string $email, string $year = '2026'): void
     {
         for ($i = 0; $i < $count; $i++) {
             $this->rows[] = [
                 'email' => $email,
                 'anonymised' => false,
+                'year' => $year,
             ];
         }
     }
@@ -99,6 +101,55 @@ final class FakeSubmissionRepository implements CJW_Wizard_Submission_Store
         }
 
         return array_slice($expired, 0, $limit);
+    }
+
+    /**
+     * @return array<int, object>
+     */
+    public function get_for_camp_year_upto(string $year, int $limit = 100): array
+    {
+        $matches = [];
+
+        foreach ($this->rows as $id => $row) {
+            if (! $row['anonymised'] && (int) $row['year'] <= (int) $year) {
+                $matches[] = (object) [ 'ID' => $id ];
+            }
+        }
+
+        return array_slice($matches, 0, $limit);
+    }
+
+    /**
+     * @return array<string, int>
+     */
+    public function count_by_camp_type(string $year): array
+    {
+        $counted = array_filter(
+            $this->rows,
+            static fn(array $row): bool => (int) $row['year'] === (int) $year
+        );
+
+        if ($counted === []) {
+            return [];
+        }
+
+        return [ 'week' => count($counted), 'total' => count($counted) ];
+    }
+
+    /**
+     * Every seeded row counts: the fake has no dates, and a test that cares
+     * about the window says so by seeding only what belongs in it.
+     */
+    public function count_since(DateTimeImmutable $since): int
+    {
+        unset($since);
+
+        return count($this->rows);
+    }
+
+    public function count_for_camp_year_upto(string $year): int
+    {
+        return count($this->get_for_camp_year_upto($year, PHP_INT_MAX));
     }
 
     public function get_payload(int $submission_id): array

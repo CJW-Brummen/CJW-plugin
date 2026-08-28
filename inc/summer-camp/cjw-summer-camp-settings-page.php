@@ -122,6 +122,7 @@ class CJW_Summer_Camp_Settings_Page
             'social_instagram',
             'footer_about',
             'footer_org',
+            'support_contact',
         ],
     ];
 
@@ -370,7 +371,15 @@ class CJW_Summer_Camp_Settings_Page
         $this->add(
             'hero_image_id',
             __('Hero afbeelding', 'cjw'),
-            new CJW_Media_Field('hero_image_id', '', self::OPTION_KEY, __('Grote sfeerfoto achter de tekst bovenaan de homepage. Kies een liggende foto van goede kwaliteit (minimaal 1600 pixels breed werkt het best).', 'cjw')),
+            new CJW_Media_Field(
+                'hero_image_id',
+                '',
+                self::OPTION_KEY,
+                __('Grote sfeerfoto achter de tekst bovenaan de homepage. Kies een liggende foto van goede kwaliteit (minimaal 1600 pixels breed werkt het best).', 'cjw'),
+                recommendedWidth: 2000,
+                recommendedHeight: 1125,
+                maxBytes: 800 * KB_IN_BYTES
+            ),
             'theme'
         );
         $this->add(
@@ -520,7 +529,16 @@ class CJW_Summer_Camp_Settings_Page
         $this->add(
             'intro_image_id',
             __('Introductiefoto homepage', 'cjw'),
-            new CJW_Media_Field('intro_image_id', '', self::OPTION_KEY, __('Sfeerfoto naast de welkomsttekst op de homepage. Laat leeg om geen foto te tonen.', 'cjw')),
+            new CJW_Media_Field(
+                'intro_image_id',
+                '',
+                self::OPTION_KEY,
+                __('Sfeerfoto naast de welkomsttekst op de homepage. Laat leeg om geen foto te tonen.', 'cjw'),
+                // The theme serves this one at WordPress's "large" size.
+                recommendedWidth: 1200,
+                recommendedHeight: 900,
+                maxBytes: 400 * KB_IN_BYTES
+            ),
             'website',
             'website_intro'
         );
@@ -609,7 +627,12 @@ class CJW_Summer_Camp_Settings_Page
                     '',
                     self::OPTION_KEY,
                     /* translators: %d: polaroid slot number. */
-                    sprintf(__('Foto %d in het plakboek. Liggende foto’s werken het best; de foto wordt automatisch bijgesneden. Laat leeg om deze plek in het plakboek leeg te laten.', 'cjw'), $slot)
+                    sprintf(__('Foto %d in het plakboek. Liggende foto’s werken het best; de foto wordt automatisch bijgesneden. Laat leeg om deze plek in het plakboek leeg te laten.', 'cjw'), $slot),
+                    // Matches the theme's registered cjw-polaroid crop exactly,
+                    // which is the size actually served on the front page.
+                    recommendedWidth: 900,
+                    recommendedHeight: 675,
+                    maxBytes: 300 * KB_IN_BYTES
                 ),
                 'website',
                 'website_photos'
@@ -702,6 +725,13 @@ class CJW_Summer_Camp_Settings_Page
             'footer_org',
             __('Organisatienaam (footer)', 'cjw'),
             new CJW_Input_Field('footer_org', '', self::OPTION_KEY, description: __('Naam van de organisatie zoals die onderaan in de voettekst staat, bijvoorbeeld “CJW Brummen”.', 'cjw')),
+            'website',
+            'website_contact'
+        );
+        $this->add(
+            'support_contact',
+            __('Wie onderhoudt de website', 'cjw'),
+            new CJW_Input_Field('support_contact', '', self::OPTION_KEY, description: __('Naam, telefoonnummer en e-mailadres van wie je belt als de website zelf stuk is. Deze gegevens staan nergens op de openbare site; ze staan in de Handleiding, zodat de volgende vrijwilliger weet bij wie hij moet zijn.', 'cjw')),
             'website',
             'website_contact'
         );
@@ -815,6 +845,7 @@ class CJW_Summer_Camp_Settings_Page
             'pricing' => __('Tarieven', 'cjw'),
             'content' => __('Inhoud', 'cjw'),
             'website' => __('Website', 'cjw'),
+            'beheer' => __('Beheer', 'cjw'),
         ];
 
         if (!array_key_exists($active_tab, $tabs)) {
@@ -841,16 +872,81 @@ class CJW_Summer_Camp_Settings_Page
 
             <?php settings_errors(self::OPTION_KEY); ?>
 
-            <form method="post" action="options.php">
-                <?php settings_fields('cjw_group'); ?>
-                <input type="hidden" name="cjw_summer_camp_active_tab" value="<?php echo esc_attr($active_tab); ?>" />
+            <?php if ($active_tab === 'beheer') : ?>
+                <?php $this->renderTools(); ?>
+            <?php else : ?>
+                <form method="post" action="options.php">
+                    <?php settings_fields('cjw_group'); ?>
+                    <input type="hidden" name="cjw_summer_camp_active_tab" value="<?php echo esc_attr($active_tab); ?>" />
 
-                <?php do_settings_sections(self::PAGE_SLUG . '-' . $active_tab); ?>
+                    <?php do_settings_sections(self::PAGE_SLUG . '-' . $active_tab); ?>
 
-                <?php submit_button(); ?>
-            </form>
+                    <?php submit_button(); ?>
+                </form>
+            <?php endif; ?>
         </div>
         <?php
+    }
+
+    /**
+     * Renders the Beheer tab: the actions that are not settings.
+     *
+     * Everything here changes something without being a field you type into --
+     * sending a test mail, putting an older version back, starting a new camp
+     * year. Mixed in among the settings they would either be missed or pressed
+     * by accident, and each one is owned by the class that implements it rather
+     * than reimplemented here.
+     *
+     * @return void
+     */
+    private function renderTools(): void
+    {
+        $this->renderToolNotice();
+
+        CJW_Summer_Camp_Mail::renderPanel();
+        CJW_Summer_Camp_Digest::renderPanel();
+        CJW_Summer_Camp_Settings_History::renderPanel();
+        CJW_Summer_Camp_Year::renderPanel();
+    }
+
+    /**
+     * Reports the outcome of whatever action sent the browser back here.
+     *
+     * @return void
+     */
+    private function renderToolNotice(): void
+    {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- reads a flag set by our own redirect after that action was verified; nothing is changed here.
+        $result = isset($_GET['cjw_result']) ? sanitize_key(wp_unslash((string) $_GET['cjw_result'])) : '';
+
+        if ($result === '') {
+            return;
+        }
+
+        $notices = [
+            'restored' => ['success', __('De eerdere versie van de instellingen is teruggezet.', 'cjw')],
+            'restore_failed' => ['error', __('Die versie kon niet worden teruggezet. Ververs de pagina en probeer het opnieuw.', 'cjw')],
+            'imported' => ['success', __('De instellingen uit het bestand zijn ingelezen.', 'cjw')],
+            'import_failed' => ['error', __('Dat bestand kon niet worden ingelezen. Kies een bestand dat eerder met “Download de instellingen” is gemaakt.', 'cjw')],
+            'digest_on' => ['success', __('Het weekbericht staat aan. Is er niets te melden, dan komt er die week geen mail.', 'cjw')],
+            'digest_off' => ['success', __('Het weekbericht staat uit.', 'cjw')],
+            'digest_sent' => ['success', __('Het voorbeeld is verstuurd naar iedereen die het kamp beheert.', 'cjw')],
+            'digest_failed' => ['error', __('Het voorbeeld kon niet worden verstuurd. Controleer hierboven of de website wel mail kan versturen.', 'cjw')],
+            'year_started' => ['success', __('Het nieuwe kampjaar is gestart. Vul de nieuwe kampdata in en zet de inschrijvingen open zodra je zover bent.', 'cjw')],
+            'year_not_confirmed' => ['error', __('Er is niets veranderd: het ingetypte jaartal klopte niet.', 'cjw')],
+        ];
+
+        if (!array_key_exists($result, $notices)) {
+            return;
+        }
+
+        [$type, $message] = $notices[$result];
+
+        printf(
+            '<div class="notice notice-%1$s is-dismissible"><p>%2$s</p></div>',
+            esc_attr($type),
+            esc_html($message)
+        );
     }
 
     /**

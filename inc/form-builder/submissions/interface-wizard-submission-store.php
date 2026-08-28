@@ -65,6 +65,46 @@ interface CJW_Wizard_Submission_Store
     public function get_expired(DateTimeImmutable $before, int $limit = 100): array;
 
     /**
+     * Registrations for a camp year or earlier that still hold personal data.
+     *
+     * Same skip-what-is-already-done rule as get_expired(), for the same
+     * reason.
+     *
+     * @param string $year  Camp year, four digits.
+     * @param int    $limit Maximum rows to return.
+     *
+     * @return array<int, object>
+     */
+    public function get_for_camp_year_upto(string $year, int $limit = 100): array;
+
+    /**
+     * A camp year's registrations counted per camp, excluding cancellations.
+     *
+     * @param string $year Camp year, four digits.
+     *
+     * @return array<string, int> Camp type to count, plus a 'total' key.
+     */
+    public function count_by_camp_type(string $year): array;
+
+    /**
+     * How many registrations arrived since a moment, whatever their status.
+     *
+     * @param DateTimeImmutable $since Start of the window.
+     *
+     * @return int
+     */
+    public function count_since(DateTimeImmutable $since): int;
+
+    /**
+     * How many rows get_for_camp_year_upto() would reach in total.
+     *
+     * @param string $year Camp year, four digits.
+     *
+     * @return int
+     */
+    public function count_for_camp_year_upto(string $year): int;
+
+    /**
      * Flattens nested answers into dot-notation columns.
      *
      * @param array  $data   Nested answers.

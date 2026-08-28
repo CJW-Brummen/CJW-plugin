@@ -161,6 +161,8 @@ final class CJW_Form_Builder_Module
         require_once CJW_DIR . 'inc/form-builder/submissions/class-wizard-submission-notifier.php';
         require_once CJW_DIR . 'inc/form-builder/submissions/class-wizard-submission-privacy.php';
         require_once CJW_DIR . 'inc/form-builder/submissions/class-wizard-submission-retention.php';
+        require_once CJW_DIR . 'inc/form-builder/submissions/class-wizard-year-rollover.php';
+        require_once CJW_DIR . 'inc/form-builder/submissions/class-wizard-submission-digest.php';
         require_once CJW_DIR . 'inc/form-builder/submissions/class-wizard-submission-confirmation.php';
         require_once CJW_DIR . 'inc/form-builder/submissions/class-wizard-children-table.php';
         require_once CJW_DIR . 'inc/form-builder/submissions/class-wizard-children-page.php';

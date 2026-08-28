@@ -53,6 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		const preview = field.querySelector("[data-cjw-media-preview]");
 		const selectButton = field.querySelector("[data-cjw-media-select]");
 		const clearButton = field.querySelector("[data-cjw-media-clear]");
+		const warning = field.querySelector("[data-cjw-media-warning]");
 
 		if (
 			!(input instanceof HTMLInputElement) ||
@@ -66,6 +67,52 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 
 		let frame = null;
+
+		const maxBytes = Number(field.dataset.maxBytes || 0);
+		const recommendedWidth = Number(field.dataset.recommendedWidth || 0);
+		const recommendedHeight = Number(field.dataset.recommendedHeight || 0);
+
+		const formatBytes = (bytes) =>
+			bytes >= 1048576
+				? `${(bytes / 1048576).toFixed(1).replace(".", ",")} MB`
+				: `${Math.round(bytes / 1024)} kB`;
+
+		/*
+		 * Said here rather than after saving, because that is where it can still
+		 * be acted on: the media library is open, and choosing a different file
+		 * is one click away.
+		 */
+		const describeProblem = (attachment) => {
+			const bytes = Number(attachment.filesizeInBytes || 0);
+			const width = Number(attachment.width || 0);
+
+			const tooHeavy = maxBytes > 0 && bytes > maxBytes;
+			const tooWide = recommendedWidth > 0 && width > recommendedWidth * 1.5;
+
+			if (!tooHeavy && !tooWide) {
+				return "";
+			}
+
+			const problem = tooHeavy
+				? `Deze afbeelding is ${formatBytes(bytes)} groot.`
+				: `Deze afbeelding is ${width} pixels breed.`;
+
+			const advice =
+				recommendedWidth > 0 && recommendedHeight > 0
+					? `Maak de afbeelding kleiner: ongeveer ${recommendedWidth} bij ${recommendedHeight} pixels en hooguit ${formatBytes(maxBytes)}.`
+					: `Maak de afbeelding kleiner: houd ongeveer ${formatBytes(maxBytes)} aan.`;
+
+			return `${problem} Daardoor laadt de pagina traag, vooral op een telefoon met mobiel internet. ${advice}`;
+		};
+
+		const showWarning = (message) => {
+			if (!(warning instanceof HTMLElement)) {
+				return;
+			}
+
+			warning.textContent = message;
+			warning.classList.toggle("is-hidden", message === "");
+		};
 
 		selectButton.addEventListener("click", (event) => {
 			event.preventDefault();
@@ -101,6 +148,8 @@ document.addEventListener("DOMContentLoaded", () => {
 				image.alt = attachment.alt || attachment.title || "";
 
 				preview.appendChild(image);
+
+				showWarning(describeProblem(attachment));
 			});
 
 			frame.open();
@@ -110,6 +159,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			event.preventDefault();
 			input.value = "";
 			preview.innerHTML = "<span>Geen afbeelding gekozen</span>";
+			showWarning("");
 		});
 	});
 

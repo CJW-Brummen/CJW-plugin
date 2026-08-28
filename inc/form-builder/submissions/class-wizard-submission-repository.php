@@ -515,6 +515,201 @@ final class CJW_Wizard_Submission_Repository implements CJW_Wizard_Submission_St
     }
 
     /**
+     * Registrations belonging to a camp year or any year before it, that still
+     * hold personal data.
+     *
+     * Used when a new camp year is started: last year's registrations have done
+     * their job by then, and keeping children's details on the chance that
+     * somebody might want them is exactly what the retention rules exist to
+     * stop. Retention still runs on its own schedule; this is the same rule
+     * applied at the moment an organiser says the season is over.
+     *
+     * @param string $year  Camp year, four digits.
+     * @param int    $limit Rows to return.
+     *
+     * @return WP_Post[]
+     */
+    public function get_for_camp_year_upto(string $year, int $limit = 100): array
+    {
+        if (!preg_match('/^\d{4}$/', $year)) {
+            return [];
+        }
+
+        return get_posts([
+            'post_type' => self::POST_TYPE,
+            'post_status' => self::ALL_STATUSES,
+            'numberposts' => $limit,
+            'orderby' => 'date',
+            'order' => 'ASC',
+            // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Runs when an organiser starts a new camp year, batched, at most a few times a year.
+            'meta_query' => $this->campYearUptoQuery($year),
+        ]);
+    }
+
+    /**
+     * This camp year's registrations, counted per camp.
+     *
+     * Cancelled rows are left out, unlike count_since(): a running total is
+     * read as "how many are coming", and a withdrawn registration is not.
+     *
+     * The counts do not necessarily add up to the total, and that is not a bug:
+     * one registration can cover two children going to different camps, so it
+     * is counted under both. The total counts registrations; the breakdown
+     * counts places.
+     *
+     * @param string $year Camp year, four digits.
+     *
+     * @return array<string, int> Camp type to count, plus a 'total' key.
+     */
+    public function count_by_camp_type(string $year): array
+    {
+        if (!preg_match('/^\d{4}$/', $year)) {
+            return [];
+        }
+
+        $total = $this->countMatching([
+            [
+                'key' => self::META_CAMP_YEAR,
+                'value' => $year,
+            ],
+        ]);
+
+        if ($total < 1) {
+            return [];
+        }
+
+        $counts = [];
+
+        foreach ($this->known_camp_types() as $camp) {
+            $count = $this->countMatching([
+                [
+                    'key' => self::META_CAMP_YEAR,
+                    'value' => $year,
+                ],
+                [
+                    'key' => self::META_CAMP_TYPE,
+                    'value' => $camp,
+                ],
+            ]);
+
+            if ($count > 0) {
+                $counts[$camp] = $count;
+            }
+        }
+
+        $counts['total'] = $total;
+
+        return $counts;
+    }
+
+    /**
+     * Counts live registrations matching a meta query.
+     *
+     * Cancelled is excluded here rather than by the callers, because every
+     * question this answers is a question about who is coming.
+     *
+     * @param array<int, array<string, mixed>> $meta_query
+     */
+    private function countMatching(array $meta_query): int
+    {
+        $statuses = array_values(array_filter(
+            self::ALL_STATUSES,
+            static fn(string $status): bool => $status !== CJW_Wizard_Submission_Status::CANCELLED
+        ));
+
+        $query = new WP_Query([
+            'post_type' => self::POST_TYPE,
+            'post_status' => $statuses,
+            'posts_per_page' => 1,
+            'fields' => 'ids',
+            'no_found_rows' => false,
+            'ignore_sticky_posts' => true,
+            // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Runs once a week on cron, over one camp year.
+            'meta_query' => $meta_query,
+        ]);
+
+        return (int) $query->found_posts;
+    }
+
+    /**
+     * How many registrations arrived since a moment.
+     *
+     * Counts every status including cancelled: the weekly report is about what
+     * came in, and a registration withdrawn on Thursday still happened.
+     */
+    public function count_since(DateTimeImmutable $since): int
+    {
+        $query = new WP_Query([
+            'post_type' => self::POST_TYPE,
+            'post_status' => self::ALL_STATUSES,
+            'posts_per_page' => 1,
+            'fields' => 'ids',
+            'no_found_rows' => false,
+            'ignore_sticky_posts' => true,
+            'date_query' => [
+                [
+                    'after' => $since->format('Y-m-d H:i:s'),
+                    'inclusive' => true,
+                ],
+            ],
+        ]);
+
+        return (int) $query->found_posts;
+    }
+
+    /**
+     * How many registrations get_for_camp_year_upto() would eventually reach.
+     *
+     * Separate from the fetch because the number is wanted before anything is
+     * changed: a button that says "247 inschrijvingen worden geanonimiseerd" is
+     * one somebody can decide about, and "weet je het zeker?" is not.
+     */
+    public function count_for_camp_year_upto(string $year): int
+    {
+        if (!preg_match('/^\d{4}$/', $year)) {
+            return 0;
+        }
+
+        $query = new WP_Query([
+            'post_type' => self::POST_TYPE,
+            'post_status' => self::ALL_STATUSES,
+            'posts_per_page' => 1,
+            'fields' => 'ids',
+            'no_found_rows' => false,
+            'ignore_sticky_posts' => true,
+            // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Admin-only count, see above.
+            'meta_query' => $this->campYearUptoQuery($year),
+        ]);
+
+        return (int) $query->found_posts;
+    }
+
+    /**
+     * The meta conditions shared by the two calls above.
+     *
+     * NUMERIC rather than string comparison: as text, '2026' sorts after
+     * '10000' and before '999', which is only ever wrong.
+     *
+     * @return array<int|string, mixed>
+     */
+    private function campYearUptoQuery(string $year): array
+    {
+        return [
+            'relation' => 'AND',
+            [
+                'key' => self::META_CAMP_YEAR,
+                'value' => $year,
+                'compare' => '<=',
+                'type' => 'NUMERIC',
+            ],
+            [
+                'key' => self::META_ANONYMISED,
+                'compare' => 'NOT EXISTS',
+            ],
+        ];
+    }
+
+    /**
      * Flattens a nested payload to dot-notation keys, for the CSV export.
      *
      * @param array<string, mixed> $data

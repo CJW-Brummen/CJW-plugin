@@ -14,12 +14,6 @@ if (! function_exists('cjw_summer_camp')) {
      */
     function cjw_summer_camp(): CJW_Summer_Camp_Service
     {
-        static $instance = null;
-
-        if (! $instance instanceof CJW_Summer_Camp_Service) {
-            $instance = new CJW_Summer_Camp_Service();
-        }
-
-        return $instance;
+        return CJW_Summer_Camp_Service::instance();
     }
 }
