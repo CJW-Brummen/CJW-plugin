@@ -815,6 +815,7 @@ class CJW_Summer_Camp_Settings_Page
             'pricing' => __('Tarieven', 'cjw'),
             'content' => __('Inhoud', 'cjw'),
             'website' => __('Website', 'cjw'),
+            'beheer' => __('Beheer', 'cjw'),
         ];
 
         if (!array_key_exists($active_tab, $tabs)) {
@@ -841,16 +842,73 @@ class CJW_Summer_Camp_Settings_Page
 
             <?php settings_errors(self::OPTION_KEY); ?>
 
-            <form method="post" action="options.php">
-                <?php settings_fields('cjw_group'); ?>
-                <input type="hidden" name="cjw_summer_camp_active_tab" value="<?php echo esc_attr($active_tab); ?>" />
+            <?php if ($active_tab === 'beheer') : ?>
+                <?php $this->renderTools(); ?>
+            <?php else : ?>
+                <form method="post" action="options.php">
+                    <?php settings_fields('cjw_group'); ?>
+                    <input type="hidden" name="cjw_summer_camp_active_tab" value="<?php echo esc_attr($active_tab); ?>" />
 
-                <?php do_settings_sections(self::PAGE_SLUG . '-' . $active_tab); ?>
+                    <?php do_settings_sections(self::PAGE_SLUG . '-' . $active_tab); ?>
 
-                <?php submit_button(); ?>
-            </form>
+                    <?php submit_button(); ?>
+                </form>
+            <?php endif; ?>
         </div>
         <?php
+    }
+
+    /**
+     * Renders the Beheer tab: the actions that are not settings.
+     *
+     * Everything here changes something without being a field you type into --
+     * sending a test mail, putting an older version back, starting a new camp
+     * year. Mixed in among the settings they would either be missed or pressed
+     * by accident, and each one is owned by the class that implements it rather
+     * than reimplemented here.
+     *
+     * @return void
+     */
+    private function renderTools(): void
+    {
+        $this->renderToolNotice();
+
+        CJW_Summer_Camp_Mail::renderPanel();
+        CJW_Summer_Camp_Settings_History::renderPanel();
+    }
+
+    /**
+     * Reports the outcome of whatever action sent the browser back here.
+     *
+     * @return void
+     */
+    private function renderToolNotice(): void
+    {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- reads a flag set by our own redirect after that action was verified; nothing is changed here.
+        $result = isset($_GET['cjw_result']) ? sanitize_key(wp_unslash((string) $_GET['cjw_result'])) : '';
+
+        if ($result === '') {
+            return;
+        }
+
+        $notices = [
+            'restored' => ['success', __('De eerdere versie van de instellingen is teruggezet.', 'cjw')],
+            'restore_failed' => ['error', __('Die versie kon niet worden teruggezet. Ververs de pagina en probeer het opnieuw.', 'cjw')],
+            'imported' => ['success', __('De instellingen uit het bestand zijn ingelezen.', 'cjw')],
+            'import_failed' => ['error', __('Dat bestand kon niet worden ingelezen. Kies een bestand dat eerder met “Download de instellingen” is gemaakt.', 'cjw')],
+        ];
+
+        if (!array_key_exists($result, $notices)) {
+            return;
+        }
+
+        [$type, $message] = $notices[$result];
+
+        printf(
+            '<div class="notice notice-%1$s is-dismissible"><p>%2$s</p></div>',
+            esc_attr($type),
+            esc_html($message)
+        );
     }
 
     /**
