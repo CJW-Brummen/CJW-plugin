@@ -41,10 +41,21 @@ final class CJW_Plugin
         self::loadShared();
         self::loadActivator();
 
+        // On every request, not just in the admin: the capabilities they guard
+        // are checked by the REST API and by WP-CLI too, and a guard that only
+        // runs in wp-admin is a guard with a way around it.
+        CJW_Roles::registerGuards();
+
+        // Not only on activation: an activation hook does not run when a
+        // plugin is updated, so a capability change would never reach a site
+        // that already had the plugin installed. See CJW_Roles::VERSION.
+        add_action('init', [CJW_Roles::class, 'installIfOutdated'], 0);
+
         add_action('init', [self::class, 'loadTextdomain']);
 
         if (is_admin()) {
             (new CJW_Roles_Notice())->init();
+            CJW_Admin_Menu::init();
         }
 
         CJW_Summer_Camp_Module::boot();
@@ -80,6 +91,7 @@ final class CJW_Plugin
         require_once CJW_DIR . 'inc/shared/class-camp-type.php';
         require_once CJW_DIR . 'inc/shared/class-cjw-roles.php';
         require_once CJW_DIR . 'inc/shared/class-cjw-roles-notice.php';
+        require_once CJW_DIR . 'inc/shared/class-cjw-admin-menu.php';
         require_once CJW_DIR . 'inc/shared/localization.php';
         require_once CJW_DIR . 'inc/shared/class-summer-camp-service.php';
         require_once CJW_DIR . 'inc/shared/functions.php';

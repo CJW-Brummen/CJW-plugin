@@ -53,3 +53,9 @@ register_activation_hook(CJW_FILE, [CJW_Activator::class, 'activate']);
 register_deactivation_hook(CJW_FILE, [CJW_Wizard_Submission_Retention::class, 'unschedule']);
 register_deactivation_hook(CJW_FILE, [CJW_Summer_Camp_Digest::class, 'unschedule']);
 register_deactivation_hook(CJW_FILE, [CJW_Wizard_Birthday_Mailer::class, 'unschedule']);
+
+// Editor, Auteur and Bijdrager are removed on activation because Leiding
+// replaces all three. Putting them back here means the plugin hands the site
+// back the way it found it, rather than leaving an administrator with three
+// roles missing and no way to recreate them from wp-admin.
+register_deactivation_hook(CJW_FILE, [CJW_Roles::class, 'restoreStockRoles']);

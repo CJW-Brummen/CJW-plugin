@@ -136,6 +136,13 @@ final class CJW_Summer_Camp_Rental_Post_Type
                 // description of the same tent.
                 'supports' => ['title', 'thumbnail', 'page-attributes'],
                 'show_in_rest' => false,
+                // Gated on the camp capability rather than on edit_posts. How
+                // many tents CJW owns and which are out on loan is camp
+                // operations, not website copy, so it belongs to Kampbeheerder
+                // and not to Leiding -- who would otherwise reach it through
+                // the same edit_posts that lets them write a page.
+                'capabilities' => CJW_Roles::postTypeCapabilities(),
+                'map_meta_cap' => true,
             ]
         );
     }
