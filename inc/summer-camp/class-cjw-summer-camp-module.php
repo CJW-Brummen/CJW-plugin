@@ -57,6 +57,8 @@ final class CJW_Summer_Camp_Module
         // sponsor post type registers (also on the front end and REST).
         CJW_Summer_Camp_Sponsor_Post_Type::init();
         CJW_Summer_Camp_Sponsor_Admin::init();
+        CJW_Summer_Camp_Rental_Post_Type::init();
+        CJW_Summer_Camp_Rental_Admin::init();
         CJW_Summer_Camp_Dashboard_Widget::init();
         CJW_Summer_Camp_Mail::init();
         CJW_Summer_Camp_Settings_History::init();
@@ -103,5 +105,7 @@ final class CJW_Summer_Camp_Module
         require_once CJW_DIR . 'inc/summer-camp/admin/class-cjw-summer-camp-help-tabs.php';
         require_once CJW_DIR . 'inc/summer-camp/class-cjw-summer-camp-sponsor-post-type.php';
         require_once CJW_DIR . 'inc/summer-camp/admin/class-cjw-summer-camp-sponsor-admin.php';
+        require_once CJW_DIR . 'inc/summer-camp/class-cjw-summer-camp-rental-post-type.php';
+        require_once CJW_DIR . 'inc/summer-camp/admin/class-cjw-summer-camp-rental-admin.php';
     }
 }
