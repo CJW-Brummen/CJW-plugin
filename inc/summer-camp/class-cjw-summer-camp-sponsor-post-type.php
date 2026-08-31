@@ -67,6 +67,13 @@ final class CJW_Summer_Camp_Sponsor_Post_Type
                 'has_archive' => false,
                 'supports' => [ 'title', 'thumbnail', 'page-attributes' ],
                 'show_in_rest' => true,
+                // Page capabilities, not the default post ones. A sponsor logo
+                // is website content and belongs to Leiding, but Leiding holds
+                // no post capabilities: this site has no posts. Left on the
+                // default, `edit_posts` would gate the sponsor wall and nobody
+                // but a Kampbeheerder could change a logo.
+                'capability_type' => 'page',
+                'map_meta_cap' => true,
             ]
         );
     }

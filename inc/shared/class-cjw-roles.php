@@ -62,7 +62,7 @@ final class CJW_Roles
      * version instead, which costs one autoloaded option read and is the only
      * way a capability change actually reaches a running site.
      */
-    public const string VERSION = '2';
+    public const string VERSION = '3';
 
     /**
      * Where the installed capability map version is recorded.
@@ -105,7 +105,15 @@ final class CJW_Roles
     /**
      * What Leiding can do: the website, all of it.
      *
-     * This is WordPress's Editor role with two deliberate omissions.
+     * This is WordPress's Editor role with the blog taken out of it and two
+     * further deliberate omissions.
+     *
+     * There are no posts on this site and never will be (see CJW_Admin_Menu),
+     * so Leiding holds no `*_posts` capability and no `moderate_comments`.
+     * Pages, media and the sponsor wall are the whole job. This is why the
+     * sponsor post type is registered against page capabilities rather than
+     * the default post ones -- without that, taking the post capabilities away
+     * would have quietly taken Sponsoren with them.
      *
      * `unfiltered_html` is not here. It lets a user save raw <script> into a
      * post, which any later visitor -- including an administrator -- then runs.

@@ -43,13 +43,34 @@ final class RolesAndAccessTest extends CJW_IntegrationTestCase
         foreach (
             [
                 'read', 'upload_files',
-                'edit_posts', 'edit_others_posts', 'publish_posts', 'delete_others_posts',
-                'edit_pages', 'edit_others_pages', 'publish_pages', 'delete_others_pages',
+                'edit_pages', 'edit_others_pages', 'edit_published_pages', 'publish_pages',
+                'delete_pages', 'delete_others_pages', 'delete_published_pages',
             ] as $capability
         ) {
             $this->assertTrue(
                 user_can($user, $capability),
                 "Leiding cannot '{$capability}', which is part of keeping the website."
+            );
+        }
+    }
+
+    public function testLeidingHoldsNoPostCapabilities(): void
+    {
+        // There are no posts on this site and never will be. A role carrying
+        // capabilities for content that cannot exist is how a menu nobody wants
+        // comes back later.
+        $user = $this->actAsLeiding();
+
+        foreach (
+            [
+                'edit_posts', 'edit_others_posts', 'edit_published_posts', 'edit_private_posts',
+                'publish_posts', 'read_private_posts', 'delete_posts', 'delete_others_posts',
+                'delete_published_posts', 'delete_private_posts', 'moderate_comments',
+            ] as $capability
+        ) {
+            $this->assertFalse(
+                user_can($user, $capability),
+                "Leiding holds '{$capability}', for content this site does not have."
             );
         }
     }
@@ -293,7 +314,9 @@ final class RolesAndAccessTest extends CJW_IntegrationTestCase
     public function testLeidingCanStillManageSponsors(): void
     {
         // Sponsor logos are pictures on the front page: website content, and
-        // deliberately left where Leiding can reach them.
+        // deliberately left where Leiding can reach them. This is the assertion
+        // that catches it if the sponsor post type ever goes back to the
+        // default post capabilities, which Leiding no longer holds.
         $this->actAsLeiding();
 
         $type = get_post_type_object(CJW_Summer_Camp_Sponsor_Post_Type::POST_TYPE);
