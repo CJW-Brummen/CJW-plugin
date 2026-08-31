@@ -80,6 +80,7 @@ final class CJW_Admin_Menu
         $instance = new self();
 
         add_action('admin_menu', [ $instance, 'trim' ], 999);
+        add_filter('register_post_type_args', [ $instance, 'hidePostsFromTheMenu' ], 10, 2);
         add_action('admin_init', [ $instance, 'blockRemovedScreens' ]);
         add_action('admin_bar_menu', [ $instance, 'trimToolbar' ], 999);
 
@@ -124,8 +125,39 @@ final class CJW_Admin_Menu
             return;
         }
 
-        remove_menu_page('edit.php');
         remove_menu_page('edit-comments.php');
+    }
+
+    /**
+     * Takes Berichten out of the menu where it is built, rather than after.
+     *
+     * Calling remove_menu_page('edit.php') is not enough, and the way it fails
+     * is worth recording. It removes the top-level entry and leaves the submenus, and
+     * wp-admin/includes/menu.php then promotes the first submenu the user can
+     * still reach into the vacated parent slot. Berichten came back for exactly
+     * the two roles that hold none of its capabilities -- pointing at
+     * edit-tags.php?taxonomy=category, because Leiding holds manage_categories,
+     * and still labelled "Berichten". Unsetting the submenu array alongside it
+     * did not help either: the promotion runs on a menu that has already been
+     * rebuilt by then.
+     *
+     * Declaring the post type out of the menu removes the parent and its
+     * children together, before there is anything to promote.
+     *
+     * @param array<string, mixed> $args Post type arguments.
+     * @param string $post_type Post type being registered.
+     * @return array<string, mixed>
+     */
+    public function hidePostsFromTheMenu($args, $post_type): array
+    {
+        if ('post' !== $post_type || ! self::trimming()) {
+            return (array) $args;
+        }
+
+        $args = (array) $args;
+        $args['show_in_menu'] = false;
+
+        return $args;
     }
 
     /**

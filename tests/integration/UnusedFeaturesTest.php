@@ -126,6 +126,21 @@ final class UnusedFeaturesTest extends CJW_IntegrationTestCase
         $this->assertFalse($this->refuses('index.php'));
     }
 
+    public function testThePostTypeIsDeclaredOutOfTheMenu(): void
+    {
+        // Not remove_menu_page(). That removes the parent and leaves the
+        // submenus, and WordPress promotes the first one the user can still
+        // reach into the vacated slot -- Berichten came back pointing at
+        // edit-tags.php?taxonomy=category for exactly the roles that hold none
+        // of its capabilities.
+        $this->assertFalse(get_post_type_object('post')->show_in_menu);
+    }
+
+    public function testPagesAreStillInTheMenu(): void
+    {
+        $this->assertNotFalse(get_post_type_object('page')->show_in_menu);
+    }
+
     /* Comments are closed, not just unmoderatable
     --------------------------------------------- */
 

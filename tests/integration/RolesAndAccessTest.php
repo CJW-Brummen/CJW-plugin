@@ -148,6 +148,55 @@ final class RolesAndAccessTest extends CJW_IntegrationTestCase
         }
     }
 
+    /* Taking a capability back
+    --------------------------------------------- */
+
+    public function testACapabilityGrantedByAnEarlierVersionIsTakenBack(): void
+    {
+        // The install used to be add-only: it could top a role up but never
+        // trim it, so removing a capability from the map reached a fresh site
+        // and no existing one. Removing the post capabilities from Leiding was
+        // exactly that change, and it did nothing on the site it was written on.
+        $role = get_role(CJW_Roles::ROLE_LEIDING);
+        $role->add_cap('edit_posts');
+
+        // The record is what tells a capability this plugin granted from one
+        // somebody added by hand. Written as though an earlier version had
+        // granted edit_posts, which is what actually happened.
+        $record = get_option('cjw_roles_installed');
+        $record[ CJW_Roles::ROLE_LEIDING ][] = 'edit_posts';
+        update_option('cjw_roles_installed', $record);
+
+        $this->assertTrue(user_can($this->actAsLeiding(), 'edit_posts'));
+
+        CJW_Roles::install();
+        unset($GLOBALS['wp_roles']);
+
+        $this->assertFalse(
+            user_can($this->actAsLeiding(), 'edit_posts'),
+            'A capability this plugin no longer grants is still on the role.'
+        );
+    }
+
+    public function testACapabilityAnAdministratorAddedByHandSurvives(): void
+    {
+        // The reason the install records what it granted rather than simply
+        // rebuilding the role: an administrator who widened Leiding on purpose
+        // should not have it undone by the next plugin update.
+        CJW_Roles::install();
+
+        $role = get_role(CJW_Roles::ROLE_LEIDING);
+        $role->add_cap('export');
+
+        CJW_Roles::install();
+        unset($GLOBALS['wp_roles']);
+
+        $this->assertTrue(
+            user_can($this->actAsLeiding(), 'export'),
+            'A capability added by hand was thrown away by a reinstall.'
+        );
+    }
+
     /* The stock roles are gone, and their people are not
     --------------------------------------------- */
 
