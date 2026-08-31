@@ -125,19 +125,7 @@ final class CJW_Roles
     private const array LEIDING_CAPABILITIES = [
         'read',
         'upload_files',
-        'moderate_comments',
         'manage_categories',
-
-        'edit_posts',
-        'edit_others_posts',
-        'edit_published_posts',
-        'edit_private_posts',
-        'publish_posts',
-        'read_private_posts',
-        'delete_posts',
-        'delete_others_posts',
-        'delete_published_posts',
-        'delete_private_posts',
 
         'edit_pages',
         'edit_others_pages',

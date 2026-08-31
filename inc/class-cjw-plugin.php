@@ -53,9 +53,12 @@ final class CJW_Plugin
 
         add_action('init', [self::class, 'loadTextdomain']);
 
+        // Outside the is_admin() check below: it closes comments, and the
+        // comment form renders on the front end.
+        CJW_Admin_Menu::init();
+
         if (is_admin()) {
             (new CJW_Roles_Notice())->init();
-            CJW_Admin_Menu::init();
         }
 
         CJW_Summer_Camp_Module::boot();
