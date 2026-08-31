@@ -64,6 +64,41 @@ final class CJW_Wizard_Submission_Repository implements CJW_Wizard_Submission_St
     public const string META_NOTES = '_cjw_wizard_notes';
 
     /**
+     * Photo consent, one row per child, as 'ja' or 'nee'.
+     *
+     * The answer has always been in the payload, which is a JSON blob: readable
+     * on one registration at a time and queryable never. "Which children may
+     * not be photographed" is a question somebody asks with a camera in their
+     * hand, on a field, before a photo goes on the site -- so it is indexed,
+     * the way the camp type is.
+     *
+     * One row per child rather than one joined value, because siblings differ
+     * and a filter has to match a registration where any one of them said no.
+     */
+    public const string META_PHOTO_CONSENT = '_cjw_wizard_photo_consent';
+
+    /**
+     * A child's identity for duplicate detection: one row per child.
+     *
+     * A hash of the normalised name and date of birth, not the pair itself.
+     * Equality is the only thing duplicate detection needs, and a hash answers
+     * that without adding a second readable copy of a child's name and birthday
+     * to the database. It is cleared on anonymisation all the same: it is
+     * derived from personal data and it links two rows together.
+     */
+    public const string META_CHILD_KEY = '_cjw_wizard_child_key';
+
+    /**
+     * The earlier registration this one appears to repeat.
+     *
+     * Set at submission time and shown in the admin list. Nothing is refused
+     * and the parent is told nothing: two children can share a name, a parent
+     * can be correcting a mistake, and a form that argues with somebody halfway
+     * through is worse than a list a kampbeheerder can glance at.
+     */
+    public const string META_DUPLICATE_OF = '_cjw_wizard_duplicate_of';
+
+    /**
      * Every status a submission we still hold data for can be in.
      *
      * Spelled out rather than using `'any'`, which sounds like "everything" and
@@ -133,7 +168,214 @@ final class CJW_Wizard_Submission_Repository implements CJW_Wizard_Submission_St
             add_post_meta($submission_id, self::META_CAMP_TYPE, $campType);
         }
 
+        $this->indexChildren((int) $submission_id, CJW_Wizard_Field_Roles::childRows($config, $data));
+
         return (int) $submission_id;
+    }
+
+    /**
+     * How many children this camp year answered each way about photos.
+     *
+     * Counted over the consent rows rather than over registrations: a family of
+     * three where one child said no is one registration and three children, and
+     * the number that matters is the children.
+     *
+     * @return array{ja: int, nee: int}
+     */
+    public static function consentCounts(): array
+    {
+        $counts = [
+            'ja' => 0,
+            'nee' => 0,
+        ];
+
+        $query = [
+            'post_type' => self::POST_TYPE,
+            // Not 'any'. See ALL_STATUSES: WP_Query expands it to every status
+            // that is not exclude_from_search, which silently drops the custom
+            // ones this post type actually uses -- so this counted nothing at
+            // all. Trash is left out on purpose here: a deleted registration is
+            // not a child anybody is photographing.
+            'post_status' => array_keys(CJW_Wizard_Submission_Status::all()),
+            // A camp year is a few hundred registrations; this is a ceiling
+            // rather than a pagination scheme.
+            // phpcs:ignore WordPress.WP.PostsPerPage.posts_per_page_numberposts -- See above: bounded by the size of a camp year.
+            'numberposts' => 500,
+            'fields' => 'ids',
+            'no_found_rows' => true,
+            // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- One camp year's registrations; the alternative is counting nothing.
+            'meta_query' => [
+                [
+                    'key' => self::META_CAMP_YEAR,
+                    'value' => self::currentCampYear(),
+                ],
+            ],
+        ];
+
+        foreach (get_posts($query) as $submission_id) {
+            // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Reading every row of one key, which is the point.
+            $answers = get_post_meta((int) $submission_id, self::META_PHOTO_CONSENT, false);
+
+            foreach (is_array($answers) ? $answers : [] as $answer) {
+                $answer = (string) $answer;
+
+                if (isset($counts[ $answer ])) {
+                    ++$counts[ $answer ];
+                }
+            }
+        }
+
+        return $counts;
+    }
+
+    /**
+     * Writes the per-child rows that make a registration answerable.
+     *
+     * @param int $submission_id Registration just stored.
+     * @param array<int, array{name: string, birth_date: string, camp: string, photo_consent: string}> $rows Children on it.
+     * @return void
+     */
+    private function indexChildren(int $submission_id, array $rows): void
+    {
+        $keys = [];
+
+        foreach ($rows as $row) {
+            add_post_meta($submission_id, self::META_PHOTO_CONSENT, self::consentValue($row['photo_consent']));
+
+            $key = self::childKey($row['name'], $row['birth_date']);
+
+            if ($key !== '' && ! in_array($key, $keys, true)) {
+                $keys[] = $key;
+                add_post_meta($submission_id, self::META_CHILD_KEY, $key);
+            }
+        }
+
+        $earlier = $this->earlierRegistrationFor($submission_id, $keys);
+
+        if ($earlier > 0) {
+            update_post_meta($submission_id, self::META_DUPLICATE_OF, $earlier);
+        }
+    }
+
+    /**
+     * Photo consent as one of two words.
+     *
+     * A checkbox arrives as '1', 'on', 'ja' or missing entirely depending on how
+     * the field was built, and an unchecked box sends nothing at all. Anything
+     * that is not recognisably a yes is a no: consent has to be given, and a
+     * value nobody understands is not consent.
+     *
+     * @param mixed $raw Whatever the form submitted.
+     * @return string
+     */
+    public static function consentValue($raw): string
+    {
+        if (is_array($raw)) {
+            $raw = reset($raw);
+        }
+
+        $value = strtolower(trim((string) $raw));
+
+        return in_array($value, [ '1', 'on', 'true', 'ja', 'yes', 'akkoord' ], true) ? 'ja' : 'nee';
+    }
+
+    /**
+     * A child's identity, as a hash of name and date of birth.
+     *
+     * Normalised first, because "Sanne  de Vries" and "sanne de vries" are the
+     * same child and a duplicate that only matches on an exact string is a
+     * duplicate check that finds nothing. Answers an empty string when either
+     * half is missing -- a name on its own is not enough to call two children
+     * the same person.
+     *
+     * @param string $name Child's full name as entered.
+     * @param string $birth_date Date of birth as entered.
+     * @return string
+     */
+    public static function childKey(string $name, string $birth_date): string
+    {
+        $name = trim(preg_replace('/\s+/u', ' ', remove_accents($name)) ?? '');
+        $date = self::normaliseDate($birth_date);
+
+        if ($name === '' || $date === '') {
+            return '';
+        }
+
+        return sha1(strtolower($name) . '|' . $date);
+    }
+
+    /**
+     * A date of birth as Y-m-d, whatever shape it arrived in.
+     *
+     * @param string $value Date as entered.
+     * @return string Empty when it cannot be read as a date.
+     */
+    private static function normaliseDate(string $value): string
+    {
+        $value = trim($value);
+
+        if ($value === '') {
+            return '';
+        }
+
+        foreach ([ 'Y-m-d', 'd-m-Y', 'd/m/Y', 'Y/m/d' ] as $format) {
+            $date = DateTimeImmutable::createFromFormat('!' . $format, $value);
+
+            if ($date instanceof DateTimeImmutable && $date->format($format) === $value) {
+                return $date->format('Y-m-d');
+            }
+        }
+
+        return '';
+    }
+
+    /**
+     * The oldest registration in this camp year holding any of these children.
+     *
+     * Scoped to the camp year on purpose: the same child registering again next
+     * summer is not a duplicate, it is next summer. Anonymised rows are skipped
+     * because their keys are gone.
+     *
+     * @param int $submission_id The registration being stored.
+     * @param array<int, string> $keys Child keys on it.
+     * @return int Zero when there is no earlier match.
+     */
+    private function earlierRegistrationFor(int $submission_id, array $keys): int
+    {
+        if ($keys === []) {
+            return 0;
+        }
+
+        $query = [
+            'post_type' => self::POST_TYPE,
+            // Not 'any' -- see consentCounts(). Trash is excluded deliberately:
+            // if somebody already deleted the earlier registration, this one is
+            // the only one there is and calling it a duplicate is wrong.
+            'post_status' => array_keys(CJW_Wizard_Submission_Status::all()),
+            'numberposts' => 2,
+            'orderby' => 'ID',
+            'order' => 'ASC',
+            'exclude' => [ $submission_id ],
+            'fields' => 'ids',
+            'no_found_rows' => true,
+            // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Runs once per submission, over one camp year.
+            'meta_query' => [
+                'relation' => 'AND',
+                [
+                    'key' => self::META_CAMP_YEAR,
+                    'value' => $this->campYear(),
+                ],
+                [
+                    'key' => self::META_CHILD_KEY,
+                    'value' => $keys,
+                    'compare' => 'IN',
+                ],
+            ],
+        ];
+
+        $matches = get_posts($query);
+
+        return $matches === [] ? 0 : (int) $matches[0];
     }
 
     /**
@@ -426,8 +668,13 @@ final class CJW_Wizard_Submission_Repository implements CJW_Wizard_Submission_St
         delete_post_meta($submission_id, self::META_EMAIL);
         delete_post_meta($submission_id, self::META_CHILD_NAME);
         delete_post_meta($submission_id, self::META_NOTES);
-        // META_CAMP_TYPE deliberately survives: it identifies nobody, and it is
-        // what keeps "74 registrations for the 2026 week camp" answerable after
+        // Derived from a name and a birthday, and it links two registrations to
+        // each other. It goes when they do.
+        delete_post_meta($submission_id, self::META_CHILD_KEY);
+        delete_post_meta($submission_id, self::META_DUPLICATE_OF);
+        // META_CAMP_TYPE and META_PHOTO_CONSENT deliberately survive: neither
+        // identifies anybody, and they are what keeps "74 registrations for the
+        // 2026 week camp" and "12 of them said no to photos" answerable after
         // the personal data is gone.
 
         update_post_meta($submission_id, self::META_ANONYMISED, wp_date('Y-m-d'));

@@ -811,5 +811,18 @@ require_once __DIR__ . '/../inc/summer-camp/admin/class-cjw-summer-camp-settings
 require_once __DIR__ . '/../inc/summer-camp/admin/class-cjw-summer-camp-year.php';
 require_once __DIR__ . '/../inc/summer-camp/class-cjw-summer-camp-rental-post-type.php';
 
+if (! function_exists('remove_accents')) {
+    /**
+     * Enough of WordPress's transliteration for a duplicate check: the Dutch
+     * names this site sees are accented, not transliterated from another script.
+     */
+    function remove_accents(string $text): string
+    {
+        $converted = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $text);
+
+        return is_string($converted) ? $converted : $text;
+    }
+}
+
 require_once __DIR__ . '/support/TestCase.php';
 require_once __DIR__ . '/support/FakeSubmissionRepository.php';

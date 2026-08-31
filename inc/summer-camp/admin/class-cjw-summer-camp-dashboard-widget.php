@@ -54,8 +54,59 @@ final class CJW_Summer_Camp_Dashboard_Widget
         $camp = cjw_summer_camp();
 
         $this->renderStatus($camp);
+        $this->renderPhotoConsent();
         $this->renderAttentionList($camp);
         $this->renderQuickLinks();
+    }
+
+    /**
+     * How many children this camp year may not be photographed.
+     *
+     * Not an attention point: nobody has to do anything about it, and a list of
+     * things to fix is the wrong place for a number that is simply true. It is
+     * here because it is the one figure that has to be known before a photo
+     * goes on the site, and going looking for it means opening every
+     * registration.
+     *
+     * Shown only when somebody has said no. A line reading "0 kinderen zonder
+     * toestemming" on a dashboard every day is noise.
+     *
+     * @return void
+     */
+    private function renderPhotoConsent(): void
+    {
+        if (! class_exists('CJW_Wizard_Submission_Repository')) {
+            return;
+        }
+
+        $counts = CJW_Wizard_Submission_Repository::consentCounts();
+
+        if ($counts['nee'] < 1) {
+            return;
+        }
+
+        $total = $counts['ja'] + $counts['nee'];
+
+        ?>
+        <p style="margin:8px 0 0;">
+            <span class="dashicons dashicons-camera" style="color:#b32d2e;" aria-hidden="true"></span>
+            <strong style="color:#b32d2e;">
+                <?php
+                    echo esc_html(sprintf(
+                        /* translators: 1: children without photo consent, 2: children this camp year. */
+                        _n(
+                            '%1$d van %2$d kind zonder fototoestemming',
+                            '%1$d van %2$d kinderen zonder fototoestemming',
+                            $total,
+                            'cjw'
+                        ),
+                        $counts['nee'],
+                        $total
+                    ));
+        ?>
+            </strong>
+        </p>
+        <?php
     }
 
     /**

@@ -257,6 +257,7 @@ JS;
             // useful while the stored title carries no personal data.
             'cjw_children' => __('Naam', 'cjw'),
             'cjw_camp' => __('Kamp', 'cjw'),
+            'cjw_foto' => __('Foto’s', 'cjw'),
             'cjw_status' => __('Status', 'cjw'),
         ];
 
@@ -402,6 +403,8 @@ JS;
             case 'cjw_children':
                 // Pre-escaped by the helper, which builds a link.
                 echo $this->childrenCell($post_id); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The helper escapes the link it builds.
+                echo $this->duplicateNote($post_id);
                 break;
 
             case 'cjw_status':
@@ -422,6 +425,11 @@ JS;
 
             case 'cjw_camp':
                 echo esc_html($this->valueOrDash($this->repository->get_camp_type($post_id)));
+                break;
+
+            case 'cjw_foto':
+                // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The helper escapes the label it builds.
+                echo $this->consentCell($post_id);
                 break;
 
             case 'cjw_received':
@@ -455,6 +463,36 @@ JS;
         }
 
         $this->renderCampFilter();
+        $this->renderConsentFilter();
+    }
+
+    /**
+     * The "no photo consent" filter.
+     *
+     * One value, not a yes/no pair. Nobody goes looking for the children who
+     * said yes; the question is always which ones did not, asked before a photo
+     * goes anywhere.
+     *
+     * @return void
+     */
+    private function renderConsentFilter(): void
+    {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Reads back the filter for the selected state.
+        $current = isset($_GET['cjw_consent_filter']) ? sanitize_text_field(wp_unslash((string) $_GET['cjw_consent_filter'])) : '';
+
+        echo '<select name="cjw_consent_filter">';
+        echo '<option value="">' . esc_html__('Alle fototoestemming', 'cjw') . '</option>';
+        printf(
+            '<option value="nee" %1$s>%2$s</option>',
+            selected($current, 'nee', false),
+            esc_html__('Zonder toestemming', 'cjw')
+        );
+        printf(
+            '<option value="ja" %1$s>%2$s</option>',
+            selected($current, 'ja', false),
+            esc_html__('Alleen met toestemming', 'cjw')
+        );
+        echo '</select>';
     }
 
     /**
@@ -501,6 +539,19 @@ JS;
             $meta[] = [
                 'key' => CJW_Wizard_Submission_Repository::META_CAMP_TYPE,
                 'value' => $camp,
+            ];
+        }
+
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- See above.
+        $consent = isset($_GET['cjw_consent_filter']) ? sanitize_text_field(wp_unslash((string) $_GET['cjw_consent_filter'])) : '';
+
+        if (in_array($consent, [ 'ja', 'nee' ], true)) {
+            // Matches a registration where any one child answered this way,
+            // because consent is stored a row per child. "Zonder toestemming"
+            // has to find a family where one of three said no.
+            $meta[] = [
+                'key' => CJW_Wizard_Submission_Repository::META_PHOTO_CONSENT,
+                'value' => $consent,
             ];
         }
 
@@ -639,6 +690,77 @@ JS;
         }
 
         echo '</select>';
+    }
+
+    /**
+     * A note under the name when this registration repeats an earlier one.
+     *
+     * Says "mogelijk", because it is a guess: a name and a date of birth match,
+     * which is usually the same child registered twice and occasionally two
+     * children who share both. The parent was told nothing and nothing was
+     * refused, so this line is the only place it surfaces.
+     *
+     * @param int $submissionId Registration.
+     * @return string Escaped HTML, or an empty string.
+     */
+    private function duplicateNote(int $submissionId): string
+    {
+        $earlier = (int) get_post_meta($submissionId, CJW_Wizard_Submission_Repository::META_DUPLICATE_OF, true);
+
+        if ($earlier < 1 || get_post_status($earlier) === false) {
+            return '';
+        }
+
+        $link = get_edit_post_link($earlier);
+
+        $label = sprintf(
+            /* translators: %d: the earlier registration's number. */
+            __('mogelijk dubbel met #%d', 'cjw'),
+            $earlier
+        );
+
+        if (! is_string($link) || $link === '') {
+            return '<br><span style="color:#b32d2e;">' . esc_html($label) . '</span>';
+        }
+
+        return '<br><a href="' . esc_url($link) . '" style="color:#b32d2e;">' . esc_html($label) . '</a>';
+    }
+
+    /**
+     * The photo consent cell: what the children on this registration answered.
+     *
+     * @param int $submissionId Registration.
+     * @return string Escaped HTML.
+     */
+    private function consentCell(int $submissionId): string
+    {
+        // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Reading every row of one key on one post.
+        $answers = get_post_meta($submissionId, CJW_Wizard_Submission_Repository::META_PHOTO_CONSENT, false);
+        $answers = is_array($answers) ? array_map('strval', $answers) : [];
+
+        if ($answers === []) {
+            return esc_html($this->valueOrDash(''));
+        }
+
+        $refused = count(array_filter($answers, static fn(string $answer): bool => $answer === 'nee'));
+
+        if ($refused === 0) {
+            return '<span style="color:#646970;">' . esc_html__('ja', 'cjw') . '</span>';
+        }
+
+        // Coloured, and it says how many. A family where one of three children
+        // may not be photographed is the case this column exists for, and "nee"
+        // on its own would read as all of them.
+        $label = count($answers) === $refused
+            ? __('nee', 'cjw')
+            : sprintf(
+                /* translators: 1: children without consent, 2: children on the registration. */
+                __('%1$d van %2$d niet', 'cjw'),
+                $refused,
+                count($answers)
+            );
+
+        return '<strong style="color:#b32d2e;">' . esc_html($label) . '</strong>';
     }
 
     /**

@@ -56,6 +56,7 @@ final class CJW_Wizard_Children_Table extends WP_List_Table
             'name' => __('Kind', 'cjw'),
             'birth_date' => __('Geboortedatum', 'cjw'),
             'camp' => __('Kamp', 'cjw'),
+            'photo_consent' => __('Foto’s', 'cjw'),
             'status' => __('Status', 'cjw'),
             'contact' => __('Contact', 'cjw'),
             'submitted' => __('Ontvangen', 'cjw'),
@@ -73,6 +74,7 @@ final class CJW_Wizard_Children_Table extends WP_List_Table
             'name' => [ 'name', false ],
             'birth_date' => [ 'birth_date', false ],
             'camp' => [ 'camp', false ],
+            'photo_consent' => [ 'photo_consent', false ],
             'status' => [ 'status', false ],
             'submitted' => [ 'submitted', true ],
         ];
@@ -142,6 +144,11 @@ final class CJW_Wizard_Children_Table extends WP_List_Table
                     'name' => $child['name'],
                     'birth_date' => $child['birth_date'],
                     'camp' => $child['camp'],
+                    // Normalised here rather than shown raw: the field can be a
+                    // checkbox, a radio or a select depending on how the form
+                    // was built, so the payload holds '1', 'on' or 'Ja' for the
+                    // same answer and a column of those is unsortable.
+                    'photo_consent' => CJW_Wizard_Submission_Repository::consentValue($child['photo_consent']),
                     'status' => (string) get_post_status($id),
                     'contact' => $this->repository->get_email($id),
                     'submitted' => get_post_time('Y-m-d H:i', false, $submission),
@@ -243,6 +250,25 @@ final class CJW_Wizard_Children_Table extends WP_List_Table
             esc_url($link),
             esc_html($name)
         );
+    }
+
+    /**
+     * Whether this child may be photographed.
+     *
+     * A refusal is the only answer worth making loud. This screen is read on a
+     * field with a camera in hand, and the one thing that must not be missed is
+     * the child who is not in the pictures.
+     *
+     * @param array $item Row.
+     * @param array<string, mixed> $item
+     */
+    public function column_photo_consent(array $item): string
+    {
+        if ((string) ($item['photo_consent'] ?? '') === 'ja') {
+            return '<span style="color:#646970;">' . esc_html__('ja', 'cjw') . '</span>';
+        }
+
+        return '<strong style="color:#b32d2e;">' . esc_html__('nee', 'cjw') . '</strong>';
     }
 
     /**

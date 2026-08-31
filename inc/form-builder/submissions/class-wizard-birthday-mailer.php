@@ -14,10 +14,15 @@ if (! defined('ABSPATH')) {
  * ignores teaches people not to trust the rest of the screen, so this either had
  * to be built or the fields had to come out.
  *
- * It reads birth dates that are already stored for another reason, and stops the
- * moment retention takes them away. That is the whole privacy position: no new
- * data is kept, nothing is kept for longer, and a family whose registration has
- * been anonymised simply stops being greeted.
+ * It reads birth dates that are already stored for another reason, and it is
+ * bounded by the same window that governs them: a registration is greeted for
+ * exactly as long as the retention setting says its data may be kept, and not a
+ * day longer. Set retention to four months and a child is wished a happy
+ * birthday if it falls in those four months; after that the row is on its way
+ * to being anonymised and nothing is sent.
+ *
+ * That is the whole privacy position: no new data is kept, nothing is kept for
+ * longer, and the greeting cannot outlive the reason the birth date is there.
  *
  * Sent to the address that registered, never to a child. The form asks for a
  * parent's address, and that is the only address there is.
@@ -117,7 +122,7 @@ final class CJW_Wizard_Birthday_Mailer
         $today = new DateTimeImmutable('now', wp_timezone());
         $sent = 0;
 
-        foreach ($this->registrationsThisYear() as $submission) {
+        foreach ($this->registrationsInRetention() as $submission) {
             $sent += $this->greet((int) $submission->ID, $today);
         }
 
@@ -263,15 +268,66 @@ final class CJW_Wizard_Birthday_Mailer
     }
 
     /**
-     * This camp year's registrations that still hold personal data.
+     * Registrations whose retention window is still open.
+     *
+     * The window is the retention setting, measured the way the sweep measures
+     * it -- from the end of the camp, so a season's registrations expire
+     * together. A row the sweep is about to anonymise is a row whose birth date
+     * is no longer ours to use, so it is not greeted in the meantime.
+     *
+     * With retention switched off there is no window to honour, and greeting
+     * indefinitely is the thing this bound exists to prevent. It falls back to
+     * the current camp year: bounded, and the narrower of the two answers.
      *
      * @return array<int, WP_Post>
      */
-    private function registrationsThisYear(): array
+    private function registrationsInRetention(): array
     {
-        return $this->repository->get_for_camp_year(
-            CJW_Wizard_Submission_Repository::currentCampYear(),
-            self::BATCH
-        );
+        $cutoff = $this->retentionCutoff();
+
+        if (! $cutoff instanceof DateTimeImmutable) {
+            return $this->repository->get_for_camp_year(
+                CJW_Wizard_Submission_Repository::currentCampYear(),
+                self::BATCH
+            );
+        }
+
+        $query = [
+            'post_type' => CJW_Wizard_Submission_Repository::POST_TYPE,
+            // Not 'any', which drops this post type's custom statuses, and not
+            // the trash either: a deleted registration is not greeted.
+            'post_status' => array_keys(CJW_Wizard_Submission_Status::all()),
+            'numberposts' => self::BATCH,
+            'no_found_rows' => true,
+            'date_query' => [
+                [
+                    'after' => $cutoff->format('Y-m-d H:i:s'),
+                    'inclusive' => true,
+                ],
+            ],
+            // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- One key, over the registrations still inside the retention window.
+            'meta_query' => [
+                [
+                    'key' => CJW_Wizard_Submission_Repository::META_ANONYMISED,
+                    'compare' => 'NOT EXISTS',
+                ],
+            ],
+        ];
+
+        return get_posts($query);
+    }
+
+    /**
+     * The date a registration must postdate for its data to still be kept.
+     *
+     * @return DateTimeImmutable|null Null when retention is switched off.
+     */
+    private function retentionCutoff(): ?DateTimeImmutable
+    {
+        if (! class_exists('CJW_Wizard_Submission_Retention')) {
+            return null;
+        }
+
+        return new CJW_Wizard_Submission_Retention($this->repository)->cutoff();
     }
 }

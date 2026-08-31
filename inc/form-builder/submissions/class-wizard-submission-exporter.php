@@ -102,14 +102,23 @@ final class CJW_Wizard_Submission_Exporter
 
         $submissions = $this->repository->get_by_wizard($wizard_id);
         $rows = [];
-        $headers = [ 'submission_id', 'submitted_at' ];
+
+        // fototoestemming is a column of its own, ahead of the payload. The
+        // answer is already in the flattened payload, but under whatever field
+        // key the form happens to use and in whatever shape that field produces
+        // -- '1' from a checkbox, 'Ja' from a radio. Whoever handles the photos
+        // reads this file to find out who is not in the pictures, so the answer
+        // gets one predictable column with one of two words in it.
+        $headers = [ 'submission_id', 'submitted_at', 'fototoestemming' ];
 
         foreach ($submissions as $submission) {
-            $flat_payload = $this->repository->flatten_data($this->repository->get_payload((int) $submission->ID));
+            $id = (int) $submission->ID;
+            $flat_payload = $this->repository->flatten_data($this->repository->get_payload($id));
             $headers = array_values(array_unique([ ...$headers, ...array_keys($flat_payload) ]));
             $rows[] = [
-                'submission_id' => (string) $submission->ID,
+                'submission_id' => (string) $id,
                 'submitted_at' => get_post_time('Y-m-d H:i:s', false, $submission),
+                'fototoestemming' => self::consentColumn($id),
                 ...$flat_payload,
             ];
         }
@@ -133,6 +142,28 @@ final class CJW_Wizard_Submission_Exporter
         }
 
         exit;
+    }
+
+    /**
+     * The photo consent column: one word, or one word per child.
+     *
+     * Siblings can answer differently, so a registration with three children
+     * exports "ja/nee/ja" rather than a single answer that would be wrong for
+     * one of them.
+     *
+     * @param int $submission_id Registration.
+     * @return string
+     */
+    private static function consentColumn(int $submission_id): string
+    {
+        // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Reading every row of one key on one post.
+        $answers = get_post_meta($submission_id, CJW_Wizard_Submission_Repository::META_PHOTO_CONSENT, false);
+
+        if (! is_array($answers) || $answers === []) {
+            return '';
+        }
+
+        return implode('/', array_map('strval', $answers));
     }
 
     /**

@@ -165,10 +165,37 @@ final class BirthdayMailTest extends CJW_IntegrationTestCase
         $this->assertSame(0, $this->mailer()->send_todays_greetings());
     }
 
-    public function testLastYearsFamiliesAreNotGreeted(): void
+    /**
+     * The window is retention, not the camp year.
+     *
+     * This test used to assert the opposite: that a family from last summer is
+     * never greeted. The rule is now the retention setting -- a birth date may
+     * be used for exactly as long as it may be kept -- so a registration whose
+     * retention window is still open is still greeted, whichever camp it
+     * belonged to. Set retention to four months and the greeting lasts four
+     * months.
+     */
+    public function testAFamilyFromLastYearIsGreetedWhileItsDataIsStillKept(): void
     {
         $id = $this->registration($this->bornToday());
         update_post_meta($id, CJW_Wizard_Submission_Repository::META_CAMP_YEAR, (string) ((int) wp_date('Y') - 1));
+
+        $this->assertSame(1, $this->mailer()->send_todays_greetings());
+    }
+
+    public function testARegistrationPastItsRetentionWindowIsNotGreeted(): void
+    {
+        $id = $this->registration($this->bornToday());
+
+        // Dated well before any cut-off the retention setting can produce. The
+        // sweep is on its way to anonymising this row, and a birth date that is
+        // no longer ours to keep is not ours to send a card with either.
+        wp_update_post([
+            'ID' => $id,
+            'post_date' => '2015-01-01 09:00:00',
+            'post_date_gmt' => '2015-01-01 09:00:00',
+            'post_status' => get_post_status($id),
+        ]);
 
         $this->assertSame(0, $this->mailer()->send_todays_greetings());
     }
