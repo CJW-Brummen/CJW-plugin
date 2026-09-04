@@ -44,6 +44,14 @@ final class CJW_Wizard_Submission_Retention
     {
         add_action(self::HOOK, [ $this, 'run_scheduled' ]);
 
+        // The only job on this site that ever erases a child's details. If it
+        // stops, nothing looks wrong and the data simply stays.
+        CJW_Cron_Heartbeat::watch(
+            self::HOOK,
+            __('Bewaartermijn opschonen', 'cjw'),
+            2 * DAY_IN_SECONDS
+        );
+
         // Self-healing: if the schedule was lost -- a botched deactivation, a
         // restored database, a plugin folder swapped out -- put it back rather
         // than silently never running again.
@@ -84,6 +92,8 @@ final class CJW_Wizard_Submission_Retention
     public function run_scheduled(): void
     {
         $this->sweep();
+
+        CJW_Cron_Heartbeat::record(self::HOOK);
     }
 
     /**

@@ -64,6 +64,15 @@ final class CJW_Summer_Camp_Digest
         $instance = new self();
 
         add_action(self::HOOK, [$instance, 'runScheduled']);
+
+        // Watched even when the mail itself is switched off: the schedule is
+        // what proves cron is alive, and a silent digest and a dead cron look
+        // identical from the outside.
+        CJW_Cron_Heartbeat::watch(
+            self::HOOK,
+            __('Weekbericht', 'cjw'),
+            9 * DAY_IN_SECONDS
+        );
         add_action('admin_post_' . self::ACTION_PREVIEW, [$instance, 'handlePreview']);
         add_action('admin_post_' . self::ACTION_TOGGLE, [$instance, 'handleToggle']);
 
@@ -128,6 +137,8 @@ final class CJW_Summer_Camp_Digest
     public function runScheduled(): void
     {
         $this->maybeSend();
+
+        CJW_Cron_Heartbeat::record(self::HOOK);
     }
 
     /**

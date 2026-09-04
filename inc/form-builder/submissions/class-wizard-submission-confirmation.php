@@ -42,6 +42,17 @@ final class CJW_Wizard_Submission_Confirmation
      */
     public const string META_RESULT_TIME = '_cjw_wizard_confirmation_time';
 
+    /**
+     * Alert key for "the confirmation could not be sent".
+     */
+    private const string ALERT_FAILED = 'confirmation_mail_failed';
+
+    /**
+     * Alert key prefix for "this form promises a confirmation it cannot send",
+     * completed with the form id.
+     */
+    private const string ALERT_NO_ADDRESS = 'confirmation_no_address:';
+
     public const string SENT = 'sent';
     public const string NO_ADDRESS = 'no_address';
     public const string FAILED = 'failed';
@@ -61,8 +72,6 @@ final class CJW_Wizard_Submission_Confirmation
      */
     public function maybe_send(int $submission_id, int $wizard_id, array $config, array $data): string
     {
-        unset($wizard_id);
-
         $settings = $config['settings'] ?? [];
 
         if (empty($settings['send_parent_confirmation'])) {
@@ -75,6 +84,7 @@ final class CJW_Wizard_Submission_Confirmation
             // A form that confirms but never asks for an address is a
             // misconfiguration worth being able to see.
             $this->record($submission_id, self::NO_ADDRESS);
+            $this->reportNoAddress($wizard_id);
 
             return self::NO_ADDRESS;
         }
@@ -89,7 +99,81 @@ final class CJW_Wizard_Submission_Confirmation
 
         $this->record($submission_id, $result);
 
+        if ($sent) {
+            // Mail is working again, so the next breakage is worth hearing about.
+            CJW_Alerts::clear(self::ALERT_FAILED);
+        } else {
+            $this->reportFailure($submission_id);
+        }
+
         return $result;
+    }
+
+    /**
+     * Tells the organisers that a parent was promised a confirmation and did
+     * not get one.
+     *
+     * A parent reads a missing confirmation as a failed registration, so they
+     * register again or telephone -- and until now the only trace was a red
+     * line on an admin list that gets opened a few times a year. Raised once
+     * and cleared by the next successful send, because a mail server that is
+     * down for a day should produce one alert, not ninety.
+     */
+    private function reportFailure(int $submission_id): void
+    {
+        $reason = CJW_Mailer::lastError();
+
+        $body = '<p>' . sprintf(
+            /* translators: %d: submission number. */
+            esc_html__(
+                'De bevestigingsmail voor inschrijving #%d is niet verstuurd. De ouder heeft dus niets ontvangen, terwijl het formulier wel zei dat er een bevestiging aankomt.',
+                'cjw'
+            ),
+            $submission_id
+        ) . '</p>';
+
+        if ($reason !== '') {
+            $body .= '<p>' . sprintf(
+                /* translators: %s: error message from the mail server. */
+                esc_html__('De mailserver meldde: %s', 'cjw'),
+                esc_html($reason)
+            ) . '</p>';
+        }
+
+        $body .= '<p>' . esc_html__(
+            'Neem contact op met deze ouder, en controleer daarna of er meer inschrijvingen zonder bevestiging zijn blijven staan. Je krijgt pas weer een melding als het versturen eerst weer is gelukt.',
+            'cjw'
+        ) . '</p>';
+
+        CJW_Alerts::raise(
+            self::ALERT_FAILED,
+            __('Bevestigingsmail niet verstuurd', 'cjw'),
+            $body
+        );
+    }
+
+    /**
+     * Tells the organisers that a form promises a confirmation it can never
+     * send, because it never asks for an address.
+     *
+     * Keyed per form: two forms can be wrong in this way independently, and
+     * fixing one should not silence the other.
+     */
+    private function reportNoAddress(int $wizard_id): void
+    {
+        $body = '<p>' . esc_html__(
+            'Dit formulier stuurt een bevestiging naar de ouder, maar vraagt nergens om een e-mailadres. Er is dus niemand om de bevestiging naartoe te sturen.',
+            'cjw'
+        ) . '</p><p>' . esc_html__(
+            'Voeg een e-mailveld toe aan het formulier en geef het de betekenis “E-mailadres van de ouder”, of zet de bevestiging uit in de instellingen van dit formulier.',
+            'cjw'
+        ) . '</p>';
+
+        CJW_Alerts::raise(
+            self::ALERT_NO_ADDRESS . $wizard_id,
+            __('Formulier belooft een bevestiging maar vraagt geen e-mailadres', 'cjw'),
+            $body
+        );
     }
 
     /**

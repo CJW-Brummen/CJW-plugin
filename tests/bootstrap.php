@@ -605,6 +605,26 @@ if (! function_exists('cjw_summer_camp')) {
     }
 }
 
+if (! function_exists('get_users')) {
+    /**
+     * The ids the test decided exist. Empty by default, so a test that does
+     * not care about recipients sends to nobody rather than to a fixture.
+     *
+     * @return array<int, int>
+     */
+    function get_users(array $args = []): array
+    {
+        return $GLOBALS['cjw_test_users'] ?? [];
+    }
+}
+
+if (! function_exists('get_userdata')) {
+    function get_userdata(int $user_id): mixed
+    {
+        return $GLOBALS['cjw_test_userdata'][ $user_id ] ?? false;
+    }
+}
+
 if (! function_exists('get_the_date')) {
     function get_the_date(string $format = '', mixed $post = null): string
     {
@@ -804,6 +824,8 @@ if (! function_exists('get_post')) {
 require_once __DIR__ . '/../inc/shared/class-cjw-mail-templates.php';
 require_once __DIR__ . '/../inc/shared/class-cjw-mail-tokens.php';
 require_once __DIR__ . '/../inc/shared/class-cjw-mailer.php';
+require_once __DIR__ . '/../inc/shared/class-cjw-alerts.php';
+require_once __DIR__ . '/../inc/shared/class-cjw-cron-heartbeat.php';
 require_once __DIR__ . '/../inc/form-builder/domain/class-wizard-amount.php';
 require_once __DIR__ . '/../inc/form-builder/submissions/class-wizard-birthday-mailer.php';
 require_once __DIR__ . '/../inc/form-builder/submissions/class-wizard-year-rollover.php';

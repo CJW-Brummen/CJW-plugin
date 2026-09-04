@@ -69,6 +69,11 @@ final class CJW_Summer_Camp_Site_Health
             'test' => [$this, 'testMail'],
         ];
 
+        $tests['direct']['cjw_summer_camp_cron'] = [
+            'label' => __('Zomerkamp: geplande taken', 'cjw'),
+            'test' => [$this, 'testScheduledJobs'],
+        ];
+
         return $tests;
     }
 
@@ -352,6 +357,59 @@ final class CJW_Summer_Camp_Site_Health
             '<p><a href="%s">%s</a></p>',
             esc_url(add_query_arg('tab', 'beheer', admin_url('admin.php?page=cjw-summer-camp'))),
             esc_html__('Stuur een testmail', 'cjw')
+        );
+    }
+
+    /**
+     * Checks that the site's scheduled jobs are still running.
+     *
+     * WP-Cron fires only when somebody visits, so an out-of-season camp site
+     * can go days without one, and a host that disables it stops them for
+     * good. The retention sweep is why this is critical rather than merely
+     * recommended: it is the only thing that ever erases a child's details,
+     * and its silence looks exactly like everything being fine.
+     *
+     * @return array<string, mixed>
+     */
+    public function testScheduledJobs(): array
+    {
+        $stale = CJW_Cron_Heartbeat::stale();
+
+        if ($stale === []) {
+            return $this->result(
+                'cjw_summer_camp_cron',
+                __('De geplande taken draaien', 'cjw'),
+                'good',
+                '<p>' . esc_html__(
+                    'Het opschonen van oude inschrijvingen, de verjaardagsmail en het weekbericht zijn recent gedraaid.',
+                    'cjw'
+                ) . '</p>'
+            );
+        }
+
+        $lines = [];
+
+        foreach ($stale as $details) {
+            $days = max(1, (int) floor($details['silent_for'] / DAY_IN_SECONDS));
+
+            $lines[] = '<li>' . sprintf(
+                /* translators: 1: job name, 2: number of days. */
+                esc_html__('%1$s: al %2$d dagen niet gedraaid', 'cjw'),
+                esc_html($details['label']),
+                $days
+            ) . '</li>';
+        }
+
+        return $this->result(
+            'cjw_summer_camp_cron',
+            __('Er staan geplande taken stil', 'cjw'),
+            'critical',
+            '<p>' . esc_html__('Deze geplande taken hebben te lang niet gedraaid:', 'cjw')
+                . '</p><ul>' . implode('', $lines) . '</ul><p>'
+                . esc_html__(
+                    'Zolang het opschonen stilstaat, blijven gegevens van kinderen langer bewaard dan aan ouders is verteld. Vraag de host om WP-Cron te controleren of een echte cronjob in te stellen.',
+                    'cjw'
+                ) . '</p>'
         );
     }
 

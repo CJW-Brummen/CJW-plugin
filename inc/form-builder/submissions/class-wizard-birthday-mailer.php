@@ -63,6 +63,12 @@ final class CJW_Wizard_Birthday_Mailer
     {
         add_action(self::HOOK, [ $this, 'run_scheduled' ]);
 
+        CJW_Cron_Heartbeat::watch(
+            self::HOOK,
+            __('Verjaardagsmail', 'cjw'),
+            2 * DAY_IN_SECONDS
+        );
+
         // Self-healing, like the retention sweep: a botched deactivation or a
         // restored database should not end the schedule for ever.
         if (! wp_next_scheduled(self::HOOK)) {
@@ -106,6 +112,8 @@ final class CJW_Wizard_Birthday_Mailer
     public function run_scheduled(): void
     {
         $this->send_todays_greetings();
+
+        CJW_Cron_Heartbeat::record(self::HOOK);
     }
 
     /**

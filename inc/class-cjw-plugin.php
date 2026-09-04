@@ -56,6 +56,12 @@ final class CJW_Plugin
         if (is_admin()) {
             (new CJW_Roles_Notice())->init();
             CJW_Admin_Menu::init();
+
+            // Late enough that every module has registered the jobs it wants
+            // watched, and on a screen a human is actually looking at. A dead
+            // cron cannot report itself, so somebody logging in is the one
+            // moment the site is certain to be running code.
+            add_action('admin_init', [CJW_Cron_Heartbeat::class, 'reportStaleScheduled']);
         }
 
         CJW_Summer_Camp_Module::boot();
@@ -98,6 +104,8 @@ final class CJW_Plugin
         require_once CJW_DIR . 'inc/shared/class-cjw-mail-templates.php';
         require_once CJW_DIR . 'inc/shared/class-cjw-mail-tokens.php';
         require_once CJW_DIR . 'inc/shared/class-cjw-mailer.php';
+        require_once CJW_DIR . 'inc/shared/class-cjw-alerts.php';
+        require_once CJW_DIR . 'inc/shared/class-cjw-cron-heartbeat.php';
         require_once CJW_DIR . 'inc/shared/class-cjw-mail-migration.php';
 
         require_once CJW_DIR . 'inc/summer-camp/class-cjw-summer-camp-module.php';
