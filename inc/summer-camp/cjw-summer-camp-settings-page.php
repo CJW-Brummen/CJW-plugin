@@ -182,7 +182,10 @@ class CJW_Summer_Camp_Settings_Page
         add_settings_section(
             'theme',
             __('Thema', 'cjw'),
-            $this->sectionIntro(__('Bepaal hier het jaarthema en de uitstraling van de grote banner (hero) bovenaan de homepage.', 'cjw')),
+            $this->sectionIntro(
+                __('Bepaal hier het jaarthema en de uitstraling van de grote banner (hero) bovenaan de homepage.', 'cjw'),
+                [CJW_Photo_Consent_Notice::class, 'render']
+            ),
             self::PAGE_SLUG . '-theme'
         );
         add_settings_section(
@@ -210,7 +213,10 @@ class CJW_Summer_Camp_Settings_Page
         add_settings_section(
             'website_intro',
             __('Introductie homepage', 'cjw'),
-            $this->sectionIntro(__('Het welkomstblok dat bezoekers direct onder de grote banner op de homepage zien.', 'cjw')),
+            $this->sectionIntro(
+                __('Het welkomstblok dat bezoekers direct onder de grote banner op de homepage zien.', 'cjw'),
+                [CJW_Photo_Consent_Notice::class, 'render']
+            ),
             $website_page
         );
         add_settings_section(
@@ -222,7 +228,10 @@ class CJW_Summer_Camp_Settings_Page
         add_settings_section(
             'website_photos',
             __('Kampplakboek', 'cjw'),
-            $this->sectionIntro(__('Het fotoblok in plakboekstijl op de homepage, met maximaal vijf polaroidfoto’s van eerdere kampen.', 'cjw')),
+            $this->sectionIntro(
+                __('Het fotoblok in plakboekstijl op de homepage, met maximaal vijf polaroidfoto’s van eerdere kampen.', 'cjw'),
+                [CJW_Photo_Consent_Notice::class, 'render']
+            ),
             $website_page
         );
         add_settings_section(
@@ -250,14 +259,21 @@ class CJW_Summer_Camp_Settings_Page
     /**
      * Creates a section callback that prints one guiding sentence.
      *
-     * @param string $text The intro sentence.
+     * @param string        $text  The intro sentence.
+     * @param callable|null $after Optional producer of extra HTML under the
+     *                             sentence, called only when the section is
+     *                             actually rendered so it may hit the database.
      *
      * @return Closure
      */
-    private function sectionIntro(string $text): Closure
+    private function sectionIntro(string $text, ?callable $after = null): Closure
     {
-        return static function () use ($text): void {
+        return static function () use ($text, $after): void {
             echo '<p>' . esc_html($text) . '</p>';
+
+            if ($after !== null) {
+                echo wp_kses_post((string) $after());
+            }
         };
     }
 

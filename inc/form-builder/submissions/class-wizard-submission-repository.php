@@ -189,7 +189,68 @@ final class CJW_Wizard_Submission_Repository implements CJW_Wizard_Submission_St
             'nee' => 0,
         ];
 
-        $query = [
+        foreach (get_posts(self::thisCampYearQuery()) as $submission_id) {
+            // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Reading every row of one key, which is the point.
+            $answers = get_post_meta((int) $submission_id, self::META_PHOTO_CONSENT, false);
+
+            foreach (is_array($answers) ? $answers : [] as $answer) {
+                $answer = (string) $answer;
+
+                if (isset($counts[ $answer ])) {
+                    ++$counts[ $answer ];
+                }
+            }
+        }
+
+        return $counts;
+    }
+
+    /**
+     * The names of this camp year's children whose parents said no to photos.
+     *
+     * For whoever is choosing photos for the website: the counts say how many
+     * children must not appear, this says which. Anonymised registrations have
+     * no name left to give and are skipped, so after the retention sweep the
+     * count can exceed this list.
+     *
+     * @return array<int, string>
+     */
+    public function childrenWithoutConsent(): array
+    {
+        $names = [];
+
+        foreach (get_posts(self::thisCampYearQuery()) as $submission_id) {
+            $id = (int) $submission_id;
+
+            if ($this->is_anonymised($id)) {
+                continue;
+            }
+
+            $snapshot = get_post_meta($id, self::META_SNAPSHOT, true);
+            $config = is_string($snapshot) ? json_decode($snapshot, true) : null;
+
+            if (! is_array($config)) {
+                continue;
+            }
+
+            foreach (CJW_Wizard_Field_Roles::childRows($config, $this->get_payload($id)) as $child) {
+                if ($child['name'] !== '' && self::consentValue($child['photo_consent']) === 'nee') {
+                    $names[] = $child['name'];
+                }
+            }
+        }
+
+        return array_values(array_unique($names));
+    }
+
+    /**
+     * Every registration of the current camp year, as ids.
+     *
+     * @return array<string, mixed> get_posts() arguments.
+     */
+    private static function thisCampYearQuery(): array
+    {
+        return [
             'post_type' => self::POST_TYPE,
             // Not 'any'. See ALL_STATUSES: WP_Query expands it to every status
             // that is not exclude_from_search, which silently drops the custom
@@ -211,21 +272,6 @@ final class CJW_Wizard_Submission_Repository implements CJW_Wizard_Submission_St
                 ],
             ],
         ];
-
-        foreach (get_posts($query) as $submission_id) {
-            // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Reading every row of one key, which is the point.
-            $answers = get_post_meta((int) $submission_id, self::META_PHOTO_CONSENT, false);
-
-            foreach (is_array($answers) ? $answers : [] as $answer) {
-                $answer = (string) $answer;
-
-                if (isset($counts[ $answer ])) {
-                    ++$counts[ $answer ];
-                }
-            }
-        }
-
-        return $counts;
     }
 
     /**

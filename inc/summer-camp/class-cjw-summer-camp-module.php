@@ -102,6 +102,7 @@ final class CJW_Summer_Camp_Module
         require_once CJW_DIR . 'inc/summer-camp/admin/class-cjw-summer-camp-manual.php';
         require_once CJW_DIR . 'inc/summer-camp/admin/class-cjw-summer-camp-mails-page.php';
         require_once CJW_DIR . 'inc/summer-camp/admin/class-cjw-summer-camp-site-health.php';
+        require_once CJW_DIR . 'inc/summer-camp/admin/class-cjw-photo-consent-notice.php';
         require_once CJW_DIR . 'inc/summer-camp/admin/class-cjw-summer-camp-help-tabs.php';
         require_once CJW_DIR . 'inc/summer-camp/class-cjw-summer-camp-sponsor-post-type.php';
         require_once CJW_DIR . 'inc/summer-camp/admin/class-cjw-summer-camp-sponsor-admin.php';
