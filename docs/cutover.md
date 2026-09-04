@@ -46,6 +46,12 @@ still exist with the same names.
 5. Once satisfied, delete the three old plugin directories and archive their
    GitHub repositories.
 
+## Old URLs
+
+The addresses of the legacy site, and where each should redirect to after the
+switch, are listed in [legacy-urls.md](legacy-urls.md). The redirects belong to
+the hosting, not to this plugin.
+
 ## Rollback
 
 Deactivate `cjw` and reactivate the three old plugins. Nothing in the database
