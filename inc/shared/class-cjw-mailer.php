@@ -34,6 +34,17 @@ final class CJW_Mailer
     private const int WIDTH = 600;
 
     /**
+     * Why the last send failed, when it did.
+     *
+     * WordPress answers only true or false, and "false" is not something an
+     * organiser can act on. The reason PHPMailer gave is the difference
+     * between "the host is refusing to relay" and "that address does not
+     * exist", so it is captured while the send is in flight and read back by
+     * whoever reports the failure.
+     */
+    private static string $lastError = '';
+
+    /**
      * A stack that exists everywhere, since webfonts do not survive email.
      */
     private const string FONT = "-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
@@ -63,6 +74,28 @@ final class CJW_Mailer
     }
 
     /**
+     * Sends one message that is not a template.
+     *
+     * Operational mail -- a job has stopped, a confirmation bounced -- has no
+     * business in the Mails screen, where an organiser edits what parents
+     * read. It still goes out wearing the same colours, from the same sender
+     * and with the same reply address, because a fault report that lands in
+     * spam has reported nothing.
+     *
+     * @param string $to      Recipient address.
+     * @param string $subject Subject line, unescaped.
+     * @param string $body    Body as HTML.
+     */
+    public static function sendMessage(string $to, string $subject, string $body): bool
+    {
+        if (! is_email($to) || trim($subject) === '') {
+            return false;
+        }
+
+        return self::deliver($to, $subject, self::wrap($body), self::toText($body));
+    }
+
+    /**
      * Hands a rendered message to WordPress as HTML with a plain-text twin.
      *
      * Both filters are added immediately before the send and removed
@@ -72,6 +105,12 @@ final class CJW_Mailer
     private static function deliver(string $to, string $subject, string $html, string $text): bool
     {
         $asHtml = static fn(): string => 'text/html';
+        $senderName = static fn(): string => self::senderName();
+        $senderAddress = self::senderAddress();
+        $fromAddress = static fn(): string => $senderAddress;
+        $replyTo = self::replyTo();
+
+        $headers = $replyTo === '' ? [] : [ 'Reply-To: ' . $replyTo ];
 
         // wp_mail() has no parameter for a plain-text alternative; PHPMailer's
         // AltBody is the only way in, and this hook is the only place it is
@@ -82,15 +121,115 @@ final class CJW_Mailer
             }
         };
 
+        $captureError = static function (mixed $error): void {
+            if (is_object($error) && method_exists($error, 'get_error_message')) {
+                self::$lastError = (string) $error->get_error_message();
+            }
+        };
+
+        self::$lastError = '';
+
         add_filter('wp_mail_content_type', $asHtml);
+        add_filter('wp_mail_from_name', $senderName);
         add_action('phpmailer_init', $addText);
+        add_action('wp_mail_failed', $captureError);
 
-        $sent = wp_mail($to, $subject, $html);
+        if ($senderAddress !== '') {
+            add_filter('wp_mail_from', $fromAddress);
+        }
 
+        $sent = wp_mail($to, $subject, $html, $headers);
+
+        if ($senderAddress !== '') {
+            remove_filter('wp_mail_from', $fromAddress);
+        }
+
+        remove_action('wp_mail_failed', $captureError);
         remove_action('phpmailer_init', $addText);
+        remove_filter('wp_mail_from_name', $senderName);
         remove_filter('wp_mail_content_type', $asHtml);
 
         return $sent;
+    }
+
+    /**
+     * Why the last send failed, or an empty string when it did not.
+     */
+    public static function lastError(): string
+    {
+        return self::$lastError;
+    }
+
+    /**
+     * Who the message is from, as a person reads it.
+     *
+     * WordPress signs its mail "WordPress" by default, so a parent's
+     * confirmation arrived from a content management system rather than from
+     * the camp. The organisation's own name, not the yearly theme: a family
+     * should recognise the sender in January and in July, and "Piraten 2027"
+     * is the subject of the mail rather than the sender of it.
+     */
+    public static function senderName(): string
+    {
+        $name = trim((string) get_bloginfo('name'));
+
+        return $name !== '' ? $name : 'CJW Brummen';
+    }
+
+    /**
+     * The envelope address, or an empty string to leave WordPress's alone.
+     *
+     * WordPress sends as wordpress@<site domain>, which is not a mailbox
+     * anybody reads. The contact address is the obvious replacement, but only
+     * when it sits on the same domain as the site: swapping in an address on
+     * somebody's gmail.com would be sending mail on a domain this server has
+     * no authority for, which is precisely what SPF and DMARC exist to reject.
+     * When the domains differ the From stays put and Reply-To does the work.
+     */
+    public static function senderAddress(): string
+    {
+        $contact = self::contactEmail();
+
+        if ($contact === '') {
+            return '';
+        }
+
+        $contactHost = strtolower((string) substr(strrchr($contact, '@') ?: '', 1));
+        $siteHost = strtolower((string) wp_parse_url((string) home_url('/'), PHP_URL_HOST));
+        $siteHost = (string) preg_replace('/^www\./', '', $siteHost);
+
+        return $contactHost !== '' && $contactHost === $siteHost ? $contact : '';
+    }
+
+    /**
+     * Where a reply should go.
+     *
+     * The single most likely thing a parent does with a confirmation is hit
+     * reply. Until now that reached wordpress@ and bounced, or vanished.
+     */
+    public static function replyTo(): string
+    {
+        $contact = self::contactEmail();
+
+        if ($contact === '') {
+            return '';
+        }
+
+        return sprintf('%s <%s>', self::senderName(), $contact);
+    }
+
+    /**
+     * The camp's contact address, when the settings carry a usable one.
+     */
+    private static function contactEmail(): string
+    {
+        if (! function_exists('cjw_summer_camp')) {
+            return '';
+        }
+
+        $email = (string) cjw_summer_camp()->getContactEmail();
+
+        return is_email($email) ? $email : '';
     }
 
     /**

@@ -35,6 +35,53 @@ final class MailerTest extends CJW_TestCase
         ]);
     }
 
+    /**
+     * WordPress signs its mail "WordPress" and sends it from wordpress@, an
+     * address nobody reads. Hitting reply is the single most likely thing a
+     * parent does with a confirmation, so it has to reach a person.
+     */
+    public function testSenderIsTheOrganisationRatherThanWordPress(): void
+    {
+        $this->assertSame('CJW Brummen', CJW_Mailer::senderName());
+    }
+
+    public function testReplyToCarriesTheContactAddress(): void
+    {
+        $GLOBALS['cjw_test_options'][CJW_Summer_Camp_Service::OPTION_KEY] = [
+            'contact_email' => 'info@example.test',
+        ];
+
+        $this->assertSame('CJW Brummen <info@example.test>', CJW_Mailer::replyTo());
+    }
+
+    public function testThereIsNoReplyToWhenNoContactAddressIsConfigured(): void
+    {
+        $GLOBALS['cjw_test_options'][CJW_Summer_Camp_Service::OPTION_KEY] = [
+            'contact_email' => '',
+        ];
+
+        $this->assertSame('', CJW_Mailer::replyTo());
+    }
+
+    /**
+     * The contact address may take over the envelope only on the site's own
+     * domain. Sending as somebody's gmail.com is what SPF and DMARC reject.
+     */
+    public function testContactAddressBecomesTheSenderOnlyOnTheSiteDomain(): void
+    {
+        $GLOBALS['cjw_test_options'][CJW_Summer_Camp_Service::OPTION_KEY] = [
+            'contact_email' => 'info@example.test',
+        ];
+
+        $this->assertSame('info@example.test', CJW_Mailer::senderAddress());
+
+        $GLOBALS['cjw_test_options'][CJW_Summer_Camp_Service::OPTION_KEY] = [
+            'contact_email' => 'cjwbrummen@gmail.com',
+        ];
+
+        $this->assertSame('', CJW_Mailer::senderAddress());
+    }
+
     public function testTokensAreFilledIn(): void
     {
         $mail = $this->birthday('Hoera {child_name}', '<p>{child_name} wordt {child_age}.</p>');

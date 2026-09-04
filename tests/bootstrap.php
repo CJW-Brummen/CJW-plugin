@@ -421,12 +421,13 @@ if (! function_exists('wp_mail')) {
      * Records instead of sending, so a test can assert who was written to and
      * — just as important — what was NOT put in the body.
      */
-    function wp_mail(string $to, string $subject, string $message): bool
+    function wp_mail(string $to, string $subject, string $message, array|string $headers = []): bool
     {
         $GLOBALS['cjw_test_mail'][] = [
             'to' => $to,
             'subject' => $subject,
             'body' => $message,
+            'headers' => $headers,
         ];
 
         return true;
