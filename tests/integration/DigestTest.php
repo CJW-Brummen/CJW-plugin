@@ -70,6 +70,8 @@ final class DigestTest extends CJW_IntegrationTestCase
 
         // A healthy site also knows it is the live one, and has its pages.
         CJW_Mail_Safe_Mode::confirmCurrentHost();
+        (new CJW_Summer_Camp_First_Run())->run();
+        CJW_Summer_Camp_Service::flush();
     }
 
     public function testItIsOffUntilSomebodySwitchesItOn(): void

@@ -84,6 +84,11 @@ final class CJW_Summer_Camp_Site_Health
             'test' => [$this, 'testParentEmailRole'],
         ];
 
+        $tests['direct']['cjw_summer_camp_setup'] = [
+            'label' => __('Zomerkamp: inrichting van de website', 'cjw'),
+            'test' => [$this, 'testSetup'],
+        ];
+
         $tests['direct']['cjw_summer_camp_mail_safe_mode'] = [
             'label' => __('Zomerkamp: mail-veiligmodus', 'cjw'),
             'test' => [$this, 'testMailSafeMode'],
@@ -527,6 +532,41 @@ final class CJW_Summer_Camp_Site_Health
                 'Open het formulier, kies bij het e-mailveld van de ouder de betekenis “E-mailadres van de ouder” en sla op.',
                 'cjw'
             ) . '</p>'
+        );
+    }
+
+    /**
+     * Checks that the pages and menu the site needs exist.
+     *
+     * @return array<string, mixed>
+     */
+    public function testSetup(): array
+    {
+        $test = 'cjw_summer_camp_setup';
+        $missing = CJW_Summer_Camp_First_Run::missing();
+
+        if ($missing === []) {
+            return $this->result(
+                $test,
+                __('De website is ingericht', 'cjw'),
+                'good',
+                '<p>' . esc_html__('De homepage, de inschrijfpagina, de privacyverklaring en het menu zijn er.', 'cjw') . '</p>'
+            );
+        }
+
+        $status = CJW_Summer_Camp_First_Run::status();
+        $lines = array_map(
+            static fn(string $key): string => '<li>' . esc_html($status[$key]['label']) . '</li>',
+            $missing
+        );
+
+        return $this->result(
+            $test,
+            __('De website is nog niet helemaal ingericht', 'cjw'),
+            'recommended',
+            '<p>' . esc_html__('Dit ontbreekt nog:', 'cjw') . '</p><ul>' . implode('', $lines) . '</ul><p>'
+                . esc_html__('Op het tabblad Beheer maakt één knop aan wat ontbreekt, zonder iets te overschrijven.', 'cjw') . '</p>',
+            $this->settingsAction('beheer')
         );
     }
 
