@@ -67,6 +67,9 @@ final class DigestTest extends CJW_IntegrationTestCase
         // Stands in for an SMTP plugin. WP_UnitTestCase restores the hook
         // registry between tests, so this does not leak into the next one.
         add_action('phpmailer_init', '__return_false');
+
+        // A healthy site also knows it is the live one, and has its pages.
+        CJW_Mail_Safe_Mode::confirmCurrentHost();
     }
 
     public function testItIsOffUntilSomebodySwitchesItOn(): void

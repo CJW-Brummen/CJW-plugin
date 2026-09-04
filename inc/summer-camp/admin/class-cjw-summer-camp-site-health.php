@@ -84,6 +84,11 @@ final class CJW_Summer_Camp_Site_Health
             'test' => [$this, 'testParentEmailRole'],
         ];
 
+        $tests['direct']['cjw_summer_camp_mail_safe_mode'] = [
+            'label' => __('Zomerkamp: mail-veiligmodus', 'cjw'),
+            'test' => [$this, 'testMailSafeMode'],
+        ];
+
         return $tests;
     }
 
@@ -522,6 +527,53 @@ final class CJW_Summer_Camp_Site_Health
                 'Open het formulier, kies bij het e-mailveld van de ouder de betekenis “E-mailadres van de ouder” en sla op.',
                 'cjw'
             ) . '</p>'
+        );
+    }
+
+    /**
+     * Checks that a copy of this site would recognise itself.
+     *
+     * Until somebody confirms the live host, a restored backup is only caught
+     * when the hosting party marks the environment -- and most do not.
+     *
+     * @return array<string, mixed>
+     */
+    public function testMailSafeMode(): array
+    {
+        $test = 'cjw_summer_camp_mail_safe_mode';
+
+        if (CJW_Mail_Safe_Mode::isActive()) {
+            return $this->result(
+                $test,
+                __('Mail-veiligmodus staat aan: dit is een kopie', 'cjw'),
+                'good',
+                '<p>' . esc_html(CJW_Mail_Safe_Mode::reason()) . ' '
+                    . esc_html__('Mail gaat naar de beheerder in plaats van naar ouders.', 'cjw') . '</p>'
+            );
+        }
+
+        if (CJW_Mail_Safe_Mode::isConfirmed()) {
+            return $this->result(
+                $test,
+                __('Een kopie van deze website zou geen mail naar ouders sturen', 'cjw'),
+                'good',
+                '<p>' . sprintf(
+                    /* translators: %s: host name. */
+                    esc_html__('%s is bevestigd als de live website; een kopie op een ander adres herkent zichzelf.', 'cjw'),
+                    '<code>' . esc_html(CJW_Mail_Safe_Mode::productionHost()) . '</code>'
+                ) . '</p>'
+            );
+        }
+
+        return $this->result(
+            $test,
+            __('Een kopie van deze website zou nog mail naar ouders sturen', 'cjw'),
+            'recommended',
+            '<p>' . esc_html__(
+                'De live website is nog niet bevestigd. Een teruggezette kopie -- om een update te oefenen, bijvoorbeeld -- bevat echte inschrijvingen en zou verjaardagsmails en bevestigingen naar echte ouders sturen.',
+                'cjw'
+            ) . '</p><p>' . esc_html__('Klik op het tabblad Beheer op “Dit is de live website”.', 'cjw') . '</p>',
+            $this->settingsAction('beheer')
         );
     }
 

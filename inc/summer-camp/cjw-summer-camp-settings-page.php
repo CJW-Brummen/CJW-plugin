@@ -913,6 +913,7 @@ class CJW_Summer_Camp_Settings_Page
         $this->renderToolNotice();
 
         CJW_Summer_Camp_Mail::renderPanel();
+        CJW_Mail_Safe_Mode::renderPanel();
         CJW_Summer_Camp_Digest::renderPanel();
         CJW_Summer_Camp_Settings_History::renderPanel();
         CJW_Summer_Camp_Year::renderPanel();
@@ -943,6 +944,8 @@ class CJW_Summer_Camp_Settings_Page
             'digest_failed' => ['error', __('Het voorbeeld kon niet worden verstuurd. Controleer hierboven of de website wel mail kan versturen.', 'cjw')],
             'year_started' => ['success', __('Het nieuwe kampjaar is gestart. Vul de nieuwe kampdata in en zet de inschrijvingen open zodra je zover bent.', 'cjw')],
             'year_not_confirmed' => ['error', __('Er is niets veranderd: het ingetypte jaartal klopte niet.', 'cjw')],
+            'host_confirmed' => ['success', __('Dit webadres is vastgelegd als de live website. Elke kopie op een ander adres stuurt vanaf nu geen mail meer naar ouders.', 'cjw')],
+            'host_forgotten' => ['success', __('De live website is vergeten. Bevestig het nieuwe adres zodra de website daar draait.', 'cjw')],
         ];
 
         if (!array_key_exists($result, $notices)) {

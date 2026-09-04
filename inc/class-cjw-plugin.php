@@ -51,6 +51,10 @@ final class CJW_Plugin
         // happens -- the editor, the REST API, WP-CLI.
         CJW_Registration_Page::init();
 
+        // On every request as well: the birthday job and the confirmations
+        // send from cron and from the public form, not from wp-admin.
+        CJW_Mail_Safe_Mode::init();
+
         // Not only on activation: an activation hook does not run when a
         // plugin is updated, so a capability change would never reach a site
         // that already had the plugin installed. See CJW_Roles::VERSION.
@@ -106,6 +110,7 @@ final class CJW_Plugin
         require_once CJW_DIR . 'inc/shared/localization.php';
         require_once CJW_DIR . 'inc/shared/class-summer-camp-service.php';
         require_once CJW_DIR . 'inc/shared/class-cjw-registration-page.php';
+        require_once CJW_DIR . 'inc/shared/class-cjw-mail-safe-mode.php';
         require_once CJW_DIR . 'inc/shared/functions.php';
         require_once CJW_DIR . 'inc/shared/class-cjw-mail-templates.php';
         require_once CJW_DIR . 'inc/shared/class-cjw-mail-tokens.php';
