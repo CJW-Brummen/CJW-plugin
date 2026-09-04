@@ -60,6 +60,8 @@ final class CJW_Summer_Camp_Module
         CJW_Summer_Camp_Rental_Post_Type::init();
         CJW_Summer_Camp_Rental_Admin::init();
         CJW_Summer_Camp_Dashboard_Widget::init();
+        CJW_System_Dashboard_Widget::init();
+
         // Not admin-only: the status endpoint answers a monitor on the front
         // end, and these are half of what it reports.
         CJW_Summer_Camp_Status_Checks::init();
@@ -108,6 +110,7 @@ final class CJW_Summer_Camp_Module
         require_once CJW_DIR . 'inc/summer-camp/admin/class-cjw-summer-camp-site-health.php';
         require_once CJW_DIR . 'inc/summer-camp/admin/class-cjw-photo-consent-notice.php';
         require_once CJW_DIR . 'inc/summer-camp/admin/class-cjw-summer-camp-first-run.php';
+        require_once CJW_DIR . 'inc/summer-camp/admin/class-cjw-system-dashboard-widget.php';
         require_once CJW_DIR . 'inc/summer-camp/class-cjw-summer-camp-status-checks.php';
         require_once CJW_DIR . 'inc/summer-camp/admin/class-cjw-summer-camp-help-tabs.php';
         require_once CJW_DIR . 'inc/summer-camp/class-cjw-summer-camp-sponsor-post-type.php';
