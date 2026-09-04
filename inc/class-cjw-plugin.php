@@ -55,6 +55,12 @@ final class CJW_Plugin
         // send from cron and from the public form, not from wp-admin.
         CJW_Mail_Safe_Mode::init();
 
+        // Both belong outside wp-admin: the crash to report is the one on a
+        // page a parent was looking at, and the monitor polling the status
+        // route has no session at all.
+        CJW_Fatal_Error_Watch::init();
+        CJW_Status_Endpoint::init();
+
         // Not only on activation: an activation hook does not run when a
         // plugin is updated, so a capability change would never reach a site
         // that already had the plugin installed. See CJW_Roles::VERSION.
@@ -111,6 +117,8 @@ final class CJW_Plugin
         require_once CJW_DIR . 'inc/shared/class-summer-camp-service.php';
         require_once CJW_DIR . 'inc/shared/class-cjw-registration-page.php';
         require_once CJW_DIR . 'inc/shared/class-cjw-mail-safe-mode.php';
+        require_once CJW_DIR . 'inc/shared/class-cjw-fatal-error-watch.php';
+        require_once CJW_DIR . 'inc/shared/class-cjw-status-endpoint.php';
         require_once CJW_DIR . 'inc/shared/functions.php';
         require_once CJW_DIR . 'inc/shared/class-cjw-mail-templates.php';
         require_once CJW_DIR . 'inc/shared/class-cjw-mail-tokens.php';

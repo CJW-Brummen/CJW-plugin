@@ -38,6 +38,7 @@ class CJW_Summer_Camp_Service
         'price_week' => 0,
         'price_weekend' => 0,
         'registration_closed_text' => '',
+        'status_token' => '',
         'late_registration_link' => '',
         'late_registration_token' => '',
         'intro_text' => '',
@@ -368,6 +369,18 @@ class CJW_Summer_Camp_Service
         }
 
         return class_exists('CJW_Registration_Page') ? CJW_Registration_Page::url() : '';
+    }
+
+    /**
+     * The token that unlocks the detail of the status endpoint.
+     *
+     * Generated, never typed. See CJW_Status_Endpoint.
+     *
+     * @return string
+     */
+    public function getStatusToken(): string
+    {
+        return self::sanitizeLateRegistrationToken($this->settings['status_token']);
     }
     /**
      * Retrieves the private late-registration token.
@@ -1045,6 +1058,9 @@ class CJW_Summer_Camp_Service
             'registration_closed_text' => wp_kses_post($input['registration_closed_text'] ?? ''),
             'late_registration_link' => esc_url_raw($input['late_registration_link'] ?? ''),
             'late_registration_token' => self::sanitizeLateRegistrationTokenForSave($input),
+            // Generated, never typed: kept through a save so the monitoring
+            // address an organiser has already pasted somewhere keeps working.
+            'status_token' => self::sanitizeStatusTokenForSave($input),
             'intro_text' => wp_kses_post($input['intro_text'] ?? ''),
             'drive_dates' => self::sanitizeDriveDates($input['drive_dates'] ?? []),
             'birthday_mail_enabled' => !empty($input['birthday_mail_enabled']),
@@ -1260,6 +1276,21 @@ class CJW_Summer_Camp_Service
      * Sanitizes late-registration token input and regenerates it when requested.
      *
      * @param array $input Raw settings input.
+     * @param array<string, mixed> $input
+     *
+     * @return string
+     */
+    private static function sanitizeStatusTokenForSave(array $input): string
+    {
+        $token = self::sanitizeLateRegistrationToken($input['status_token'] ?? '');
+
+        return $token !== '' ? $token : self::generateLateRegistrationToken();
+    }
+
+    /**
+     * Keeps the late-registration token unless a new one was asked for.
+     *
+     * @param array $input Submitted settings.
      * @param array<string, mixed> $input
      *
      * @return string

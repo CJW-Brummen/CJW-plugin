@@ -53,6 +53,12 @@ final class CJW_Activator
             $defaults['late_registration_token'] = CJW_Summer_Camp_Service::generateLateRegistrationToken();
         }
 
+        // The status endpoint's detail is worthless without it, and nobody
+        // types a token by hand.
+        if (empty($existing['status_token'])) {
+            $defaults['status_token'] = CJW_Summer_Camp_Service::generateLateRegistrationToken();
+        }
+
         update_option(
             CJW_Summer_Camp_Service::OPTION_KEY,
             wp_parse_args($existing, $defaults)

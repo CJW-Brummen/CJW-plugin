@@ -409,6 +409,19 @@ if (! function_exists('wp_get_environment_type')) {
     }
 }
 
+if (! function_exists('delete_option')) {
+    function delete_option(string $option): bool
+    {
+        if (! array_key_exists($option, $GLOBALS['cjw_test_options'] ?? [])) {
+            return false;
+        }
+
+        unset($GLOBALS['cjw_test_options'][ $option ]);
+
+        return true;
+    }
+}
+
 if (! function_exists('has_shortcode')) {
     function has_shortcode(string $content, string $tag): bool
     {
@@ -606,6 +619,8 @@ require_once __DIR__ . '/../inc/shared/class-cjw-roles.php';
 require_once __DIR__ . '/../inc/shared/class-summer-camp-service.php';
 require_once __DIR__ . '/../inc/shared/class-cjw-registration-page.php';
 require_once __DIR__ . '/../inc/shared/class-cjw-mail-safe-mode.php';
+require_once __DIR__ . '/../inc/shared/class-cjw-fatal-error-watch.php';
+require_once __DIR__ . '/../inc/shared/class-cjw-status-endpoint.php';
 require_once __DIR__ . '/../inc/form-builder/frontend/class-wizard-session.php';
 require_once __DIR__ . '/../inc/form-builder/submissions/class-wizard-submission-privacy.php';
 require_once __DIR__ . '/../inc/form-builder/submissions/class-wizard-submission-retention.php';

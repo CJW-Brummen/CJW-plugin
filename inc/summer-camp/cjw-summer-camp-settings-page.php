@@ -913,6 +913,7 @@ class CJW_Summer_Camp_Settings_Page
         $this->renderToolNotice();
 
         CJW_Summer_Camp_First_Run::renderPanel();
+        CJW_Status_Endpoint::renderPanel();
         CJW_Summer_Camp_Mail::renderPanel();
         CJW_Mail_Safe_Mode::renderPanel();
         CJW_Summer_Camp_Digest::renderPanel();
@@ -949,6 +950,7 @@ class CJW_Summer_Camp_Settings_Page
             'setup_nothing' => ['success', __('Er ontbrak niets; er is niets aangemaakt.', 'cjw')],
             'host_confirmed' => ['success', __('Dit webadres is vastgelegd als de live website. Elke kopie op een ander adres stuurt vanaf nu geen mail meer naar ouders.', 'cjw')],
             'host_forgotten' => ['success', __('De live website is vergeten. Bevestig het nieuwe adres zodra de website daar draait.', 'cjw')],
+            'fatal_cleared' => ['success', __('De crashmelding is weggehaald. De statuspagina meldt weer “ok”, en een volgende crash wordt opnieuw gemeld.', 'cjw')],
         ];
 
         if (!array_key_exists($result, $notices)) {
