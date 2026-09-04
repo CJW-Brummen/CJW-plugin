@@ -14,7 +14,16 @@ final class CJW_Wizard_Renderer
      * @param array<string, mixed> $config
      */
     public function __construct(
-        private array $config
+        private array $config,
+        /**
+         * Whether the viewer may edit this form.
+         *
+         * Decided by the caller, which is the only place that knows both the
+         * form id and the current user. All it changes is whether the
+         * "form unavailable" notice carries its technical reason: a parent
+         * gets the short version, the person who can fix it gets the cause.
+         */
+        private bool $mayEdit = false
     ) {
         $this->config = cjw_localize_value($config);
     }
@@ -37,8 +46,29 @@ final class CJW_Wizard_Renderer
 
         echo '<div class="cjw-wizard-container">';
 
+        // A form with no steps is not a finished form. Both used to arrive
+        // here as $stepKey === null and take the success branch, which is how
+        // a mistyped shortcode id came to tell a parent their registration had
+        // succeeded. "Nothing to render" and "past the last step" are now
+        // answered separately, and only the second one is good news.
+        if ($stepKeys === []) {
+            echo wp_kses_post(CJW_Wizard_Unavailable::notice(
+                $this->mayEdit ? CJW_Wizard_Unavailable::detailNoSteps() : ''
+            ));
+            echo '</div>';
+            return;
+        }
+
+        if ($visibleStepKeys === []) {
+            echo wp_kses_post(CJW_Wizard_Unavailable::notice(
+                $this->mayEdit ? CJW_Wizard_Unavailable::detailNoVisibleSteps() : ''
+            ));
+            echo '</div>';
+            return;
+        }
+
         if ($stepKey === null) {
-            $this->renderComplete($token);
+            $this->renderComplete($token, $state['completion'] ?? []);
             echo '</div>';
             return;
         }
@@ -46,9 +76,21 @@ final class CJW_Wizard_Renderer
         $step = $this->config['steps'][ $stepKey ] ?? [];
 
         if (! CJW_Wizard_Conditions::isVisible($step, $stateData)) {
-            $this->renderComplete($token);
-            echo '</div>';
-            return;
+            // The state points at a step this data hides. Mid-form the engine
+            // has already skipped it, so this is reached on the opening render
+            // of a form whose first step is conditional -- and answering that
+            // with the success screen was the second way this wizard congratulated
+            // somebody who had filled in nothing. Move forward to the first step
+            // that is actually visible; only when none is left is the form done.
+            $stepKey = $this->firstVisibleStepFrom($stepIndex, $stepKeys, $visibleStepKeys);
+
+            if ($stepKey === null) {
+                $this->renderComplete($token, $state['completion'] ?? []);
+                echo '</div>';
+                return;
+            }
+
+            $step = $this->config['steps'][ $stepKey ] ?? [];
         }
 
         $visibleStepPosition = array_search($stepKey, $visibleStepKeys, true);
@@ -120,15 +162,57 @@ final class CJW_Wizard_Renderer
     private function renderComplete(string $token): void
     {
         $settings = $this->getSettings();
+        $submission = (int) ($completion['submission'] ?? 0);
+        $email = (string) ($completion['email'] ?? '');
+        $mail = (string) ($completion['mail'] ?? '');
 
         echo '<div class="cjw-wizard-complete">';
         echo '<div class="success-icon dashicons dashicons-yes-alt"></div>';
         echo '<h2>' . esc_html__('Gelukt!', 'cjw') . '</h2>';
         echo '<p>' . nl2br(esc_html((string) $settings['success_message'])) . '</p>';
+
+        if ($submission > 0) {
+            echo '<p class="cjw-wizard-complete__reference">' . sprintf(
+                /* translators: %s: registration number. */
+                esc_html__('Je inschrijfnummer is %s. Noem dit nummer als je ons over deze inschrijving mailt of belt.', 'cjw'),
+                '<strong>' . esc_html((string) $submission) . '</strong>'
+            ) . '</p>';
+        }
+
+        echo wp_kses_post($this->confirmationLine($mail, $email));
+
         echo '<div class="cjw-wizard-actions" style="justify-content: center; border:none; padding:0;">';
         echo '<a href="' . esc_url($this->getResetUrl($token)) . '" class="button">' . esc_html__('Begin Opnieuw', 'cjw') . '</a>';
         echo '</div>';
         echo '</div>';
+    }
+
+    /**
+     * What the success screen says about the confirmation mail.
+     *
+     * Silent when the form does not send one: promising nothing and saying
+     * nothing is consistent, and "we hebben geen mail gestuurd" would only
+     * worry somebody who was never expecting one.
+     */
+    private function confirmationLine(string $result, string $email): string
+    {
+        if ($result === CJW_Wizard_Submission_Confirmation::SENT && $email !== '') {
+            return '<p class="cjw-wizard-complete__mail">' . sprintf(
+                /* translators: %s: the parent's own e-mail address. */
+                esc_html__('We hebben een bevestiging gestuurd naar %s. Niets ontvangen? Kijk ook even in je spam.', 'cjw'),
+                '<strong>' . esc_html($email) . '</strong>'
+            ) . '</p>';
+        }
+
+        if ($result === CJW_Wizard_Submission_Confirmation::FAILED) {
+            return '<p class="cjw-wizard-complete__mail cjw-wizard-complete__mail--failed">'
+                . esc_html__(
+                    'Je inschrijving is opgeslagen, maar het versturen van de bevestigingsmail lukte niet. Je hoeft niets opnieuw te doen: we hebben hier zelf bericht van gekregen en nemen contact met je op.',
+                    'cjw'
+                ) . '</p>';
+        }
+
+        return '';
     }
 
     /**

@@ -578,6 +578,7 @@ require_once __DIR__ . '/../inc/form-builder/submissions/class-wizard-submission
 require_once __DIR__ . '/../inc/form-builder/submissions/interface-wizard-submission-store.php';
 require_once __DIR__ . '/../inc/form-builder/submissions/class-wizard-submission-repository.php';
 require_once __DIR__ . '/../inc/form-builder/submissions/class-wizard-submission-exporter.php';
+require_once __DIR__ . '/../inc/form-builder/frontend/class-wizard-unavailable.php';
 require_once __DIR__ . '/../inc/form-builder/frontend/class-wizard-guard.php';
 require_once __DIR__ . '/../inc/shared/class-cjw-roles.php';
 require_once __DIR__ . '/../inc/shared/class-summer-camp-service.php';

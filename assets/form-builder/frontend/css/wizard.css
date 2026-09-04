@@ -309,6 +309,80 @@
     animation: cjw-bounce-in 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
+/* Shown instead of the form when there is nothing to render, and over a form
+   an editor is previewing before it is published. Grouped by specificity
+   rather than by component so the plain `p` rules all precede the
+   `p:last-child` ones. */
+.cjw-wizard-unavailable,
+.cjw-wizard-draft-banner {
+    max-width: 640px;
+    margin: var(--cjw-space-xxl) auto;
+    padding: var(--cjw-space-xxl);
+    border-radius: var(--cjw-radius-lg);
+    color: var(--cjw-text);
+}
+
+.cjw-wizard-unavailable {
+    background: var(--cjw-bg-soft);
+    border: 1px solid var(--cjw-border);
+    border-left: 5px solid var(--cjw-camp-accent, var(--cjw-primary));
+}
+
+/* Loud on purpose: the whole risk of previewing an unpublished form is
+   mistaking it for the live page. */
+.cjw-wizard-draft-banner {
+    margin-bottom: 0;
+    padding: var(--cjw-space-lg) var(--cjw-space-xxl);
+    background: #fff8e5;
+    border: 2px dashed #dba617;
+}
+
+.cjw-wizard-unavailable p,
+.cjw-wizard-draft-banner p {
+    margin: 0 0 var(--cjw-space-md);
+}
+
+/* Only editors ever see this, and only when they can fix what it describes. */
+.cjw-wizard-unavailable__detail {
+    font-size: 14px;
+    color: var(--cjw-text-muted);
+    padding-top: var(--cjw-space-md);
+    border-top: 1px dashed var(--cjw-border);
+}
+
+/* The registration number and what happened to the confirmation mail. */
+.cjw-wizard-complete__reference {
+    font-size: 15px;
+    margin: 0 0 var(--cjw-space-md);
+}
+
+.cjw-wizard-complete__mail {
+    font-size: 15px;
+    color: var(--cjw-text-muted);
+    margin: 0 0 var(--cjw-space-md);
+}
+
+/* A mail that did not go out is not decoration; it is the one line on this
+   screen a parent has to read. */
+.cjw-wizard-complete__mail--failed {
+    color: var(--cjw-text);
+    background: #fcf0f0;
+    border: 1px solid var(--cjw-error);
+    border-radius: var(--cjw-radius-md);
+    padding: var(--cjw-space-md) var(--cjw-space-lg);
+    text-align: left;
+}
+
+.cjw-wizard-unavailable p:last-child,
+.cjw-wizard-draft-banner p:last-child {
+    margin-bottom: 0;
+}
+
+.cjw-wizard-draft-banner p:last-child {
+    font-size: 14px;
+    color: var(--cjw-text-muted);
+}
+
 /* Animations */
 @keyframes cjw-fade-in {
     from { opacity: 0; transform: translateY(10px); }

@@ -108,6 +108,29 @@ final class CJW_Form_Builder_Module
     }
 
     /**
+     * The form a shortcode id points at, or null when it points at nothing.
+     *
+     * Null covers every way the id can be wrong: absent, zero, a post that was
+     * deleted, and a post of some other type -- a page id pasted by mistake
+     * reads its wizard meta as empty and would otherwise render as a form with
+     * no steps.
+     */
+    private static function resolve_form(?int $wizard_id): ?WP_Post
+    {
+        if ($wizard_id === null || $wizard_id < 1) {
+            return null;
+        }
+
+        $post = get_post($wizard_id);
+
+        if (! $post instanceof WP_Post || $post->post_type !== CJW_Wizard_Post_Type::SLUG) {
+            return null;
+        }
+
+        return $post;
+    }
+
+    /**
      * Whether the page being rendered contains the wizard shortcode.
      */
     private function current_page_has_wizard(): bool
@@ -148,6 +171,7 @@ final class CJW_Form_Builder_Module
         require_once CJW_DIR . 'inc/form-builder/frontend/class-wizard-engine.php';
         require_once CJW_DIR . 'inc/form-builder/frontend/class-wizard-conditions.php';
         require_once CJW_DIR . 'inc/form-builder/frontend/class-wizard-session.php';
+        require_once CJW_DIR . 'inc/form-builder/frontend/class-wizard-unavailable.php';
         require_once CJW_DIR . 'inc/form-builder/frontend/class-wizard-renderer.php';
         require_once CJW_DIR . 'inc/form-builder/frontend/class-wizard-validator.php';
         require_once CJW_DIR . 'inc/form-builder/frontend/class-wizard-guard.php';
@@ -180,6 +204,41 @@ final class CJW_Form_Builder_Module
     {
         $atts = shortcode_atts([ 'id' => null ], $atts, 'cjw_wizard');
         $wizard_id = $atts['id'] ? (int) $atts['id'] : null;
+
+        // The shortcode is copy-pasted by hand out of the form's sidebar, so a
+        // wrong or missing id is the likeliest mistake anybody will make on
+        // this site. It used to be the quietest, too: an id pointing at
+        // nothing produced an empty config, and an empty config rendered the
+        // success screen. Resolve the form first and refuse plainly.
+        $form = self::resolve_form($wizard_id);
+
+        if (! $form instanceof WP_Post) {
+            return CJW_Wizard_Unavailable::notice(
+                current_user_can(CJW_Roles::CAPABILITY)
+                    ? CJW_Wizard_Unavailable::detailUnknownForm($wizard_id)
+                    : ''
+            );
+        }
+
+        // An unpublished form is not open for business. Somebody who may edit
+        // it still gets to walk it, because checking the steps before going
+        // live is exactly what a draft is for -- but under a banner, and
+        // without writing anything to the submissions store.
+        $is_preview = $form->post_status !== 'publish';
+        $may_edit = current_user_can('edit_post', $form->ID);
+
+        // Past this point the id is known good, so the nullable the shortcode
+        // handed us stops being nullable and everything downstream can rely on it.
+        $wizard_id = (int) $form->ID;
+
+        if ($is_preview && ! $may_edit) {
+            return CJW_Wizard_Unavailable::notice(
+                current_user_can(CJW_Roles::CAPABILITY)
+                    ? CJW_Wizard_Unavailable::detailNotPublished($form->post_status)
+                    : ''
+            );
+        }
+
         $request_token = $this->requested_token();
 
         ob_start();
@@ -188,7 +247,7 @@ final class CJW_Form_Builder_Module
         $summer_camp_context = new CJW_Wizard_Summer_Camp_Context($config_data);
         $config_data = $summer_camp_context->applyTokens($config_data);
         $session = $this->session ?? CJW_Wizard_Session::fromRequest($request_token);
-        $renderer = new CJW_Wizard_Renderer($config_data);
+        $renderer = new CJW_Wizard_Renderer($config_data, $may_edit);
         $engine = new CJW_Wizard_Engine($config_data);
         $guard = new CJW_Wizard_Guard();
 
@@ -243,20 +302,33 @@ final class CJW_Form_Builder_Module
                 return '<p>' . esc_html__('We konden deze inzending niet verwerken. Vernieuw de pagina en probeer het opnieuw.', 'cjw') . '</p>';
             }
 
+            $step_count = count($config_data['steps'] ?? []);
             $previous_state = $state;
-            $result = $engine->next($state, wp_unslash($_POST));
 
-            $session->save($result['state']);
+            // A finished session takes no more answers. The success screen has
+            // no form, so a POST that lands here is a browser re-sending the
+            // last step. Fed to the engine, it would clamp to the last
+            // step and merge those answers straight back into a session that
+            // was just emptied of them (below), and it would drop the
+            // completion details the parent was told to quote. Show the same
+            // success screen again instead.
+            if (($previous_state['step'] ?? 0) >= $step_count) {
+                $result = [
+                    'state' => $previous_state,
+                    'errors' => [],
+                ];
+            } else {
+                $result = $engine->next($state, wp_unslash($_POST));
+            }
+
             $state = $result['state'];
             $errors = $result['errors'] ?? [];
 
-            if (
-                $wizard_id !== null
-                && $wizard_id > 0
-                && $errors === []
-                && ($previous_state['step'] ?? 0) < count($config_data['steps'] ?? [])
-                && ($state['step'] ?? 0) >= count($config_data['steps'] ?? [])
-            ) {
+            $completed_now = $errors === []
+                && ($previous_state['step'] ?? 0) < $step_count
+                && ($state['step'] ?? 0) >= $step_count;
+
+            if ($completed_now && ! $is_preview) {
                 if (! $guard->mayComplete()) {
                     ob_end_clean();
                     return $this->renderThrottleNotice();
@@ -264,7 +336,17 @@ final class CJW_Form_Builder_Module
 
                 $submission_id = $this->submissions->save_submission($wizard_id, $config_data, $state['data'] ?? []);
                 $this->submissions->maybe_notify_admin($wizard_id, $config_data, $state['data'] ?? [], $submission_id);
-                $this->submissions->maybe_confirm_to_parent($submission_id, $wizard_id, $config_data, $state['data'] ?? []);
+                $confirmation = $this->submissions->maybe_confirm_to_parent($submission_id, $wizard_id, $config_data, $state['data'] ?? []);
+
+                // What the success screen needs to stop being a bare tick: the
+                // number to quote, the address that was written to, and
+                // whether that actually worked. Kept on the state rather than
+                // recomputed, so a reload still shows the same answer.
+                $state['completion'] = [
+                    'submission' => $submission_id,
+                    'email' => CJW_Wizard_Submission_Repository::findEmail($config_data, $state['data'] ?? []),
+                    'mail' => $confirmation,
+                ];
             }
         }
 
