@@ -48,6 +48,8 @@ final class DigestTest extends CJW_IntegrationTestCase
             'end_date' => '17-07-2027',
             'registration_deadline' => '01-06-2027',
             'contact_email' => 'info@example.test',
+            // A healthy site has somewhere for the signup buttons to go.
+            'late_registration_link' => 'https://example.test/inschrijven/',
             'polaroid_1_image_id' => self::factory()->attachment->create_object([
                 'file' => 'kampvuur.jpg',
                 'post_mime_type' => 'image/jpeg',

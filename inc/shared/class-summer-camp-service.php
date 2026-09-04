@@ -55,7 +55,9 @@ class CJW_Summer_Camp_Service
         'hero_image_id' => 0,
         'hero_image_alt' => '',
         'hero_primary_cta_label' => 'Meld je aan',
-        'hero_primary_cta_url' => '#inschrijven',
+        // Blank on purpose: the button then points at the page holding the
+        // registration form. See getRegistrationPageUrl().
+        'hero_primary_cta_url' => '',
         'hero_secondary_cta_label' => 'Lees meer',
         'hero_secondary_cta_url' => '#meer',
         'theme_primary_color' => '#588C7E',
@@ -105,6 +107,13 @@ class CJW_Summer_Camp_Service
      * Number of polaroid slots on the website's photo wall.
      */
     public const int POLAROID_SLOTS = 5;
+
+    /**
+     * What the primary button used to point at, and what activation wrote into
+     * every existing site's settings. It is an anchor no template has ever
+     * carried, so a stored copy means "never set", not "set to this".
+     */
+    private const string LEGACY_CTA_ANCHOR = '#inschrijven';
 
     /**
      * Returns the complete default settings array.
@@ -330,7 +339,7 @@ class CJW_Summer_Camp_Service
             return '';
         }
 
-        $base_url = trim($baseUrl ?? (string) $this->settings['late_registration_link']);
+        $base_url = trim($baseUrl ?? $this->getRegistrationPageUrl());
 
         if ($base_url === '') {
             $base_url = home_url('/');
@@ -339,6 +348,27 @@ class CJW_Summer_Camp_Service
         return esc_url_raw(self::buildLateRegistrationLink($base_url, $token));
     }
 
+    /**
+     * The address of the page with the registration form.
+     *
+     * One answer for every button on the site and for the late-registration
+     * link: the address the organiser typed in, or, when that is blank, the
+     * published page that actually carries the form's shortcode. An empty
+     * string means there is no such page, and the theme hides the button
+     * rather than link to nowhere.
+     *
+     * @return string
+     */
+    public function getRegistrationPageUrl(): string
+    {
+        $configured = esc_url_raw(trim((string) $this->settings['late_registration_link']));
+
+        if ($configured !== '') {
+            return $configured;
+        }
+
+        return class_exists('CJW_Registration_Page') ? CJW_Registration_Page::url() : '';
+    }
     /**
      * Retrieves the private late-registration token.
      *
@@ -642,9 +672,17 @@ class CJW_Summer_Camp_Service
      */
     public function getPrimaryHeroCta(): array
     {
+        $url = $this->urlSettingWithDefault('hero_primary_cta_url');
+
+        // Unset, or set by activation to the anchor nothing answers to: either
+        // way the button belongs on the registration form.
+        if ($url === '' || $url === self::LEGACY_CTA_ANCHOR) {
+            $url = $this->getRegistrationPageUrl();
+        }
+
         return [
             'label' => $this->textSettingWithDefault('hero_primary_cta_label'),
-            'url' => $this->urlSettingWithDefault('hero_primary_cta_url'),
+            'url' => $url,
         ];
     }
 

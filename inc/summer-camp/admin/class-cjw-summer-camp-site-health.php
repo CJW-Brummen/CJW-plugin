@@ -74,6 +74,11 @@ final class CJW_Summer_Camp_Site_Health
             'test' => [$this, 'testScheduledJobs'],
         ];
 
+        $tests['direct']['cjw_summer_camp_registration_page'] = [
+            'label' => __('Zomerkamp: inschrijfpagina', 'cjw'),
+            'test' => [$this, 'testRegistrationPage'],
+        ];
+
         return $tests;
     }
 
@@ -410,6 +415,50 @@ final class CJW_Summer_Camp_Site_Health
                     'Zolang het opschonen stilstaat, blijven gegevens van kinderen langer bewaard dan aan ouders is verteld. Vraag de host om WP-Cron te controleren of een echte cronjob in te stellen.',
                     'cjw'
                 ) . '</p>'
+        );
+    }
+
+    /**
+     * Checks that the "Schrijf je in" buttons have somewhere to go.
+     *
+     * Every button on the site links to the page with the registration form;
+     * when no such page can be found the theme hides them rather than link to
+     * nowhere. A homepage without a signup button while registration is open
+     * is the worst version of that, so that case is critical.
+     *
+     * @return array<string, mixed>
+     */
+    public function testRegistrationPage(): array
+    {
+        $test = 'cjw_summer_camp_registration_page';
+        $camp = cjw_summer_camp();
+        $url = $camp->getRegistrationPageUrl();
+
+        if ($url !== '') {
+            return $this->result(
+                $test,
+                __('De inschrijfknoppen linken naar het inschrijfformulier', 'cjw'),
+                'good',
+                '<p>' . sprintf(
+                    /* translators: %s: page address. */
+                    esc_html__('Elke “Schrijf je in”-knop op de website linkt naar %s.', 'cjw'),
+                    '<code>' . esc_html($url) . '</code>'
+                ) . '</p>'
+            );
+        }
+
+        return $this->result(
+            $test,
+            __('De inschrijfknoppen wijzen nergens heen', 'cjw'),
+            $camp->isRegistrationOpen() ? 'critical' : 'recommended',
+            '<p>' . esc_html__(
+                'Er is geen gepubliceerde pagina gevonden met het inschrijfformulier (de [cjw_wizard]-shortcode), en bij “Pagina met inschrijfformulier” is geen adres ingevuld. De website verbergt daarom elke “Schrijf je in”-knop.',
+                'cjw'
+            ) . '</p><p>' . esc_html__(
+                'Publiceer de pagina met het formulier, of vul het adres in bij de zomerkamp-instellingen.',
+                'cjw'
+            ) . '</p>',
+            $this->settingsAction('general')
         );
     }
 

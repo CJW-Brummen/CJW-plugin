@@ -46,6 +46,11 @@ final class CJW_Plugin
         // runs in wp-admin is a guard with a way around it.
         CJW_Roles::registerGuards();
 
+        // Every button on the site asks where the form lives; the answer is
+        // cached and has to be dropped when a page changes, wherever that
+        // happens -- the editor, the REST API, WP-CLI.
+        CJW_Registration_Page::init();
+
         // Not only on activation: an activation hook does not run when a
         // plugin is updated, so a capability change would never reach a site
         // that already had the plugin installed. See CJW_Roles::VERSION.
@@ -100,6 +105,7 @@ final class CJW_Plugin
         require_once CJW_DIR . 'inc/shared/class-cjw-admin-menu.php';
         require_once CJW_DIR . 'inc/shared/localization.php';
         require_once CJW_DIR . 'inc/shared/class-summer-camp-service.php';
+        require_once CJW_DIR . 'inc/shared/class-cjw-registration-page.php';
         require_once CJW_DIR . 'inc/shared/functions.php';
         require_once CJW_DIR . 'inc/shared/class-cjw-mail-templates.php';
         require_once CJW_DIR . 'inc/shared/class-cjw-mail-tokens.php';

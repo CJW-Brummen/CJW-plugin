@@ -332,7 +332,7 @@ class CJW_Summer_Camp_Settings_Page
         $this->add(
             'late_registration_link',
             __('Pagina met inschrijfformulier', 'cjw'),
-            new CJW_Input_Field('late_registration_link', '', self::OPTION_KEY, 'url', description: __('Volledig webadres van de pagina met het inschrijfformulier, beginnend met https://. Dit adres wordt gebruikt om de unieke late-inschrijflink hieronder te maken.', 'cjw')),
+            new CJW_Input_Field('late_registration_link', '', self::OPTION_KEY, 'url', description: __('Volledig webadres van de pagina met het inschrijfformulier, beginnend met https://. Elke “Schrijf je in”-knop op de website linkt hierheen, en de unieke late-inschrijflink hieronder wordt ervan gemaakt. Laat leeg om de website zelf de gepubliceerde pagina met het formulier te laten vinden.', 'cjw')),
             'general'
         );
         $this->add(
@@ -396,7 +396,7 @@ class CJW_Summer_Camp_Settings_Page
         $this->add(
             'hero_primary_cta_url',
             __('Primaire knop link', 'cjw'),
-            new CJW_Input_Field('hero_primary_cta_url', '', self::OPTION_KEY, 'url', description: __('Webadres waar de eerste knop naartoe linkt. Begin met https://, bijvoorbeeld https://www.voorbeeld.nl/inschrijven.', 'cjw')),
+            new CJW_Input_Field('hero_primary_cta_url', '', self::OPTION_KEY, 'url', description: __('Webadres waar de eerste knop naartoe linkt. Laat leeg om naar de pagina met het inschrijfformulier te linken; vul alleen iets in als de knop ergens anders heen moet, beginnend met https://.', 'cjw')),
             'theme'
         );
         $this->add(
@@ -954,6 +954,7 @@ class CJW_Summer_Camp_Settings_Page
         $week_price = $camp->getPrice(CampType::WEEK);
         $weekend_price = $camp->getPrice(CampType::WEEKEND);
         $late_registration_link = $camp->getLateRegistrationLink();
+        $registration_page = $camp->getRegistrationPageUrl();
         $registration_open = $camp->isRegistrationOpen();
         $registration_status_class = $registration_open ? 'is-open' : 'is-closed';
         $registration_status_label = $registration_open ? __('Open', 'cjw') : __('Gesloten', 'cjw');
@@ -961,6 +962,9 @@ class CJW_Summer_Camp_Settings_Page
         $status_items = [
             __('Zomerkamp', 'cjw') => $camp->getDateRangeText(),
             __('Deadline', 'cjw') => $this->formatDate($deadline),
+            __('Inschrijfpagina', 'cjw') => $registration_page !== ''
+                ? $registration_page
+                : __('Geen pagina met het formulier gevonden', 'cjw'),
             __('Vroegboekkorting', 'cjw') => $early_bird_status,
             __('Prijs week', 'cjw') => cjw_localize_value($week_price, [
                 'type' => 'currency',
