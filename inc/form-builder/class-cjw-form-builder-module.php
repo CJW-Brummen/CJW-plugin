@@ -348,6 +348,23 @@ final class CJW_Form_Builder_Module
                     'mail' => $confirmation,
                 ];
             }
+
+            if ($completed_now) {
+                // The answers now live where they belong: on the submission,
+                // under the retention sweep and the privacy eraser. The copy in
+                // this transient answers to neither, and would otherwise keep a
+                // child's details -- allergies included -- for the six hours
+                // the session lives on so that the success screen can be
+                // reloaded. That screen needs nothing from it. (In a preview
+                // nothing was stored, so there is even less reason to keep it.)
+                $state['data'] = [];
+            }
+
+            $session->save($state);
+        }
+
+        if ($is_preview) {
+            echo wp_kses_post(CJW_Wizard_Unavailable::draftBanner($form->post_status));
         }
 
         $renderer->render($state, $errors, $session->getToken(), $guard->trapFields());
