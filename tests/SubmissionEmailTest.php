@@ -29,6 +29,63 @@ final class SubmissionEmailTest extends CJW_TestCase
         ];
     }
 
+    /**
+     * The role is the one reading that does not depend on field order. A form
+     * that asks the emergency contact first would otherwise mail grandma the
+     * confirmation and hand her the child's data on an AVG request.
+     */
+    public function testTheFieldMarkedAsTheParentsAddressWinsOverAnEarlierEmailField(): void
+    {
+        $config = $this->config([
+            [ 'key' => 'noodcontact_email', 'label' => 'E-mail noodcontact', 'type' => 'email' ],
+            [ 'key' => 'ouder_email', 'label' => 'E-mail ouder', 'type' => 'email', 'role' => CJW_Wizard_Field_Roles::PARENT_EMAIL ],
+        ]);
+
+        $this->assertSame(
+            'ouder@example.test',
+            CJW_Wizard_Submission_Repository::findEmail($config, [
+                'noodcontact_email' => 'oma@example.test',
+                'ouder_email' => 'ouder@example.test',
+            ])
+        );
+    }
+
+    public function testTheMarkedFieldWinsEvenWhenItIsAPlainTextField(): void
+    {
+        $config = $this->config([
+            [ 'key' => 'contact', 'label' => 'Contact', 'type' => 'text' ],
+            [ 'key' => 'ouder', 'label' => 'Ouder', 'type' => 'text', 'role' => CJW_Wizard_Field_Roles::PARENT_EMAIL ],
+        ]);
+
+        $this->assertSame(
+            'ouder@example.test',
+            CJW_Wizard_Submission_Repository::findEmail($config, [
+                'contact' => 'oma@example.test',
+                'ouder' => 'ouder@example.test',
+            ])
+        );
+    }
+
+    /**
+     * A marked field the parent left blank or mistyped is not an address, and
+     * the older readings are still better than nothing.
+     */
+    public function testAMarkedFieldWithoutAnAddressFallsThroughToTheOlderReadings(): void
+    {
+        $config = $this->config([
+            [ 'key' => 'ouder', 'label' => 'Ouder', 'type' => 'text', 'role' => CJW_Wizard_Field_Roles::PARENT_EMAIL ],
+            [ 'key' => 'contact_email', 'label' => 'E-mail', 'type' => 'email' ],
+        ]);
+
+        $this->assertSame(
+            'contact@example.test',
+            CJW_Wizard_Submission_Repository::findEmail($config, [
+                'ouder' => 'niet ingevuld',
+                'contact_email' => 'contact@example.test',
+            ])
+        );
+    }
+
     public function testFindsTheFieldTheFormDeclaresAsEmail(): void
     {
         $config = $this->config([

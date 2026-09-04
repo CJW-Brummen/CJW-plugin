@@ -59,6 +59,17 @@ final class CJW_Wizard_Field_Roles
     public const string PHOTO_CONSENT = 'photo_consent';
 
     /**
+     * The registering parent's e-mail address.
+     *
+     * The only role about the parent rather than the child, and the one most
+     * things stand on: the confirmation goes there, and WordPress answers an
+     * AVG access or erasure request by this address. Without it the plugin
+     * falls back to the first value in the payload that looks like an address,
+     * which on a form with an emergency contact is a coin toss.
+     */
+    public const string PARENT_EMAIL = 'parent_email';
+
+    /**
      * Roles whose value identifies a person and must not outlive retention.
      *
      * @var array<int, string>
@@ -68,6 +79,7 @@ final class CJW_Wizard_Field_Roles
         self::CHILD_INFIX,
         self::CHILD_LAST_NAME,
         self::BIRTH_DATE,
+        self::PARENT_EMAIL,
     ];
 
     /**
@@ -91,6 +103,7 @@ final class CJW_Wizard_Field_Roles
             self::BIRTH_DATE => __('Geboortedatum', 'cjw'),
             self::CAMP_TYPE => __('Type kamp', 'cjw'),
             self::PHOTO_CONSENT => __('Toestemming foto’s', 'cjw'),
+            self::PARENT_EMAIL => __('E-mailadres van de ouder', 'cjw'),
         ];
     }
 

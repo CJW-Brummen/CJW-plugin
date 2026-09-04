@@ -455,10 +455,13 @@ final class CJW_Wizard_Submission_Repository implements CJW_Wizard_Submission_St
     /**
      * Finds the registering parent's e-mail address in a submission.
      *
-     * Prefers a field the form actually declares as `email`, in the order the
-     * form asks them, so a parent's address wins over a second contact's. Falls
-     * back to the first value that looks like an address at all, for forms built
-     * before the field type existed or where the builder used a plain text field.
+     * The field the builder marks as "E-mailadres van de ouder" is the answer
+     * when the form has one: it is the only reading that does not depend on
+     * field order. Without the role, prefers a field the form declares as
+     * `email`, in the order the form asks them, so a parent's address wins over
+     * a second contact's. Falls back to the first value that looks like an
+     * address at all, for forms built before the field type existed or where
+     * the builder used a plain text field.
      *
      * @param array $config Form configuration.
      * @param array $data   Submitted payload.
@@ -467,6 +470,12 @@ final class CJW_Wizard_Submission_Repository implements CJW_Wizard_Submission_St
      */
     public static function findEmail(array $config, array $data): string
     {
+        $declared = CJW_Wizard_Field_Roles::valueFor($config, $data, CJW_Wizard_Field_Roles::PARENT_EMAIL);
+
+        if (is_email($declared)) {
+            return sanitize_email($declared);
+        }
+
         $flat = (new self())->flatten_data($data);
 
         foreach (self::emailFieldKeys($config['steps'] ?? []) as $key) {

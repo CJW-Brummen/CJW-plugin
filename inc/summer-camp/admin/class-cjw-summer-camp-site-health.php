@@ -79,6 +79,11 @@ final class CJW_Summer_Camp_Site_Health
             'test' => [$this, 'testRegistrationPage'],
         ];
 
+        $tests['direct']['cjw_summer_camp_parent_email'] = [
+            'label' => __('Zomerkamp: e-mailadres van de ouder', 'cjw'),
+            'test' => [$this, 'testParentEmailRole'],
+        ];
+
         return $tests;
     }
 
@@ -460,6 +465,85 @@ final class CJW_Summer_Camp_Site_Health
             ) . '</p>',
             $this->settingsAction('general')
         );
+    }
+
+    /**
+     * Checks that every published form says which field is the parent's address.
+     *
+     * Without the role the plugin guesses: the first declared e-mail field, or
+     * failing that the first value that looks like an address. On a form with
+     * an emergency contact that guess decides who gets the confirmation and,
+     * worse, whose data an AVG request returns.
+     *
+     * @return array<string, mixed>
+     */
+    public function testParentEmailRole(): array
+    {
+        $test = 'cjw_summer_camp_parent_email';
+
+        if (!class_exists('CJW_Wizard_Field_Roles') || !class_exists('CJW_Wizard_Config')) {
+            return $this->result(
+                $test,
+                __('De formulierbouwer is niet geladen', 'cjw'),
+                'good',
+                '<p>' . esc_html__('Er zijn geen formulieren om te controleren.', 'cjw') . '</p>'
+            );
+        }
+
+        $unmarked = $this->formsWithoutParentEmail();
+
+        if ($unmarked === []) {
+            return $this->result(
+                $test,
+                __('Elk formulier weet welk veld het e-mailadres van de ouder is', 'cjw'),
+                'good',
+                '<p>' . esc_html__('Bevestigingen en AVG-verzoeken gaan naar het veld dat daarvoor is gemarkeerd.', 'cjw') . '</p>'
+            );
+        }
+
+        $lines = [];
+
+        foreach ($unmarked as $form) {
+            $lines[] = sprintf(
+                '<li><a href="%s">%s</a></li>',
+                esc_url((string) get_edit_post_link($form->ID, 'raw')),
+                esc_html($form->post_title !== '' ? $form->post_title : (string) $form->ID)
+            );
+        }
+
+        return $this->result(
+            $test,
+            __('Een formulier weet niet welk veld het e-mailadres van de ouder is', 'cjw'),
+            'recommended',
+            '<p>' . esc_html__(
+                'Bij deze formulieren is geen veld gemarkeerd met de betekenis “E-mailadres van de ouder”. De website raadt dan welk veld het is, en bij een formulier met een noodcontact kan die gok verkeerd uitvallen: de bevestiging en een AVG-verzoek gaan dan naar het verkeerde adres.',
+                'cjw'
+            ) . '</p><ul>' . implode('', $lines) . '</ul><p>' . esc_html__(
+                'Open het formulier, kies bij het e-mailveld van de ouder de betekenis “E-mailadres van de ouder” en sla op.',
+                'cjw'
+            ) . '</p>'
+        );
+    }
+
+    /**
+     * Published forms with no field carrying the parent e-mail role.
+     *
+     * @return WP_Post[]
+     */
+    private function formsWithoutParentEmail(): array
+    {
+        $forms = get_posts([
+            'post_type' => CJW_Wizard_Post_Type::SLUG,
+            'post_status' => 'publish',
+            'numberposts' => 50,
+            'orderby' => 'title',
+            'order' => 'ASC',
+        ]);
+
+        return array_values(array_filter($forms, static function ($form): bool {
+            return $form instanceof WP_Post
+                && CJW_Wizard_Field_Roles::pathFor(CJW_Wizard_Config::get((int) $form->ID), CJW_Wizard_Field_Roles::PARENT_EMAIL) === '';
+        }));
     }
 
     /**

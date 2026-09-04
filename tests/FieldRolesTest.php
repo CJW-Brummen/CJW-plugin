@@ -30,6 +30,18 @@ final class FieldRolesTest extends CJW_TestCase
         ];
     }
 
+    /**
+     * The builder's dropdown and the normaliser both take their list from
+     * all(); a role missing there is a role the builder cannot set and a
+     * hand-edited config cannot keep.
+     */
+    public function testTheParentsAddressIsARoleTheBuilderOffers(): void
+    {
+        $this->assertArrayHasKey(CJW_Wizard_Field_Roles::PARENT_EMAIL, CJW_Wizard_Field_Roles::all());
+        $this->assertTrue(CJW_Wizard_Field_Roles::isValid('parent_email'));
+        $this->assertContains(CJW_Wizard_Field_Roles::PARENT_EMAIL, CJW_Wizard_Field_Roles::PERSONAL);
+    }
+
     public function testFindsTheValueForARole(): void
     {
         $config = $this->config([

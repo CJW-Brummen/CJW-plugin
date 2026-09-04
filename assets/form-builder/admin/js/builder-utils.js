@@ -24,6 +24,7 @@
 		{ value: "birth_date", label: "Geboortedatum" },
 		{ value: "camp_type", label: "Type kamp" },
 		{ value: "photo_consent", label: "Toestemming foto's" },
+		{ value: "parent_email", label: "E-mailadres van de ouder" },
 	];
 
 	Builder.FIELD_FEATURES = {
