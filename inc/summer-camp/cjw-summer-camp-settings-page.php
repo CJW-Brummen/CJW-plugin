@@ -84,6 +84,7 @@ class CJW_Summer_Camp_Settings_Page
         ],
         'content' => [
             'intro_text',
+            'privacy_notice_text',
             'birthday_mail_enabled',
         ],
         'website' => [
@@ -254,6 +255,24 @@ class CJW_Summer_Camp_Settings_Page
         );
 
         $this->fields();
+    }
+
+    /**
+     * The help text under the privacy field, with the tokens spelled out.
+     *
+     * @return string
+     */
+    private function privacyNoticeDescription(): string
+    {
+        $tokens = [];
+
+        foreach (CJW_Privacy_Notice::tokens() as $token => $meaning) {
+            $tokens[] = $token . ' — ' . $meaning;
+        }
+
+        return __('Deze tekst staat op de laatste stap van het inschrijfformulier, boven het vinkje waarmee de ouder akkoord gaat. Laat leeg om de standaardtekst te gebruiken.', 'cjw')
+            . ' ' . __('Woorden tussen accolades vult de website zelf in, zodat de tekst klopt ook als je later iets aan de instellingen verandert:', 'cjw')
+            . ' ' . implode('; ', $tokens) . '.';
     }
 
     /**
@@ -501,6 +520,17 @@ class CJW_Summer_Camp_Settings_Page
             'intro_text',
             __('Introductietekst', 'cjw'),
             new CJW_Wysiwyg_Field('intro_text', '', self::OPTION_KEY, __('Welkomsttekst die bovenaan het inschrijfformulier wordt getoond. Vertel kort wat ouders kunnen verwachten. Laat leeg om geen introductietekst te tonen.', 'cjw')),
+            'content'
+        );
+        $this->add(
+            'privacy_notice_text',
+            __('Privacytekst op het formulier', 'cjw'),
+            new CJW_Wysiwyg_Field(
+                'privacy_notice_text',
+                '',
+                self::OPTION_KEY,
+                $this->privacyNoticeDescription()
+            ),
             'content'
         );
         $this->add(

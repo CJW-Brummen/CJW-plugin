@@ -113,6 +113,26 @@ final class CJW_Wizard_Submission_Detail
 
         $this->summaryCell(__('Contact', 'cjw'), $contact === [] ? '—' : implode('<br>', $contact));
 
+        $consent = CJW_Wizard_Privacy_Consent::recorded($submissionId);
+
+        $this->summaryCell(
+            __('Privacy', 'cjw'),
+            $consent === null
+                ? esc_html__('Niet vastgelegd', 'cjw')
+                : sprintf(
+                    // The wording that was on screen sits in the title, so the
+                    // question "what did this parent agree to" is answerable
+                    // even after the text has since been rewritten.
+                    '<span title="%s">%s</span>',
+                    esc_attr($consent['label'] . "\n\n" . $consent['text']),
+                    esc_html(sprintf(
+                        /* translators: %s: date and time. */
+                        __('Akkoord op %s', 'cjw'),
+                        wp_date(__('j F Y \o\m H:i', 'cjw'), $consent['at'])
+                    ))
+                )
+        );
+
         echo '</div>';
     }
 

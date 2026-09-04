@@ -141,6 +141,17 @@ final class CJW_Wizard_Renderer
             }
         }
 
+        // The last step is where the complete button is, so it is where the
+        // parent is told what happens to what they just typed.
+        if ($stepNumber === $stepCount) {
+            $this->renderPrivacyConsent(
+                ! empty($state['consent']),
+                isset($errors[ CJW_Wizard_Privacy_Consent::ERROR_KEY ])
+                    ? (string) $errors[ CJW_Wizard_Privacy_Consent::ERROR_KEY ]
+                    : null
+            );
+        }
+
         echo '<div class="cjw-wizard-actions">';
 
         if ($hasPrevious) {
@@ -157,9 +168,79 @@ final class CJW_Wizard_Renderer
     }
 
     /**
-     * Renders the completion state.
+     * The privacy text and the tick that has to go with it.
+     *
+     * @param bool        $checked Whether the parent has already ticked it.
+     * @param string|null $error   Why the last attempt was refused, if it was.
      */
-    private function renderComplete(string $token): void
+    private function renderPrivacyConsent(bool $checked, ?string $error): void
+    {
+        if (! CJW_Wizard_Privacy_Consent::isRequired($this->config)) {
+            return;
+        }
+
+        $id = 'cjw-privacy-consent';
+        $errorId = $id . '-error';
+
+        echo '<div class="cjw-wizard-privacy' . ($error !== null ? ' cjw-wizard-privacy--invalid' : '') . '">';
+        echo '<div class="cjw-wizard-privacy__text">' . wp_kses_post(CJW_Privacy_Notice::text()) . '</div>';
+
+        printf(
+            '<label class="cjw-wizard-privacy__consent" for="%1$s"><input type="checkbox" id="%1$s" name="%2$s" value="1" required%3$s%4$s><span>%5$s</span></label>',
+            esc_attr($id),
+            esc_attr(CJW_Wizard_Privacy_Consent::FIELD),
+            $checked ? ' checked' : '',
+            $error !== null ? ' aria-describedby="' . esc_attr($errorId) . '"' : '',
+            esc_html(CJW_Privacy_Notice::consentLabel())
+        );
+
+        if ($error !== null) {
+            printf(
+                '<p class="cjw-wizard-privacy__error" id="%s">%s</p>',
+                esc_attr($errorId),
+                esc_html($error)
+            );
+        }
+
+        echo '</div>';
+    }
+
+    /**
+     * The first visible step at or after a position, or null when the state
+     * has moved past every step this data leaves visible.
+     *
+     * @param array<int, string> $stepKeys        Every step key, in order.
+     * @param array<int, string> $visibleStepKeys The subset currently visible.
+     */
+    private function firstVisibleStepFrom(int $from, array $stepKeys, array $visibleStepKeys): ?string
+    {
+        foreach ($stepKeys as $index => $key) {
+            if ($index >= $from && in_array($key, $visibleStepKeys, true)) {
+                return $key;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Renders the completion state.
+     *
+     * A tick and one editable sentence is not proof. A parent who has just
+     * typed their child's allergies into a website wants to know it landed:
+     * a number they can quote on the phone, the address that was written to,
+     * and -- when the mail did not go out -- to be told so here rather than
+     * discovering it by waiting for an inbox that stays empty. The
+     * registration itself is safely stored in every one of these cases; only
+     * the mail about it can fail, and saying so is what keeps the screen
+     * honest.
+     *
+     * @param array<string, mixed> $completion Details recorded when the
+     *                                         submission was stored. Empty for
+     *                                         a session that finished before
+     *                                         this existed.
+     */
+    private function renderComplete(string $token, array $completion = []): void
     {
         $settings = $this->getSettings();
         $submission = (int) ($completion['submission'] ?? 0);

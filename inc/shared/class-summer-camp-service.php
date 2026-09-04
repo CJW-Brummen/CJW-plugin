@@ -38,6 +38,8 @@ class CJW_Summer_Camp_Service
         'price_week' => 0,
         'price_weekend' => 0,
         'registration_closed_text' => '',
+        // Empty means "use the built-in wording"; see CJW_Privacy_Notice.
+        'privacy_notice_text' => '',
         'status_token' => '',
         'late_registration_link' => '',
         'late_registration_token' => '',
@@ -382,6 +384,22 @@ class CJW_Summer_Camp_Service
     {
         return self::sanitizeLateRegistrationToken($this->settings['status_token']);
     }
+
+    /**
+     * The privacy text shown on the registration form, as written.
+     *
+     * Tokens are left in place: resolving them is CJW_Privacy_Notice's job,
+     * and the settings screen has to show what was typed.
+     *
+     * @return string
+     */
+    public function getPrivacyNoticeText(): string
+    {
+        $stored = cjw_localize_value($this->settings[ CJW_Privacy_Notice::SETTING ] ?? '');
+
+        return is_scalar($stored) ? (string) $stored : '';
+    }
+
     /**
      * Retrieves the private late-registration token.
      *
@@ -1058,6 +1076,7 @@ class CJW_Summer_Camp_Service
             'registration_closed_text' => wp_kses_post($input['registration_closed_text'] ?? ''),
             'late_registration_link' => esc_url_raw($input['late_registration_link'] ?? ''),
             'late_registration_token' => self::sanitizeLateRegistrationTokenForSave($input),
+            'privacy_notice_text' => wp_kses_post($input[ CJW_Privacy_Notice::SETTING ] ?? ''),
             // Generated, never typed: kept through a save so the monitoring
             // address an organiser has already pasted somewhere keeps working.
             'status_token' => self::sanitizeStatusTokenForSave($input),

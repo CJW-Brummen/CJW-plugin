@@ -172,6 +172,7 @@ final class CJW_Form_Builder_Module
         require_once CJW_DIR . 'inc/form-builder/frontend/class-wizard-conditions.php';
         require_once CJW_DIR . 'inc/form-builder/frontend/class-wizard-session.php';
         require_once CJW_DIR . 'inc/form-builder/frontend/class-wizard-unavailable.php';
+        require_once CJW_DIR . 'inc/form-builder/frontend/class-wizard-privacy-consent.php';
         require_once CJW_DIR . 'inc/form-builder/frontend/class-wizard-renderer.php';
         require_once CJW_DIR . 'inc/form-builder/frontend/class-wizard-validator.php';
         require_once CJW_DIR . 'inc/form-builder/frontend/class-wizard-guard.php';
@@ -324,9 +325,29 @@ final class CJW_Form_Builder_Module
             $state = $result['state'];
             $errors = $result['errors'] ?? [];
 
+            // The privacy tick is not a form field, so the engine neither
+            // validates nor carries it. Remembered on the state so that a
+            // validation error elsewhere on the last step does not silently
+            // untick a box the parent already ticked.
+            // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Verified at the top of this block.
+            $consent_given = CJW_Wizard_Privacy_Consent::given(wp_unslash($_POST))
+                || ! empty($previous_state['consent']);
+
+            if ($consent_given) {
+                $state['consent'] = true;
+            }
+
             $completed_now = $errors === []
                 && ($previous_state['step'] ?? 0) < $step_count
                 && ($state['step'] ?? 0) >= $step_count;
+
+            // Refuse rather than store: a registration whose privacy tick
+            // nobody can produce afterwards is worse than one more attempt.
+            if ($completed_now && CJW_Wizard_Privacy_Consent::isRequired($config_data) && ! $consent_given) {
+                $state['step'] = (int) ($previous_state['step'] ?? 0);
+                $errors[ CJW_Wizard_Privacy_Consent::ERROR_KEY ] = CJW_Wizard_Privacy_Consent::errorMessage();
+                $completed_now = false;
+            }
 
             if ($completed_now && ! $is_preview) {
                 if (! $guard->mayComplete()) {
@@ -335,6 +356,13 @@ final class CJW_Form_Builder_Module
                 }
 
                 $submission_id = $this->submissions->save_submission($wizard_id, $config_data, $state['data'] ?? []);
+
+                // Before the mails: what was agreed to is part of the
+                // registration, and a mail server having a bad day must not
+                // cost the record of it.
+                if (CJW_Wizard_Privacy_Consent::isRequired($config_data)) {
+                    CJW_Wizard_Privacy_Consent::record($submission_id);
+                }
                 $this->submissions->maybe_notify_admin($wizard_id, $config_data, $state['data'] ?? [], $submission_id);
                 $confirmation = $this->submissions->maybe_confirm_to_parent($submission_id, $wizard_id, $config_data, $state['data'] ?? []);
 

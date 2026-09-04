@@ -143,6 +143,16 @@ final class CJW_Wizard_Meta_Boxes
         );
 
         echo '<hr>';
+        echo '<p><strong>' . esc_html__('Privacy', 'cjw') . '</strong></p>';
+
+        $this->render_checkbox_setting(
+            'require_privacy_consent',
+            __('Vraag akkoord op de privacytekst', 'cjw'),
+            $settings['require_privacy_consent']
+        );
+        echo '<p class="description">' . esc_html__('Zet de privacytekst op de laatste stap, met een vinkje dat de ouder moet aanzetten om te kunnen versturen. Het moment en de tekst worden bij de inschrijving bewaard. De tekst schrijf je bij Zomerkamp → Instellingen → Inhoud.', 'cjw') . '</p>';
+
+        echo '<hr>';
         echo '<p><strong>' . esc_html__('Bevestiging naar de ouder', 'cjw') . '</strong></p>';
 
         $this->render_checkbox_setting(

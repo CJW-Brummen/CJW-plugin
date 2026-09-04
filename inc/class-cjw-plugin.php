@@ -114,6 +114,7 @@ final class CJW_Plugin
         require_once CJW_DIR . 'inc/shared/class-cjw-roles-notice.php';
         require_once CJW_DIR . 'inc/shared/class-cjw-admin-menu.php';
         require_once CJW_DIR . 'inc/shared/localization.php';
+        require_once CJW_DIR . 'inc/shared/class-cjw-privacy-notice.php';
         require_once CJW_DIR . 'inc/shared/class-summer-camp-service.php';
         require_once CJW_DIR . 'inc/shared/class-cjw-registration-page.php';
         require_once CJW_DIR . 'inc/shared/class-cjw-mail-safe-mode.php';

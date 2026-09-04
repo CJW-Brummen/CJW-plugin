@@ -22,6 +22,9 @@ final class CJW_Wizard_Defaults
             'show_previous_button' => true,
             'success_message' => __('Bedankt! Je formulier is succesvol afgerond.', 'cjw'),
             'use_summer_camp_settings' => false,
+            // On by default: the form asks for a child's medical notes, and a
+            // form that says nothing about that is the state this replaces.
+            'require_privacy_consent' => true,
             'show_summer_camp_intro' => true,
             'send_admin_notification' => false,
             'notification_email' => '',

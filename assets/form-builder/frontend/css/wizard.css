@@ -112,6 +112,54 @@
 }
 
 /* Fields */
+
+/* The privacy text and its tick, on the last step above the buttons. */
+.cjw-wizard-privacy {
+	margin: 24px 0 0;
+	padding: 16px 18px;
+	border: 1px solid #d6d9d3;
+	border-radius: 8px;
+	background: #fbfaf6;
+}
+
+.cjw-wizard-privacy--invalid {
+	border-color: #b32d2e;
+	background: #fdf3f3;
+}
+
+.cjw-wizard-privacy__text {
+	font-size: 15px;
+	line-height: 1.6;
+}
+
+.cjw-wizard-privacy__text p {
+	margin: 0 0 10px;
+}
+
+.cjw-wizard-privacy__consent {
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+	margin: 4px 0 0;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.cjw-wizard-privacy__consent input {
+	flex: 0 0 auto;
+	margin: 3px 0 0;
+}
+
+.cjw-wizard-privacy__error {
+	margin: 10px 0 0;
+	color: #b32d2e;
+	font-weight: 600;
+}
+
+.cjw-wizard-privacy__text > :last-child {
+	margin-bottom: 0;
+}
+
 .cjw-field {
     margin-bottom: var(--cjw-space-xxl);
 }
