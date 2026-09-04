@@ -540,6 +540,13 @@ if (! class_exists('WP_User')) {
     }
 }
 
+if (! function_exists('get_current_user_id')) {
+    function get_current_user_id(): int
+    {
+        return (int) ($GLOBALS['cjw_test_current_user_id'] ?? 0);
+    }
+}
+
 if (! function_exists('wp_get_current_user')) {
     function wp_get_current_user(): WP_User
     {
@@ -867,6 +874,7 @@ require_once __DIR__ . '/../inc/shared/class-cjw-mailer.php';
 require_once __DIR__ . '/../inc/shared/class-cjw-alerts.php';
 require_once __DIR__ . '/../inc/shared/class-cjw-cron-heartbeat.php';
 require_once __DIR__ . '/../inc/form-builder/domain/class-wizard-amount.php';
+require_once __DIR__ . '/../inc/form-builder/submissions/class-wizard-payments.php';
 require_once __DIR__ . '/../inc/form-builder/submissions/class-wizard-birthday-mailer.php';
 require_once __DIR__ . '/../inc/form-builder/submissions/class-wizard-year-rollover.php';
 require_once __DIR__ . '/../inc/form-builder/submissions/class-wizard-submission-digest.php';

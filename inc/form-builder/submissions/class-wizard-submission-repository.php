@@ -168,7 +168,14 @@ final class CJW_Wizard_Submission_Repository implements CJW_Wizard_Submission_St
             add_post_meta($submission_id, self::META_CAMP_TYPE, $campType);
         }
 
-        $this->indexChildren((int) $submission_id, CJW_Wizard_Field_Roles::childRows($config, $data));
+        $childRows = CJW_Wizard_Field_Roles::childRows($config, $data);
+
+        $this->indexChildren((int) $submission_id, $childRows);
+
+        // What this registration comes to, frozen now. Recomputed later it
+        // would read the payload, which the retention sweep erases -- and a
+        // camp year's figures would turn into zero a year after the fact.
+        CJW_Wizard_Payments::freeze((int) $submission_id, $childRows, $data);
 
         return (int) $submission_id;
     }
@@ -730,7 +737,10 @@ final class CJW_Wizard_Submission_Repository implements CJW_Wizard_Submission_St
         // META_CAMP_TYPE and META_PHOTO_CONSENT deliberately survive: neither
         // identifies anybody, and they are what keeps "74 registrations for the
         // 2026 week camp" and "12 of them said no to photos" answerable after
-        // the personal data is gone.
+        // the personal data is gone. So do the frozen amount and the payments
+        // against it -- the camp's own books -- but the free-text note on a
+        // payment is something somebody typed, so that goes.
+        CJW_Wizard_Payments::anonymise($submission_id);
 
         update_post_meta($submission_id, self::META_ANONYMISED, wp_date('Y-m-d'));
 

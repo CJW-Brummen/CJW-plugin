@@ -178,6 +178,8 @@ final class CJW_Form_Builder_Module
         require_once CJW_DIR . 'inc/form-builder/frontend/class-wizard-guard.php';
         require_once CJW_DIR . 'inc/form-builder/admin/class-wizard-site-health.php';
         require_once CJW_DIR . 'inc/form-builder/submissions/class-wizard-submission-status.php';
+        require_once CJW_DIR . 'inc/form-builder/submissions/class-wizard-payments.php';
+        require_once CJW_DIR . 'inc/form-builder/submissions/class-wizard-payments-admin.php';
         require_once CJW_DIR . 'inc/form-builder/submissions/class-wizard-submissions-post-type.php';
         require_once CJW_DIR . 'inc/form-builder/submissions/interface-wizard-submission-store.php';
         require_once CJW_DIR . 'inc/form-builder/submissions/class-wizard-submission-repository.php';

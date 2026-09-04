@@ -80,7 +80,7 @@ final class CJW_Wizard_Submission_Detail
     private function renderSummary(int $submissionId, array $config, array $payload): void
     {
         $children = CJW_Wizard_Field_Roles::childRows($config, $payload);
-        $amount = $this->amount($children, $payload);
+        $amount = $this->amount($submissionId, $children, $payload);
         $email = $this->repository->get_email($submissionId);
         $phone = $this->firstValueByLabel($config, $payload, [ 'telefoon' ]);
 
@@ -174,16 +174,27 @@ final class CJW_Wizard_Submission_Detail
     /**
      * The total the parent owes, rendered for this screen.
      *
-     * The arithmetic lives in CJW_Wizard_Amount, because the confirmation mail
-     * quotes the same figure and two implementations would drift.
+     * Read from the frozen amount rather than recomputed: the arithmetic needs
+     * the payload, and once the retention sweep has erased that, recomputing
+     * answers zero. Registrations taken before the amount was frozen have
+     * nothing stored, so those fall back to the sum -- while their payload is
+     * still there to sum.
      *
-     * @param array $children Child records.
-     * @param array $payload  Submitted answers.
-     * @param array<int, mixed> $children
+     * @param int   $submissionId Registration post id.
+     * @param array $children     Child records.
+     * @param array $payload      Submitted answers.
+     * @param array<int, mixed>    $children
      * @param array<string, mixed> $payload
      */
-    private function amount(array $children, array $payload): string
+    private function amount(int $submissionId, array $children, array $payload): string
     {
+        $frozen = CJW_Wizard_Payments::amount($submissionId);
+        $paid = CJW_Wizard_Payments::paid($submissionId);
+
+        if ($frozen['snapshot'] > 0 || $frozen['override'] !== null) {
+            return $this->frozenAmount($frozen, $paid);
+        }
+
         $amount = CJW_Wizard_Amount::of($children, $payload);
         $parts = [];
 
@@ -211,6 +222,53 @@ final class CJW_Wizard_Submission_Detail
 
         if (count($parts) > 1) {
             $sum .= '<br><span class="cjw-muted">' . implode(' + ', $parts) . '</span>';
+        }
+
+        if ($amount['unpriced'] > 0) {
+            $sum .= '<br><span class="cjw-muted">' . esc_html(sprintf(
+                /* translators: %d: number of children whose camp carries no price. */
+                _n('%d kamp zonder prijs in de naam', '%d kampen zonder prijs in de naam', $amount['unpriced'], 'cjw'),
+                $amount['unpriced']
+            )) . '</span>';
+        }
+
+        return $sum;
+    }
+
+    /**
+     * The frozen amount, with what is still open under it.
+     *
+     * @param array{camp: int, donation: int, snapshot: int, due: int, override: ?int, unpriced: int} $amount
+     * @param int                                                                                    $paid Received, in cents.
+     */
+    private function frozenAmount(array $amount, int $paid): string
+    {
+        $sum = '<strong>' . esc_html(CJW_Wizard_Payments::formatAmount($amount['due'])) . '</strong>';
+        $outstanding = $amount['due'] - $paid;
+
+        if ($amount['override'] !== null && $amount['override'] !== $amount['snapshot']) {
+            $sum .= '<br><span class="cjw-muted">' . esc_html(sprintf(
+                /* translators: %s: the amount the form worked out. */
+                __('aangepast, formulier: %s', 'cjw'),
+                CJW_Wizard_Payments::formatAmount($amount['snapshot'])
+            )) . '</span>';
+        } elseif ($amount['camp'] > 0 && $amount['donation'] > 0) {
+            $sum .= '<br><span class="cjw-muted">' . esc_html(sprintf(
+                /* translators: 1: camp fee, 2: donation. */
+                __('%1$s kampgeld + %2$s donatie', 'cjw'),
+                CJW_Wizard_Payments::formatAmount($amount['camp']),
+                CJW_Wizard_Payments::formatAmount($amount['donation'])
+            )) . '</span>';
+        }
+
+        if ($amount['due'] > 0 && $outstanding <= 0) {
+            $sum .= '<br><span style="color:#007017;">' . esc_html__('voldaan', 'cjw') . '</span>';
+        } elseif ($paid !== 0) {
+            $sum .= '<br><span style="color:#b32d2e;">' . esc_html(sprintf(
+                /* translators: %s: outstanding amount. */
+                __('%s openstaand', 'cjw'),
+                CJW_Wizard_Payments::formatAmount($outstanding)
+            )) . '</span>';
         }
 
         if ($amount['unpriced'] > 0) {

@@ -19,6 +19,7 @@ final class CJW_Wizard_Submissions
     private CJW_Wizard_Submission_Digest $digest;
     private CJW_Wizard_Birthday_Mailer $birthdays;
     private CJW_Wizard_Submission_Status $status;
+    private CJW_Wizard_Payments_Admin $payments;
     private CJW_Wizard_Submission_Confirmation $confirmation;
     private CJW_Wizard_Children_Page $children;
 
@@ -35,6 +36,7 @@ final class CJW_Wizard_Submissions
         $this->digest = new CJW_Wizard_Submission_Digest($this->repository);
         $this->birthdays = new CJW_Wizard_Birthday_Mailer($this->repository);
         $this->status = new CJW_Wizard_Submission_Status();
+        $this->payments = new CJW_Wizard_Payments_Admin();
         $this->confirmation = new CJW_Wizard_Submission_Confirmation();
         $this->children = new CJW_Wizard_Children_Page($this->repository);
     }
@@ -50,6 +52,7 @@ final class CJW_Wizard_Submissions
         $this->digest->init();
         $this->birthdays->init();
         $this->status->init();
+        $this->payments->init();
         $this->children->init();
     }
 

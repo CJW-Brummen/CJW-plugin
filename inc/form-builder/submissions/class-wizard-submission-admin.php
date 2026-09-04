@@ -259,6 +259,7 @@ JS;
             'cjw_camp' => __('Kamp', 'cjw'),
             'cjw_foto' => __('Foto’s', 'cjw'),
             'cjw_status' => __('Status', 'cjw'),
+            'cjw_payment' => __('Betaling', 'cjw'),
         ];
 
         // Only worth a column when there is more than one form to tell apart.
@@ -425,6 +426,11 @@ JS;
 
             case 'cjw_camp':
                 echo esc_html($this->valueOrDash($this->repository->get_camp_type($post_id)));
+                break;
+
+            case 'cjw_payment':
+                // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- cell() escapes the figures it formats.
+                echo CJW_Wizard_Payments_Admin::cell($post_id);
                 break;
 
             case 'cjw_foto':
