@@ -3,7 +3,7 @@ Contributors: Imre Boersma
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.5
-Stable tag: 2.3.0
+Stable tag: 2.4.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -77,6 +77,22 @@ the option key, post types, and meta keys are unchanged.
 * `npm run lint` runs ESLint and Stylelint over `assets/`
 
 == Changelog ==
+
+= 2.4.0 =
+* A status route at `cjw/v1/status` for an uptime monitor outside the site, because everything
+  else this plugin reports it reports by mail from inside itself. An anonymous caller learns
+  whether the site is up and whether it considers itself healthy; the token from the Beheer tab
+  unlocks what is actually wrong. Graded ok / warning / critical, `?strict=1` answers 503 on a
+  critical verdict, and the checks are cached for thirty seconds.
+* Fatal errors are recorded and reported once per place in the code, so a crash that takes a page
+  down mid-render is no longer invisible to everybody but the visitor.
+* An administrators-only dashboard widget: the verdict with the problems named, this camp year's
+  registration numbers, when each scheduled job last ran and when it is next due, and whether this
+  installation is the live site or a copy.
+* The registration form now says what happens to the data it asks for and requires the parent to
+  agree. The wording is the organisers' to write, with tokens so the retention period on the page
+  cannot drift from the one the sweep applies; the moment and the exact wording shown are stored
+  with the registration and survive anonymisation.
 
 = 2.3.0 =
 * One click on the Beheer tab creates what a fresh site is missing: the registration page, the
