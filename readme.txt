@@ -3,7 +3,7 @@ Contributors: Imre Boersma
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.5
-Stable tag: 2.4.0
+Stable tag: 2.5.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -77,6 +77,19 @@ the option key, post types, and meta keys are unchanged.
 * `npm run lint` runs ESLint and Stylelint over `assets/`
 
 == Changelog ==
+
+= 2.5.0 =
+* Payments per registration. "Betaald" was one radio button, so part payments, cash at the drive
+  and a grandparent paying for one child could not be recorded at all.
+* The amount owed is frozen in cents when the registration is taken. It used to be recomputed from
+  the payload on every view, and the retention sweep erases that payload — so a camp year's figures
+  quietly became zero once its registrations were anonymised.
+* Each payment is a row: date, amount, method, note and who recorded it. A negative amount is a
+  refund. The amount owed can be corrected for a reduced rate, with the form's own figure kept
+  beside it.
+* The Betaald status follows the balance, but only when the ledger itself moved, so a status
+  chosen by hand is not overruled by arithmetic.
+* A column on the registrations list and a total for the camp year above it.
 
 = 2.4.0 =
 * A status route at `cjw/v1/status` for an uptime monitor outside the site, because everything
