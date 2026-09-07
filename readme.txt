@@ -3,7 +3,7 @@ Contributors: Imre Boersma
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.5
-Stable tag: 2.0.0
+Stable tag: 2.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -77,6 +77,18 @@ the option key, post types, and meta keys are unchanged.
 * `npm run lint` runs ESLint and Stylelint over `assets/`
 
 == Changelog ==
+
+= 2.1.0 =
+* A registration is never reported as succeeded when it was not stored. A mistyped shortcode id,
+  a form with no steps and an unpublished form each say so plainly instead, with the technical
+  reason shown only to somebody who may edit the form.
+* The success screen quotes the registration number, names the address the confirmation went to,
+  and says so honestly when that send failed.
+* Mail leaves with the site's own sender name and the camp's reply address, and the reason a send
+  failed is captured rather than discarded.
+* Faults that used to stay silent now report themselves once: a confirmation a parent never got,
+  and a scheduled job that has stopped running.
+* The session stops holding a child's answers the moment the registration is stored.
 
 = 2.0.0 =
 * Merge `cjw-common`, `cjw-summer-camp` and `cjw-form-builder` into a single plugin with one
