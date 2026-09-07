@@ -3,7 +3,7 @@ Contributors: Imre Boersma
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.5
-Stable tag: 2.5.0
+Stable tag: 2.6.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -77,6 +77,24 @@ the option key, post types, and meta keys are unchanged.
 * `npm run lint` runs ESLint and Stylelint over `assets/`
 
 == Changelog ==
+
+= 2.6.0 =
+* iDEAL payments through Mollie. A form can require the parent to pay before it is finished: the
+  registration is stored first and only then is the parent sent to iDEAL, so a bank app that
+  crashes never costs a registration and money is never taken for details nobody wrote down.
+* Mollie's webhook carries only an id and is never believed. The payment is traced to a
+  registration in this site's own records first — a foreign id costs no API call at all — and then
+  verified against Mollie itself: it must be one we started, in the mode it was created in, in
+  euros, and reported as paid. The amount recorded is Mollie's, not ours, and a repeated webhook
+  records nothing twice.
+* A test key and a live key are stored side by side and switching between them is one click, so
+  rehearsing the form before a new camp year does not mean re-pasting credentials. A payment still
+  in flight is verified with the key that created it, so switching cannot drop one.
+* The API key lives in an option of its own, outside the camp settings, which are snapshotted on
+  every save and downloadable as a JSON file. `CJW_MOLLIE_API_KEY` in wp-config.php overrides it
+  for a site that would rather keep the credential out of the database entirely.
+* Payments are refused from a copy of the site, over plain http, and for a cancelled registration.
+  Site Health reports a test key as critical while registration is open.
 
 = 2.5.0 =
 * Payments per registration. "Betaald" was one radio button, so part payments, cash at the drive
