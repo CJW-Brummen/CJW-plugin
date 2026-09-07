@@ -3,7 +3,7 @@ Contributors: Imre Boersma
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.5
-Stable tag: 2.2.0
+Stable tag: 2.3.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -77,6 +77,15 @@ the option key, post types, and meta keys are unchanged.
 * `npm run lint` runs ESLint and Stylelint over `assets/`
 
 == Changelog ==
+
+= 2.3.0 =
+* One click on the Beheer tab creates what a fresh site is missing: the registration page, the
+  front page, the two card pages, a draft privacy page and the main menu. Nothing that already
+  exists is touched, and it deliberately does not run on activation.
+* A copy of the site recognises itself and sends every outgoing mail to the administrator with
+  [TEST] in the subject, so rehearsing an update on a restored backup cannot reach real parents.
+* docs/legacy-urls.md records all 61 addresses of the old site and where each should point after
+  the switch, with a paste-ready .htaccess block. The redirects belong to the hosting, not here.
 
 = 2.2.0 =
 * One canonical address for the registration form. Every "Schrijf je in" button links there, and
