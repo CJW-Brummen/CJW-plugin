@@ -3,7 +3,7 @@ Contributors: Imre Boersma
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.5
-Stable tag: 2.1.0
+Stable tag: 2.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -77,6 +77,15 @@ the option key, post types, and meta keys are unchanged.
 * `npm run lint` runs ESLint and Stylelint over `assets/`
 
 == Changelog ==
+
+= 2.2.0 =
+* One canonical address for the registration form. Every "Schrijf je in" button links there, and
+  when the setting is blank the published page carrying the shortcode is found rather than guessed.
+  The old `#inschrijven` anchor, which no template ever had, is gone.
+* The photo pickers say how many children of this camp year may not appear in a photo, and name
+  them for anybody who may open the children list anyway.
+* A seventh field role, "E-mailadres van de ouder", so the confirmation and any AVG request stop
+  depending on a guess about which e-mail field belongs to whom.
 
 = 2.1.0 =
 * A registration is never reported as succeeded when it was not stored. A mistyped shortcode id,
