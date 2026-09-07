@@ -120,6 +120,7 @@ final class CJW_Plugin
         require_once CJW_DIR . 'inc/shared/class-cjw-mail-safe-mode.php';
         require_once CJW_DIR . 'inc/shared/class-cjw-fatal-error-watch.php';
         require_once CJW_DIR . 'inc/shared/class-cjw-status-endpoint.php';
+        require_once CJW_DIR . 'inc/shared/class-cjw-mollie.php';
         require_once CJW_DIR . 'inc/shared/functions.php';
         require_once CJW_DIR . 'inc/shared/class-cjw-mail-templates.php';
         require_once CJW_DIR . 'inc/shared/class-cjw-mail-tokens.php';

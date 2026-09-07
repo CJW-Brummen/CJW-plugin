@@ -58,6 +58,16 @@ final class CJW_Wizard_Submission_Confirmation
     public const string FAILED = 'failed';
 
     /**
+     * Held back until the payment resolves.
+     *
+     * A form that makes the parent pay before it is finished has nothing
+     * useful to confirm yet: the mail either carries a payment request the
+     * parent is about to satisfy, or it carries none because they just did.
+     * See CJW_Wizard_Ideal.
+     */
+    public const string DEFERRED = 'deferred';
+
+    /**
      * Sends the confirmation, if this form asks for one.
      *
      * @param int   $submission_id Submission post id.
@@ -92,7 +102,10 @@ final class CJW_Wizard_Submission_Confirmation
         $sent = CJW_Mailer::send(
             CJW_Mail_Templates::CONFIRMATION,
             $to,
-            CJW_Mail_Tokens::registration($submission_id, $config, $data)
+            CJW_Mail_Tokens::registration($submission_id, $config, $data),
+            // Empty once the money has arrived, so a parent who has paid is
+            // never asked again by a mail that went out afterwards.
+            CJW_Wizard_Ideal::mailButton($submission_id)
         );
 
         $result = $sent ? self::SENT : self::FAILED;

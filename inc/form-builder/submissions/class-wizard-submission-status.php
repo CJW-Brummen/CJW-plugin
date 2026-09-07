@@ -326,6 +326,13 @@ final class CJW_Wizard_Submission_Status
             return;
         }
 
+        // A payment recorded in the same save has already decided this, and
+        // updating the post fired save_post again to get us here. Re-applying
+        // the radio button now would undo the status the money just earned.
+        if (class_exists('CJW_Wizard_Payments') && CJW_Wizard_Payments::statusWasApplied($post_id)) {
+            return;
+        }
+
         remove_action('save_post_' . CJW_Wizard_Submission_Repository::POST_TYPE, [ $this, 'save' ], 10);
 
         wp_update_post([

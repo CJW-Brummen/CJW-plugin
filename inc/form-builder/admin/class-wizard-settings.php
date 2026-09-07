@@ -44,6 +44,7 @@ final class CJW_Wizard_Settings
             'success_message' => $this->sanitize_required_textarea($settings['success_message'] ?? null, $defaults['success_message']),
             'use_summer_camp_settings' => ! empty($settings['use_summer_camp_settings']),
             'require_privacy_consent' => ! empty($settings['require_privacy_consent']),
+            'require_ideal_payment' => ! empty($settings['require_ideal_payment']),
             'show_summer_camp_intro' => ! empty($settings['show_summer_camp_intro']),
             'send_admin_notification' => ! empty($settings['send_admin_notification']),
             'notification_email' => $this->sanitize_notification_email($settings['notification_email'] ?? null),

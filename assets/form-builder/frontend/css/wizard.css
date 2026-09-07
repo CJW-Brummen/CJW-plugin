@@ -456,3 +456,23 @@
         width: 100%;
     }
 }
+
+/* Waiting for a payment: the one button on the screen, and the note under it. */
+.cjw-wizard-complete__pay {
+	margin: 20px 0 6px;
+}
+
+.cjw-wizard-pay {
+	display: inline-block;
+	padding: 14px 28px;
+	font-size: 17px;
+	font-weight: 700;
+	line-height: 1.2;
+	text-decoration: none;
+}
+
+.cjw-wizard-complete__pay-note {
+	margin: 0 0 4px;
+	font-size: 14px;
+	color: #5a625d;
+}

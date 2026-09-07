@@ -239,6 +239,11 @@ final class CJW_Wizard_Payments_Admin
             return;
         }
 
+        // The status is derived from the row as it stands when the ledger has
+        // finished, which applyStatus() reads for itself; the copy WordPress
+        // handed us here is already stale by then.
+        unset($post);
+
         self::$applied[ $post_id ] = true;
 
         $changed = false;
@@ -257,18 +262,15 @@ final class CJW_Wizard_Payments_Admin
         // Only when the ledger moved. A status somebody chose by hand is their
         // decision; arithmetic overruling it on every save would make the radio
         // buttons above look broken.
-        $status = CJW_Wizard_Payments::statusFor($post_id, (string) $post->post_status);
-
-        if ($status === $post->post_status) {
-            return;
-        }
-
+        //
+        // Unhooked around the update because this runs inside save_post and
+        // the update fires it again. The status box cannot be unhooked from
+        // here -- the module registered it as an instance callable -- so it
+        // asks CJW_Wizard_Payments::statusWasApplied() instead and stands
+        // aside on that second pass.
         remove_action('save_post_' . CJW_Wizard_Submission_Repository::POST_TYPE, [ $this, 'save' ], 20);
 
-        wp_update_post([
-            'ID' => $post_id,
-            'post_status' => $status,
-        ]);
+        CJW_Wizard_Payments::applyStatus($post_id);
 
         add_action('save_post_' . CJW_Wizard_Submission_Repository::POST_TYPE, [ $this, 'save' ], 20, 2);
     }

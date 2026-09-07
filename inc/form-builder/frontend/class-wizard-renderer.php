@@ -59,16 +59,21 @@ final class CJW_Wizard_Renderer
             return;
         }
 
-        if ($visibleStepKeys === []) {
-            echo wp_kses_post(CJW_Wizard_Unavailable::notice(
-                $this->mayEdit ? CJW_Wizard_Unavailable::detailNoVisibleSteps() : ''
-            ));
+        // Before the visibility check on purpose. Being past the last step is
+        // a fact about the stored step, and a parent coming back from iDEAL
+        // arrives with no answers in hand -- so a form whose first step is
+        // conditional would otherwise greet them with "niets in te vullen"
+        // instead of their own confirmation.
+        if ($stepKey === null) {
+            $this->renderComplete($token, $state['completion'] ?? []);
             echo '</div>';
             return;
         }
 
-        if ($stepKey === null) {
-            $this->renderComplete($token, $state['completion'] ?? []);
+        if ($visibleStepKeys === []) {
+            echo wp_kses_post(CJW_Wizard_Unavailable::notice(
+                $this->mayEdit ? CJW_Wizard_Unavailable::detailNoVisibleSteps() : ''
+            ));
             echo '</div>';
             return;
         }
@@ -246,11 +251,26 @@ final class CJW_Wizard_Renderer
         $submission = (int) ($completion['submission'] ?? 0);
         $email = (string) ($completion['email'] ?? '');
         $mail = (string) ($completion['mail'] ?? '');
+        $payUrl = (string) ($completion['pay_url'] ?? '');
+        $outstanding = (int) ($completion['outstanding'] ?? 0);
+        $awaitingPayment = $payUrl !== '' && $outstanding > 0;
 
         echo '<div class="cjw-wizard-complete">';
-        echo '<div class="success-icon dashicons dashicons-yes-alt"></div>';
-        echo '<h2>' . esc_html__('Gelukt!', 'cjw') . '</h2>';
-        echo '<p>' . nl2br(esc_html((string) $settings['success_message'])) . '</p>';
+
+        // A registration that still has to be paid is stored but not finished,
+        // and saying "Gelukt!" over the top of a payment request is how a
+        // parent closes the tab believing they are done.
+        if ($awaitingPayment) {
+            echo '<h2>' . esc_html__('Nog één stap: betalen', 'cjw') . '</h2>';
+            echo '<p>' . esc_html__(
+                'Je inschrijving staat klaar. Rond hem af door te betalen met iDEAL; daarna is hij definitief.',
+                'cjw'
+            ) . '</p>';
+        } else {
+            echo '<div class="success-icon dashicons dashicons-yes-alt"></div>';
+            echo '<h2>' . esc_html__('Gelukt!', 'cjw') . '</h2>';
+            echo '<p>' . nl2br(esc_html((string) $settings['success_message'])) . '</p>';
+        }
 
         if ($submission > 0) {
             echo '<p class="cjw-wizard-complete__reference">' . sprintf(
@@ -260,11 +280,32 @@ final class CJW_Wizard_Renderer
             ) . '</p>';
         }
 
+        if ($awaitingPayment) {
+            printf(
+                '<p class="cjw-wizard-complete__pay"><a class="button button-primary cjw-wizard-pay" href="%1$s">%2$s</a></p>',
+                esc_url($payUrl),
+                esc_html(sprintf(
+                    /* translators: %s: amount to pay. */
+                    __('Betaal %s met iDEAL', 'cjw'),
+                    CJW_Wizard_Payments::formatAmount($outstanding)
+                ))
+            );
+
+            echo '<p class="cjw-wizard-complete__pay-note">' . esc_html__(
+                'Lukt het nu niet? Je krijgt deze betaallink ook per mail, en die blijft werken.',
+                'cjw'
+            ) . '</p>';
+        }
+
         echo wp_kses_post($this->confirmationLine($mail, $email));
 
-        echo '<div class="cjw-wizard-actions" style="justify-content: center; border:none; padding:0;">';
-        echo '<a href="' . esc_url($this->getResetUrl($token)) . '" class="button">' . esc_html__('Begin Opnieuw', 'cjw') . '</a>';
-        echo '</div>';
+        // No "begin opnieuw" while a payment is waiting: it resets the session
+        // and reads, at that moment, as the way to get out of paying.
+        if (! $awaitingPayment) {
+            echo '<div class="cjw-wizard-actions" style="justify-content: center; border:none; padding:0;">';
+            echo '<a href="' . esc_url($this->getResetUrl($token)) . '" class="button">' . esc_html__('Begin Opnieuw', 'cjw') . '</a>';
+            echo '</div>';
+        }
         echo '</div>';
     }
 
@@ -283,6 +324,12 @@ final class CJW_Wizard_Renderer
                 esc_html__('We hebben een bevestiging gestuurd naar %s. Niets ontvangen? Kijk ook even in je spam.', 'cjw'),
                 '<strong>' . esc_html($email) . '</strong>'
             ) . '</p>';
+        }
+
+        if ($result === CJW_Wizard_Submission_Confirmation::DEFERRED) {
+            return '<p class="cjw-wizard-complete__mail">'
+                . esc_html__('Zodra je betaling binnen is, krijg je de bevestiging per mail.', 'cjw')
+                . '</p>';
         }
 
         if ($result === CJW_Wizard_Submission_Confirmation::FAILED) {

@@ -153,6 +153,16 @@ final class CJW_Wizard_Meta_Boxes
         echo '<p class="description">' . esc_html__('Zet de privacytekst op de laatste stap, met een vinkje dat de ouder moet aanzetten om te kunnen versturen. Het moment en de tekst worden bij de inschrijving bewaard. De tekst schrijf je bij Zomerkamp → Instellingen → Inhoud.', 'cjw') . '</p>';
 
         echo '<hr>';
+        echo '<p><strong>' . esc_html__('Betalen', 'cjw') . '</strong></p>';
+
+        $this->render_checkbox_setting(
+            'require_ideal_payment',
+            __('Afronden met een iDEAL-betaling', 'cjw'),
+            $settings['require_ideal_payment']
+        );
+        echo '<p class="description">' . esc_html__('De inschrijving wordt opgeslagen en de ouder gaat daarna meteen door naar iDEAL. Betaalt iemand niet, dan blijft de inschrijving staan als “nog te betalen” en krijgt de ouder de betaallink per mail. Werkt alleen als er een Mollie-sleutel is ingesteld bij Zomerkamp → Beheer.', 'cjw') . '</p>';
+
+        echo '<hr>';
         echo '<p><strong>' . esc_html__('Bevestiging naar de ouder', 'cjw') . '</strong></p>';
 
         $this->render_checkbox_setting(

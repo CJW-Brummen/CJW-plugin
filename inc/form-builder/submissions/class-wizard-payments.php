@@ -148,7 +148,7 @@ final class CJW_Wizard_Payments
      *
      * @param int $submissionId Registration post id.
      *
-     * @return array<int, array{id: string, date: string, cents: int, method: string, note: string, by: int, at: int}>
+     * @return array<int, array{id: string, date: string, cents: int, method: string, note: string, ref: string, by: int, at: int}>
      */
     public static function payments(int $submissionId): array
     {
@@ -168,6 +168,7 @@ final class CJW_Wizard_Payments
                     ? (string) $row['method']
                     : self::METHOD_OTHER,
                 'note' => (string) ($row['note'] ?? ''),
+                'ref' => (string) ($row['ref'] ?? ''),
                 'by' => (int) ($row['by'] ?? 0),
                 'at' => (int) ($row['at'] ?? 0),
             ];
@@ -191,11 +192,21 @@ final class CJW_Wizard_Payments
      * @param string $method       One of the METHOD_ constants.
      * @param string $date         Date received, as Y-m-d.
      * @param string $note         Free text, e.g. "aan de poort".
+     * @param string $reference    The provider's own identifier, when a
+     *                             provider was involved. Survives
+     *                             anonymisation: it is how a line in the bank
+     *                             statement is matched to a row here.
      *
      * @return bool Whether anything was recorded.
      */
-    public static function add(int $submissionId, int $cents, string $method, string $date = '', string $note = ''): bool
-    {
+    public static function add(
+        int $submissionId,
+        int $cents,
+        string $method,
+        string $date = '',
+        string $note = '',
+        string $reference = ''
+    ): bool {
         if ($submissionId < 1 || $cents === 0) {
             return false;
         }
@@ -209,6 +220,7 @@ final class CJW_Wizard_Payments
             'cents' => $cents,
             'method' => array_key_exists($method, self::methods()) ? $method : self::METHOD_OTHER,
             'note' => $note,
+            'ref' => $reference,
             'by' => get_current_user_id(),
             'at' => time(),
         ];
@@ -243,6 +255,33 @@ final class CJW_Wizard_Payments
         update_post_meta($submissionId, self::META_PAYMENTS, $kept);
 
         return true;
+    }
+
+    /**
+     * Whether a payment carrying this reference is already recorded.
+     *
+     * The webhook that reports a payment can arrive more than once -- Mollie
+     * retries for a day when anything goes wrong at this end -- and a ledger
+     * that adds the same money twice is worse than one that misses it.
+     *
+     * @param int    $submissionId Registration post id.
+     * @param string $reference    Provider identifier.
+     *
+     * @return bool
+     */
+    public static function hasReference(int $submissionId, string $reference): bool
+    {
+        if ($reference === '') {
+            return false;
+        }
+
+        foreach (self::payments($submissionId) as $row) {
+            if ($row['ref'] === $reference) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -324,6 +363,74 @@ final class CJW_Wizard_Payments
     }
 
     /**
+     * Registrations whose status the ledger has decided this request.
+     *
+     * @var array<int, bool>
+     */
+    private static array $statusApplied = [];
+
+    /**
+     * Whether the ledger has already set this registration's status now.
+     *
+     * The status box reads this. Updating a post from inside save_post fires
+     * save_post again, and on that second pass the box would re-apply the
+     * radio button that was submitted -- putting "Bevestigd" back over the
+     * "Betaald" the payment just earned.
+     *
+     * @param int $submissionId Registration post id.
+     *
+     * @return bool
+     */
+    public static function statusWasApplied(int $submissionId): bool
+    {
+        return isset(self::$statusApplied[ $submissionId ]);
+    }
+
+    /**
+     * Moves a registration to the status its balance implies.
+     *
+     * The one place the transition happens, because there is more than one way
+     * for money to arrive -- a webhook from Mollie, a transfer typed in by
+     * hand, a refund -- and each of them forgetting to move the status is how
+     * a paid family ends up being chased.
+     *
+     * Deliberately not called from add() itself. Recording a payment happens
+     * during save_post on the registration screen, and updating the post from
+     * inside that fires save_post again: the status box would then re-apply
+     * whatever radio button was submitted and undo this. So the callers that
+     * are not in the middle of a save call it, and the one that is does it
+     * once at the end of its own handler.
+     *
+     * @param int $submissionId Registration post id.
+     *
+     * @return bool Whether the status changed.
+     */
+    public static function applyStatus(int $submissionId): bool
+    {
+        $post = get_post($submissionId);
+
+        if (! $post instanceof WP_Post || $post->post_type !== CJW_Wizard_Submission_Repository::POST_TYPE) {
+            return false;
+        }
+
+        $status = self::statusFor($submissionId, (string) $post->post_status);
+
+        if ($status === $post->post_status) {
+            return false;
+        }
+
+        // Set before the update, so the save_post this triggers already sees it.
+        self::$statusApplied[ $submissionId ] = true;
+
+        wp_update_post([
+            'ID' => $submissionId,
+            'post_status' => $status,
+        ]);
+
+        return true;
+    }
+
+    /**
      * Drops what an organiser typed, and keeps the money.
      *
      * Called when a registration is anonymised. The amounts, dates and methods
@@ -345,6 +452,9 @@ final class CJW_Wizard_Payments
 
         update_post_meta($submissionId, self::META_PAYMENTS, array_map(
             static function (array $row): array {
+                // The reference stays: it identifies a transaction, not a
+                // person, and it is what reconciles this row against a bank
+                // statement long after the names have gone.
                 $row['note'] = '';
                 $row['by'] = 0;
 

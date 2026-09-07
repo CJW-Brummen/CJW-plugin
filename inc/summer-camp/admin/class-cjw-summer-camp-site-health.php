@@ -94,6 +94,11 @@ final class CJW_Summer_Camp_Site_Health
             'test' => [$this, 'testMailSafeMode'],
         ];
 
+        $tests['direct']['cjw_summer_camp_ideal'] = [
+            'label' => __('Zomerkamp: iDEAL-betalingen', 'cjw'),
+            'test' => [$this, 'testIdeal'],
+        ];
+
         return $tests;
     }
 
@@ -614,6 +619,76 @@ final class CJW_Summer_Camp_Site_Health
                 'cjw'
             ) . '</p><p>' . esc_html__('Klik op het tabblad Beheer op “Dit is de live website”.', 'cjw') . '</p>',
             $this->settingsAction('beheer')
+        );
+    }
+
+    /**
+     * Checks that iDEAL is in a state that matches what the forms expect.
+     *
+     * The case worth catching is a live camp on a test key: every parent
+     * completes the form, nobody's money arrives, and every screen says the
+     * registration is paid.
+     *
+     * @return array<string, mixed>
+     */
+    public function testIdeal(): array
+    {
+        $test = 'cjw_summer_camp_ideal';
+        $demanded = class_exists('CJW_Wizard_Ideal') && CJW_Wizard_Ideal::anyPublishedFormRequires();
+
+        if (!CJW_Mollie::isConfigured()) {
+            if (!$demanded) {
+                return $this->result(
+                    $test,
+                    __('Er wordt niet met iDEAL betaald', 'cjw'),
+                    'good',
+                    '<p>' . esc_html__('Geen formulier vraagt om een iDEAL-betaling, en er is geen Mollie-sleutel ingesteld. Dat is een geldige combinatie.', 'cjw') . '</p>'
+                );
+            }
+
+            return $this->result(
+                $test,
+                __('Een formulier vraagt om iDEAL, maar Mollie is niet ingesteld', 'cjw'),
+                'critical',
+                '<p>' . esc_html__('Het inschrijfformulier wil dat de ouder afrekent met iDEAL, en er is geen Mollie-sleutel. Niemand kan zijn inschrijving afronden.', 'cjw') . '</p>',
+                $this->settingsAction('beheer')
+            );
+        }
+
+        if (!CJW_Mollie::isUsable()) {
+            return $this->result(
+                $test,
+                __('Betalen met iDEAL staat uit', 'cjw'),
+                $demanded ? 'critical' : 'recommended',
+                '<p>' . esc_html(CJW_Mollie::unusableReason()) . '</p>',
+                $this->settingsAction('beheer')
+            );
+        }
+
+        if (CJW_Mollie::mode() === CJW_Mollie::MODE_TEST) {
+            $open = cjw_summer_camp()->isRegistrationOpen();
+
+            return $this->result(
+                $test,
+                __('iDEAL staat in testmodus', 'cjw'),
+                $open ? 'critical' : 'recommended',
+                '<p>' . esc_html__(
+                    'De ingestelde Mollie-sleutel is een testsleutel. Ouders doorlopen de betaling zonder dat er geld wordt overgemaakt, terwijl de website de inschrijving als betaald bijschrijft.',
+                    'cjw'
+                ) . '</p><p>' . esc_html(
+                    $open
+                        ? __('De inschrijvingen staan nu open, dus dit is geld dat niet binnenkomt.', 'cjw')
+                        : __('Zet een live-sleutel klaar voordat de inschrijvingen opengaan.', 'cjw')
+                ) . '</p>',
+                $this->settingsAction('beheer')
+            );
+        }
+
+        return $this->result(
+            $test,
+            __('Ouders kunnen met iDEAL betalen', 'cjw'),
+            'good',
+            '<p>' . esc_html__('Er is een live Mollie-sleutel ingesteld en de website draait op https.', 'cjw') . '</p>'
         );
     }
 

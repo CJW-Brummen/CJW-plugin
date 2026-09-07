@@ -25,6 +25,10 @@ final class CJW_Wizard_Defaults
             // On by default: the form asks for a child's medical notes, and a
             // form that says nothing about that is the state this replaces.
             'require_privacy_consent' => true,
+            // Off by default: a form for leiding or sponsors has nothing to
+            // charge for, and a form that suddenly demands money is worse
+            // than one that asks for none.
+            'require_ideal_payment' => false,
             'show_summer_camp_intro' => true,
             'send_admin_notification' => false,
             'notification_email' => '',

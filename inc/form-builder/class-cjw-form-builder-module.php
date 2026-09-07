@@ -56,6 +56,10 @@ final class CJW_Form_Builder_Module
         add_action('template_redirect', [ $this, 'bootstrap_session' ]);
 
         add_shortcode('cjw_wizard', [ $this, 'render_shortcode' ]);
+
+        // The pay link, the return from iDEAL and Mollie's webhook all arrive
+        // on the front end, and the deferred confirmation runs from cron.
+        CJW_Wizard_Ideal::init();
     }
 
     /**
@@ -180,6 +184,7 @@ final class CJW_Form_Builder_Module
         require_once CJW_DIR . 'inc/form-builder/submissions/class-wizard-submission-status.php';
         require_once CJW_DIR . 'inc/form-builder/submissions/class-wizard-payments.php';
         require_once CJW_DIR . 'inc/form-builder/submissions/class-wizard-payments-admin.php';
+        require_once CJW_DIR . 'inc/form-builder/submissions/class-wizard-ideal.php';
         require_once CJW_DIR . 'inc/form-builder/submissions/class-wizard-submissions-post-type.php';
         require_once CJW_DIR . 'inc/form-builder/submissions/interface-wizard-submission-store.php';
         require_once CJW_DIR . 'inc/form-builder/submissions/class-wizard-submission-repository.php';
@@ -240,6 +245,23 @@ final class CJW_Form_Builder_Module
                     ? CJW_Wizard_Unavailable::detailNotPublished($form->post_status)
                     : ''
             );
+        }
+
+        // A parent coming back from iDEAL has a token in the address and, very
+        // possibly, no session at all: a payment can be finished in a bank app
+        // on another device. Everything shown is looked up from the token.
+        $returning = CJW_Wizard_Ideal::returningSubmission();
+
+        if ($returning > 0) {
+            ob_start();
+
+            new CJW_Wizard_Renderer(CJW_Wizard_Config::get($wizard_id), $may_edit)->render(
+                CJW_Wizard_Ideal::completionState($returning),
+                [],
+                ''
+            );
+
+            return (string) ob_get_clean();
         }
 
         $request_token = $this->requested_token();
@@ -366,7 +388,22 @@ final class CJW_Form_Builder_Module
                     CJW_Wizard_Privacy_Consent::record($submission_id);
                 }
                 $this->submissions->maybe_notify_admin($wizard_id, $config_data, $state['data'] ?? [], $submission_id);
-                $confirmation = $this->submissions->maybe_confirm_to_parent($submission_id, $wizard_id, $config_data, $state['data'] ?? []);
+                // The order matters and is the whole design: the registration
+                // is stored above, and only then is the parent sent to pay. A
+                // bank app that crashes must not cost the camp a registration,
+                // and money must never be taken for details nobody wrote down.
+                $awaiting_payment = CJW_Wizard_Ideal::isRequiredFor($config_data)
+                    && CJW_Mollie::isUsable()
+                    && CJW_Wizard_Ideal::isOutstanding($submission_id);
+
+                if ($awaiting_payment) {
+                    // Nothing useful to confirm yet: either the parent is about
+                    // to pay, or they abandon it and hear from us anyway.
+                    CJW_Wizard_Ideal::deferConfirmation($submission_id);
+                    $confirmation = CJW_Wizard_Submission_Confirmation::DEFERRED;
+                } else {
+                    $confirmation = $this->submissions->maybe_confirm_to_parent($submission_id, $wizard_id, $config_data, $state['data'] ?? []);
+                }
 
                 // What the success screen needs to stop being a bare tick: the
                 // number to quote, the address that was written to, and
@@ -376,6 +413,8 @@ final class CJW_Form_Builder_Module
                     'submission' => $submission_id,
                     'email' => CJW_Wizard_Submission_Repository::findEmail($config_data, $state['data'] ?? []),
                     'mail' => $confirmation,
+                    'outstanding' => $awaiting_payment ? CJW_Wizard_Payments::outstanding($submission_id) : 0,
+                    'pay_url' => $awaiting_payment ? CJW_Wizard_Ideal::payUrl($submission_id) : '',
                 ];
             }
 

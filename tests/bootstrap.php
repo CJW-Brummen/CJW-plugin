@@ -875,6 +875,8 @@ require_once __DIR__ . '/../inc/shared/class-cjw-alerts.php';
 require_once __DIR__ . '/../inc/shared/class-cjw-cron-heartbeat.php';
 require_once __DIR__ . '/../inc/form-builder/domain/class-wizard-amount.php';
 require_once __DIR__ . '/../inc/form-builder/submissions/class-wizard-payments.php';
+require_once __DIR__ . '/../inc/shared/class-cjw-mollie.php';
+require_once __DIR__ . '/../inc/form-builder/submissions/class-wizard-ideal.php';
 require_once __DIR__ . '/../inc/form-builder/submissions/class-wizard-birthday-mailer.php';
 require_once __DIR__ . '/../inc/form-builder/submissions/class-wizard-year-rollover.php';
 require_once __DIR__ . '/../inc/form-builder/submissions/class-wizard-submission-digest.php';

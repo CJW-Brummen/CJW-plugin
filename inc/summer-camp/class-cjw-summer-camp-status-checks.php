@@ -70,8 +70,9 @@ final class CJW_Summer_Camp_Status_Checks
 
         $page = $camp->getRegistrationPageUrl();
         $form = self::hasPublishedForm();
+        $payable = self::paymentIsPossible();
 
-        if ($page !== '' && $form) {
+        if ($page !== '' && $form && $payable) {
             return CJW_Status_Endpoint::check(
                 CJW_Status_Endpoint::LEVEL_OK,
                 '',
@@ -89,6 +90,14 @@ final class CJW_Summer_Camp_Status_Checks
             $missing[] = __('er is geen gepubliceerd formulier', 'cjw');
         }
 
+        if (!$payable) {
+            $missing[] = sprintf(
+                /* translators: %s: why paying is switched off. */
+                __('het formulier wil met iDEAL laten betalen, maar dat kan niet (%s)', 'cjw'),
+                CJW_Mollie::unusableReason()
+            );
+        }
+
         return CJW_Status_Endpoint::check(
             CJW_Status_Endpoint::LEVEL_CRITICAL,
             sprintf(
@@ -100,6 +109,7 @@ final class CJW_Summer_Camp_Status_Checks
                 'open' => true,
                 'page' => $page !== '',
                 'form' => $form,
+                'payable' => $payable,
             ]
         );
     }
@@ -158,6 +168,24 @@ final class CJW_Summer_Camp_Status_Checks
                 'at' => gmdate('c', (int) $last['time']),
             ]
         );
+    }
+
+    /**
+     * Whether a form that demands payment can actually take one.
+     *
+     * A registration form that ends in iDEAL and cannot reach Mollie is a
+     * form nobody can finish -- and it looks perfectly healthy from the
+     * outside, which is what makes it worth reporting.
+     *
+     * @return bool
+     */
+    private static function paymentIsPossible(): bool
+    {
+        if (!class_exists('CJW_Wizard_Ideal') || !CJW_Wizard_Ideal::anyPublishedFormRequires()) {
+            return true;
+        }
+
+        return CJW_Mollie::isUsable();
     }
 
     /**

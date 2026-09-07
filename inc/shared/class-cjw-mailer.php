@@ -55,16 +55,24 @@ final class CJW_Mailer
      * @param string                $template Template key.
      * @param string                $to       Recipient address.
      * @param array<string, string> $tokens   Token values, unescaped.
+     * @param string                $append   Trusted HTML added under the
+     *                                        body. For something the plugin
+     *                                        decides rather than the
+     *                                        organiser -- a pay button that
+     *                                        must not appear once the money
+     *                                        has arrived. Token values are
+     *                                        escaped, so markup cannot travel
+     *                                        as one.
      *
      * @return bool Whether the message was handed off without error.
      */
-    public static function send(string $template, string $to, array $tokens = []): bool
+    public static function send(string $template, string $to, array $tokens = [], string $append = ''): bool
     {
         if (! is_email($to)) {
             return false;
         }
 
-        $rendered = self::render($template, $tokens);
+        $rendered = self::render($template, $tokens, $append);
 
         if ($rendered['subject'] === '') {
             return false;
@@ -239,7 +247,7 @@ final class CJW_Mailer
      *
      * @return array{subject: string, html: string, text: string}
      */
-    public static function render(string $template, array $tokens = []): array
+    public static function render(string $template, array $tokens = [], string $append = ''): array
     {
         $definition = CJW_Mail_Templates::definition($template);
 
@@ -254,7 +262,7 @@ final class CJW_Mailer
         $allowed = array_keys(CJW_Mail_Templates::tokensFor($template));
 
         $subject = self::replace(CJW_Mail_Templates::subject($template), $tokens, $allowed, false);
-        $body = self::replace(CJW_Mail_Templates::body($template), $tokens, $allowed, true);
+        $body = self::replace(CJW_Mail_Templates::body($template), $tokens, $allowed, true) . $append;
 
         return [
             // Collapsed and trimmed: a token that resolves to nothing would

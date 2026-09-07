@@ -85,9 +85,22 @@ final class PaymentsLedgerTest extends CJW_IntegrationTestCase
             'cjw_wizard_payments_nonce' => wp_create_nonce('cjw_wizard_payments'),
         ], $fields);
 
-        $post = get_post($submissionId);
+        // The status box is on the same screen and posts on the same save, so
+        // a test that leaves it out is testing a screen nobody has.
+        if (! isset($_POST['cjw_submission_status'])) {
+            $_POST['cjw_submission_status'] = (string) get_post_status($submissionId);
+            $_POST['cjw_submission_status_nonce'] = wp_create_nonce('cjw_submission_status');
+        }
 
-        new CJW_Wizard_Payments_Admin()->save($submissionId, $post);
+        // Fired as a save rather than called directly, so both boxes on the
+        // screen run through the real hook at their real priorities -- which
+        // is the only way the interaction between them is under test.
+        do_action(
+            'save_post_' . CJW_Wizard_Submission_Repository::POST_TYPE,
+            $submissionId,
+            get_post($submissionId),
+            true
+        );
     }
 
     public function testTheAmountIsFrozenWhenTheRegistrationIsTaken(): void
@@ -272,6 +285,54 @@ final class PaymentsLedgerTest extends CJW_IntegrationTestCase
 
         $this->assertSame(12000, $totals['due']);
         $this->assertSame(12000, $totals['paid']);
+    }
+
+    /**
+     * Changing the status and recording a payment in the same save: the money
+     * has the last word.
+     *
+     * The nastier version of this -- posting the status the row already has,
+     * which is what the screen sends when somebody only types a payment -- is
+     * what the three tests above cover. Without the guard in the status box
+     * they fail, because the save_post that the ledger's own update fires lets
+     * the box re-apply the radio over the top of "Betaald".
+     */
+    public function testAPaymentBeatsTheStatusRadioSubmittedBesideIt(): void
+    {
+        $id = $this->register([ [ 'voornaam' => 'Fleur', 'kamp' => 'Weekkamp (€ 120)' ] ]);
+        wp_update_post([ 'ID' => $id, 'post_status' => CJW_Wizard_Submission_Status::NEW ]);
+
+        $this->submitBox($id, [
+            // Exactly what a kampbeheerder's browser sends: the row was Nieuw,
+            // they tick Bevestigd, and they type in the transfer that arrived.
+            'cjw_submission_status' => CJW_Wizard_Submission_Status::CONFIRMED,
+            'cjw_submission_status_nonce' => wp_create_nonce('cjw_submission_status'),
+            'cjw_payment_amount' => '120',
+            'cjw_payment_method' => CJW_Wizard_Payments::METHOD_TRANSFER,
+        ]);
+
+        wp_cache_flush();
+
+        $this->assertSame(CJW_Wizard_Submission_Status::PAID, get_post_status($id));
+    }
+
+    /**
+     * And with nothing typed into the ledger, the radio is still the boss.
+     */
+    public function testTheStatusRadioStillWinsWhenTheLedgerDidNotMove(): void
+    {
+        $id = $this->register([ [ 'voornaam' => 'Fleur', 'kamp' => 'Weekkamp (€ 120)' ] ]);
+        wp_update_post([ 'ID' => $id, 'post_status' => CJW_Wizard_Submission_Status::NEW ]);
+
+        $this->submitBox($id, [
+            'cjw_submission_status' => CJW_Wizard_Submission_Status::CANCELLED,
+            'cjw_submission_status_nonce' => wp_create_nonce('cjw_submission_status'),
+            'cjw_payment_amount' => '',
+        ]);
+
+        wp_cache_flush();
+
+        $this->assertSame(CJW_Wizard_Submission_Status::CANCELLED, get_post_status($id));
     }
 
     public function testACancelledRegistrationIsNotMoneyAnybodyIsWaitingFor(): void
