@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-27T10:06:35+00:00\n"
+"POT-Creation-Date: 2026-09-07T17:45:57+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: cjw\n"
@@ -136,95 +136,118 @@ msgid "Voorbereiden voor CSV-export"
 msgstr ""
 
 #: inc/form-builder/admin/class-wizard-meta-boxes.php:146
-msgid "Bevestiging naar de ouder"
+#: inc/form-builder/submissions/class-wizard-submission-detail.php:119
+msgid "Privacy"
 msgstr ""
 
 #: inc/form-builder/admin/class-wizard-meta-boxes.php:150
-msgid "Stuur een bevestiging naar de ouder"
+msgid "Vraag akkoord op de privacytekst"
 msgstr ""
 
 #: inc/form-builder/admin/class-wizard-meta-boxes.php:153
-msgid "Staat uit tot e-mail betrouwbaar verstuurd wordt: een bevestiging die niet aankomt is erger dan geen bevestiging. Het e-mailadres wordt gehaald uit het veld met type E-mail."
+msgid "Zet de privacytekst op de laatste stap, met een vinkje dat de ouder moet aanzetten om te kunnen versturen. Het moment en de tekst worden bij de inschrijving bewaard. De tekst schrijf je bij Zomerkamp → Instellingen → Inhoud."
 msgstr ""
 
-#: inc/form-builder/admin/class-wizard-meta-boxes.php:158
-msgid "Onderwerp"
+#: inc/form-builder/admin/class-wizard-meta-boxes.php:156
+msgid "Betalen"
 msgstr ""
 
 #: inc/form-builder/admin/class-wizard-meta-boxes.php:160
-msgid "Leeg laten voor een standaardonderwerp."
+msgid "Afronden met een iDEAL-betaling"
 msgstr ""
 
-#: inc/form-builder/admin/class-wizard-meta-boxes.php:164
-msgid "Bericht"
+#: inc/form-builder/admin/class-wizard-meta-boxes.php:163
+msgid "De inschrijving wordt opgeslagen en de ouder gaat daarna meteen door naar iDEAL. Betaalt iemand niet, dan blijft de inschrijving staan als “nog te betalen” en krijgt de ouder de betaallink per mail. Werkt alleen als er een Mollie-sleutel is ingesteld bij Zomerkamp → Beheer."
 msgstr ""
 
 #: inc/form-builder/admin/class-wizard-meta-boxes.php:166
-msgid "Leeg laten voor een standaardtekst. Tokens zoals {camp_date_range} en {camp_price_week} worden ingevuld."
+msgid "Bevestiging naar de ouder"
 msgstr ""
 
-#: inc/form-builder/admin/class-wizard-post-type.php:22
-#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:196
+#: inc/form-builder/admin/class-wizard-meta-boxes.php:170
+msgid "Stuur een bevestiging naar de ouder"
+msgstr ""
+
+#: inc/form-builder/admin/class-wizard-meta-boxes.php:173
+msgid "Staat uit tot e-mail betrouwbaar verstuurd wordt: een bevestiging die niet aankomt is erger dan geen bevestiging. Het e-mailadres wordt gehaald uit het veld met type E-mail."
+msgstr ""
+
+#. translators: %s: link to the Mails screen.
+#: inc/form-builder/admin/class-wizard-meta-boxes.php:183
+#, php-format
+msgid "De tekst van deze mail schrijf je op %s."
+msgstr ""
+
+#: inc/form-builder/admin/class-wizard-meta-boxes.php:187
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:228
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:306
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:410
+msgid "Zomerkamp → Mails"
+msgstr ""
+
+#: inc/form-builder/admin/class-wizard-post-type.php:30
+#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:247
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:223
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:316
 msgid "Formulieren"
 msgstr ""
 
-#: inc/form-builder/admin/class-wizard-post-type.php:23
-#: inc/form-builder/submissions/class-wizard-submission-admin.php:239
+#: inc/form-builder/admin/class-wizard-post-type.php:31
+#: inc/form-builder/submissions/class-wizard-submission-admin.php:267
 #: inc/form-builder/submissions/class-wizard-submission-exporter.php:62
-#: inc/form-builder/submissions/class-wizard-submission-repository.php:106
 msgid "Formulier"
 msgstr ""
 
-#: inc/form-builder/admin/class-wizard-post-type.php:24
-#: inc/form-builder/admin/class-wizard-post-type.php:25
+#: inc/form-builder/admin/class-wizard-post-type.php:32
+#: inc/form-builder/admin/class-wizard-post-type.php:33
 msgid "Nieuw Formulier"
 msgstr ""
 
-#: inc/form-builder/admin/class-wizard-post-type.php:26
+#: inc/form-builder/admin/class-wizard-post-type.php:34
 msgid "Bewerk Formulier"
 msgstr ""
 
-#: inc/form-builder/admin/class-wizard-site-health.php:36
+#: inc/form-builder/admin/class-wizard-site-health.php:39
 msgid "Inschrijfformulier: herkenning van bezoekers"
 msgstr ""
 
-#: inc/form-builder/admin/class-wizard-site-health.php:51
+#: inc/form-builder/admin/class-wizard-site-health.php:56
 msgid "Het inschrijfformulier herkent bezoekers afzonderlijk"
 msgstr ""
 
-#: inc/form-builder/admin/class-wizard-site-health.php:54
+#: inc/form-builder/admin/class-wizard-site-health.php:59
 msgid "Beveiliging"
 msgstr ""
 
-#: inc/form-builder/admin/class-wizard-site-health.php:57
+#: inc/form-builder/admin/class-wizard-site-health.php:62
 msgid "De limiet op het aantal inschrijvingen per uur werkt per bezoeker, zoals bedoeld."
 msgstr ""
 
-#: inc/form-builder/admin/class-wizard-site-health.php:67
+#: inc/form-builder/admin/class-wizard-site-health.php:72
 msgid "Nog te weinig bezoek om dit te kunnen controleren"
 msgstr ""
 
 #. translators: 1: requests observed so far, 2: requests needed.
-#: inc/form-builder/admin/class-wizard-site-health.php:70
+#: inc/form-builder/admin/class-wizard-site-health.php:75
 #, php-format
 msgid "Er zijn %1$d van de %2$d benodigde bezoeken aan het inschrijfformulier gemeten. Kom hier terug zodra het formulier live staat."
 msgstr ""
 
-#: inc/form-builder/admin/class-wizard-site-health.php:87
+#: inc/form-builder/admin/class-wizard-site-health.php:92
 msgid "Alle bezoekers van het inschrijfformulier lijken dezelfde persoon"
 msgstr ""
 
 #. translators: %d: number of requests observed.
-#: inc/form-builder/admin/class-wizard-site-health.php:91
+#: inc/form-builder/admin/class-wizard-site-health.php:96
 #, php-format
 msgid "Bij %d gemeten bezoeken is er telkens maar één bezoeker herkend. Dat betekent vrijwel zeker dat de site achter een proxy of CDN staat en dat de server het adres van die tussenlaag ziet in plaats van dat van de bezoeker."
 msgstr ""
 
-#: inc/form-builder/admin/class-wizard-site-health.php:97
+#: inc/form-builder/admin/class-wizard-site-health.php:102
 msgid "Gevolg: de limiet op inschrijvingen per uur geldt dan voor de hele site samen. Na tien inschrijvingen in een uur worden échte ouders geweigerd."
 msgstr ""
 
-#: inc/form-builder/admin/class-wizard-site-health.php:101
+#: inc/form-builder/admin/class-wizard-site-health.php:106
 msgid "Op te lossen door het juiste bezoekersadres door te geven met de filter cjw_wizard_client_ip — bijvoorbeeld de header CF-Connecting-IP bij Cloudflare."
 msgstr ""
 
@@ -236,156 +259,284 @@ msgstr ""
 msgid "Voeg stap toe"
 msgstr ""
 
-#: inc/form-builder/class-cjw-form-builder-module.php:228
+#: inc/form-builder/class-cjw-form-builder-module.php:321
 msgid "Ongeldig formulierverzoek. Vernieuw de pagina en probeer opnieuw."
 msgstr ""
 
-#: inc/form-builder/class-cjw-form-builder-module.php:234
+#: inc/form-builder/class-cjw-form-builder-module.php:327
 msgid "We konden deze inzending niet verwerken. Vernieuw de pagina en probeer het opnieuw."
 msgstr ""
 
-#: inc/form-builder/class-cjw-form-builder-module.php:283
+#: inc/form-builder/class-cjw-form-builder-module.php:460
 msgid "Er zijn vanaf deze internetverbinding kort achter elkaar veel inschrijvingen gedaan. Probeer het over een uur nog eens."
 msgstr ""
 
 #. translators: %s: contact e-mail address.
-#: inc/form-builder/class-cjw-form-builder-module.php:291
+#: inc/form-builder/class-cjw-form-builder-module.php:468
 #, php-format
 msgid "Lukt het dan nog niet, mail ons dan op %s en we schrijven je handmatig in."
 msgstr ""
 
-#: inc/form-builder/domain/class-wizard-defaults.php:14
+#. translators: 1: camp fee, 2: donation, both already formatted.
+#: inc/form-builder/domain/class-wizard-amount.php:80
+#, php-format
+msgid " (€%1$s kampgeld en €%2$s donatie)"
+msgstr ""
+
+#: inc/form-builder/domain/class-wizard-defaults.php:19
 msgid "Volgende"
 msgstr ""
 
-#: inc/form-builder/domain/class-wizard-defaults.php:15
+#: inc/form-builder/domain/class-wizard-defaults.php:20
 msgid "Afronden"
 msgstr ""
 
-#: inc/form-builder/domain/class-wizard-defaults.php:16
+#: inc/form-builder/domain/class-wizard-defaults.php:21
 msgid "Vorige"
 msgstr ""
 
-#: inc/form-builder/domain/class-wizard-defaults.php:18
+#: inc/form-builder/domain/class-wizard-defaults.php:23
 msgid "Bedankt! Je formulier is succesvol afgerond."
 msgstr ""
 
-#: inc/form-builder/domain/class-wizard-field-roles.php:88
+#: inc/form-builder/domain/class-wizard-field-roles.php:100
 msgid "Voornaam van het kind"
 msgstr ""
 
-#: inc/form-builder/domain/class-wizard-field-roles.php:89
+#: inc/form-builder/domain/class-wizard-field-roles.php:101
 msgid "Tussenvoegsel van het kind"
 msgstr ""
 
-#: inc/form-builder/domain/class-wizard-field-roles.php:90
+#: inc/form-builder/domain/class-wizard-field-roles.php:102
 msgid "Achternaam van het kind"
 msgstr ""
 
-#: inc/form-builder/domain/class-wizard-field-roles.php:91
+#: inc/form-builder/domain/class-wizard-field-roles.php:103
 #: inc/form-builder/submissions/class-wizard-children-table.php:57
 msgid "Geboortedatum"
 msgstr ""
 
-#: inc/form-builder/domain/class-wizard-field-roles.php:92
+#: inc/form-builder/domain/class-wizard-field-roles.php:104
 msgid "Type kamp"
 msgstr ""
 
-#: inc/form-builder/domain/class-wizard-field-roles.php:93
+#: inc/form-builder/domain/class-wizard-field-roles.php:105
 msgid "Toestemming foto’s"
+msgstr ""
+
+#: inc/form-builder/domain/class-wizard-field-roles.php:106
+msgid "E-mailadres van de ouder"
 msgstr ""
 
 #: inc/form-builder/frontend/class-wizard-guard.php:88
 msgid "Laat dit veld leeg."
 msgstr ""
 
-#: inc/form-builder/frontend/class-wizard-renderer.php:120
+#: inc/form-builder/frontend/class-wizard-privacy-consent.php:73
+msgid "Je kunt de inschrijving pas versturen als je akkoord gaat met het gebruik van deze gegevens."
+msgstr ""
+
+#: inc/form-builder/frontend/class-wizard-renderer.php:264
+msgid "Nog één stap: betalen"
+msgstr ""
+
+#: inc/form-builder/frontend/class-wizard-renderer.php:265
+msgid "Je inschrijving staat klaar. Rond hem af door te betalen met iDEAL; daarna is hij definitief."
+msgstr ""
+
+#: inc/form-builder/frontend/class-wizard-renderer.php:271
 msgid "Gelukt!"
 msgstr ""
 
-#: inc/form-builder/frontend/class-wizard-renderer.php:123
+#. translators: %s: registration number.
+#: inc/form-builder/frontend/class-wizard-renderer.php:278
+#, php-format
+msgid "Je inschrijfnummer is %s. Noem dit nummer als je ons over deze inschrijving mailt of belt."
+msgstr ""
+
+#. translators: %s: amount to pay.
+#. translators: %s: amount still to pay.
+#: inc/form-builder/frontend/class-wizard-renderer.php:289
+#: inc/form-builder/submissions/class-wizard-ideal.php:674
+#, php-format
+msgid "Betaal %s met iDEAL"
+msgstr ""
+
+#: inc/form-builder/frontend/class-wizard-renderer.php:294
+msgid "Lukt het nu niet? Je krijgt deze betaallink ook per mail, en die blijft werken."
+msgstr ""
+
+#: inc/form-builder/frontend/class-wizard-renderer.php:306
 msgid "Begin Opnieuw"
 msgstr ""
 
+#. translators: %s: the parent's own e-mail address.
+#: inc/form-builder/frontend/class-wizard-renderer.php:324
+#, php-format
+msgid "We hebben een bevestiging gestuurd naar %s. Niets ontvangen? Kijk ook even in je spam."
+msgstr ""
+
+#: inc/form-builder/frontend/class-wizard-renderer.php:331
+msgid "Zodra je betaling binnen is, krijg je de bevestiging per mail."
+msgstr ""
+
+#: inc/form-builder/frontend/class-wizard-renderer.php:337
+msgid "Je inschrijving is opgeslagen, maar het versturen van de bevestigingsmail lukte niet. Je hoeft niets opnieuw te doen: we hebben hier zelf bericht van gekregen en nemen contact met je op."
+msgstr ""
+
 #. translators: 1: current step number, 2: total visible step count.
-#: inc/form-builder/frontend/class-wizard-renderer.php:141
+#: inc/form-builder/frontend/class-wizard-renderer.php:359
 #, php-format
 msgid "Stap %1$d van %2$d"
 msgstr ""
 
-#: inc/form-builder/frontend/class-wizard-renderer.php:370
+#: inc/form-builder/frontend/class-wizard-renderer.php:596
 msgid "Voeg nog een toe"
 msgstr ""
 
-#: inc/form-builder/frontend/class-wizard-validator.php:73
+#: inc/form-builder/frontend/class-wizard-unavailable.php:38
+msgid "Het inschrijfformulier staat op dit moment niet klaar."
+msgstr ""
+
+#. translators: %s: contact e-mail address.
+#: inc/form-builder/frontend/class-wizard-unavailable.php:48
+#, php-format
+msgid "Mail ons op %s, dan schrijven we je handmatig in."
+msgstr ""
+
+#: inc/form-builder/frontend/class-wizard-unavailable.php:55
+msgid "Alleen zichtbaar voor beheerders:"
+msgstr ""
+
+#. translators: %s: post status label, e.g. Concept.
+#: inc/form-builder/frontend/class-wizard-unavailable.php:74
+#, php-format
+msgid "Voorbeeld: dit formulier is %s en staat niet online."
+msgstr ""
+
+#: inc/form-builder/frontend/class-wizard-unavailable.php:77
+msgid "Je kunt de stappen doorlopen om ze te controleren. Inzendingen worden niet bewaard en er wordt geen e-mail verstuurd. Publiceer het formulier om het echt in gebruik te nemen."
+msgstr ""
+
+#: inc/form-builder/frontend/class-wizard-unavailable.php:89
+msgid "Dit formulier heeft nog geen stappen. Open het in de formulierbouwer en voeg er minstens één toe."
+msgstr ""
+
+#: inc/form-builder/frontend/class-wizard-unavailable.php:100
+msgid "Alle stappen van dit formulier zijn verborgen door hun voorwaarden, dus er valt niets te tonen. Controleer de voorwaarden in de formulierbouwer."
+msgstr ""
+
+#: inc/form-builder/frontend/class-wizard-unavailable.php:112
+msgid "De shortcode [cjw_wizard] is gebruikt zonder id. Kopieer de shortcode uit de zijbalk van het formulier, inclusief het nummer."
+msgstr ""
+
+#. translators: %d: the post id from the shortcode.
+#: inc/form-builder/frontend/class-wizard-unavailable.php:120
+#, php-format
+msgid "De shortcode verwijst naar nummer %d, en daar staat geen formulier. Kopieer de shortcode opnieuw uit de zijbalk van het formulier."
+msgstr ""
+
+#. translators: %s: post status label, e.g. Concept.
+#: inc/form-builder/frontend/class-wizard-unavailable.php:135
+#, php-format
+msgid "Dit formulier heeft de status %s en is daarom niet ingevuld te krijgen. Publiceer het om het in gebruik te nemen."
+msgstr ""
+
+#: inc/form-builder/frontend/class-wizard-unavailable.php:149
+msgid "Concept"
+msgstr ""
+
+#: inc/form-builder/frontend/class-wizard-unavailable.php:150
+msgid "Wacht op beoordeling"
+msgstr ""
+
+#: inc/form-builder/frontend/class-wizard-unavailable.php:151
+msgid "Ingepland"
+msgstr ""
+
+#: inc/form-builder/frontend/class-wizard-unavailable.php:152
+msgid "Privé"
+msgstr ""
+
+#: inc/form-builder/frontend/class-wizard-unavailable.php:153
+msgid "Weggegooid"
+msgstr ""
+
+#: inc/form-builder/frontend/class-wizard-validator.php:84
 msgid "Dit veld is verplicht."
 msgstr ""
 
-#: inc/form-builder/frontend/class-wizard-validator.php:86
+#: inc/form-builder/frontend/class-wizard-validator.php:97
 msgid "Voer een geldig e-mailadres in."
 msgstr ""
 
-#: inc/form-builder/frontend/class-wizard-validator.php:101
-#: inc/form-builder/frontend/class-wizard-validator.php:333
+#: inc/form-builder/frontend/class-wizard-validator.php:112
+#: inc/form-builder/frontend/class-wizard-validator.php:360
 msgid "Kies een geldige optie."
 msgstr ""
 
-#: inc/form-builder/frontend/class-wizard-validator.php:147
+#: inc/form-builder/frontend/class-wizard-validator.php:161
 msgid "Voeg minimaal één item toe."
 msgstr ""
 
 #. translators: %d is the maximum number of rows.
-#: inc/form-builder/frontend/class-wizard-validator.php:155
+#: inc/form-builder/frontend/class-wizard-validator.php:169
 #, php-format
 msgid "Maximaal %d items toegestaan."
 msgstr ""
 
 #. translators: %d is the minimum number of characters.
-#: inc/form-builder/frontend/class-wizard-validator.php:196
+#: inc/form-builder/frontend/class-wizard-validator.php:212
 #, php-format
 msgid "Gebruik minimaal %d tekens."
 msgstr ""
 
 #. translators: %d is the maximum number of characters.
-#: inc/form-builder/frontend/class-wizard-validator.php:205
+#: inc/form-builder/frontend/class-wizard-validator.php:221
 #, php-format
 msgid "Gebruik maximaal %d tekens."
 msgstr ""
 
-#: inc/form-builder/frontend/class-wizard-validator.php:225
+#: inc/form-builder/frontend/class-wizard-validator.php:244
 msgid "Voer een geldige datum in."
 msgstr ""
 
 #. translators: %s is a date.
-#: inc/form-builder/frontend/class-wizard-validator.php:233
+#: inc/form-builder/frontend/class-wizard-validator.php:252
 #, php-format
 msgid "Kies een datum op of na %s."
 msgstr ""
 
 #. translators: %s is a date.
-#: inc/form-builder/frontend/class-wizard-validator.php:246
+#: inc/form-builder/frontend/class-wizard-validator.php:265
 #, php-format
 msgid "Kies een datum op of voor %s."
 msgstr ""
 
-#: inc/form-builder/frontend/class-wizard-validator.php:261
+#: inc/form-builder/frontend/class-wizard-validator.php:280
 msgid "Deze datum mag niet voor de gekoppelde startdatum liggen."
 msgstr ""
 
-#: inc/form-builder/frontend/class-wizard-validator.php:272
+#: inc/form-builder/frontend/class-wizard-validator.php:291
 msgid "Deze datum mag niet na de gekoppelde einddatum liggen."
 msgstr ""
 
-#: inc/form-builder/frontend/class-wizard-validator.php:318
+#: inc/form-builder/frontend/class-wizard-validator.php:345
 msgid "Kies minimaal één checkbox."
 msgstr ""
 
-#: inc/form-builder/integrations/class-summer-camp-context.php:77
+#: inc/form-builder/integrations/class-summer-camp-context.php:94
 msgid "De inschrijving voor het zomerkamp is gesloten."
 msgstr ""
 
-#: inc/form-builder/integrations/class-summer-camp-context.php:82
+#: inc/form-builder/integrations/class-summer-camp-context.php:99
 msgid "Inschrijven is gesloten"
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-birthday-mailer.php:68
+#: inc/shared/class-cjw-mail-templates.php:92
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:419
+msgid "Verjaardagsmail"
 msgstr ""
 
 #: inc/form-builder/submissions/class-wizard-children-page.php:36
@@ -413,110 +564,378 @@ msgid "Kind"
 msgstr ""
 
 #: inc/form-builder/submissions/class-wizard-children-table.php:58
-#: inc/form-builder/submissions/class-wizard-submission-admin.php:233
-#: inc/form-builder/submissions/class-wizard-submission-detail.php:93
+#: inc/form-builder/submissions/class-wizard-submission-admin.php:259
+#: inc/form-builder/submissions/class-wizard-submission-detail.php:95
 msgid "Kamp"
 msgstr ""
 
 #: inc/form-builder/submissions/class-wizard-children-table.php:59
-#: inc/form-builder/submissions/class-wizard-submission-admin.php:234
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:888
-msgid "Status"
+#: inc/form-builder/submissions/class-wizard-submission-admin.php:260
+msgid "Foto’s"
 msgstr ""
 
 #: inc/form-builder/submissions/class-wizard-children-table.php:60
-#: inc/form-builder/submissions/class-wizard-submission-detail.php:112
-msgid "Contact"
+#: inc/form-builder/submissions/class-wizard-submission-admin.php:261
+#: inc/form-builder/submissions/class-wizard-submission-status.php:195
+#: inc/shared/class-cjw-mail-safe-mode.php:330
+#: inc/summer-camp/admin/class-cjw-mollie-panel.php:153
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:1045
+msgid "Status"
 msgstr ""
 
 #: inc/form-builder/submissions/class-wizard-children-table.php:61
-#: inc/form-builder/submissions/class-wizard-submission-admin.php:242
+#: inc/form-builder/submissions/class-wizard-submission-detail.php:114
+#: inc/summer-camp/admin/class-cjw-summer-camp-first-run.php:439
+msgid "Contact"
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-children-table.php:62
+#: inc/form-builder/submissions/class-wizard-payments-admin.php:114
+#: inc/form-builder/submissions/class-wizard-submission-admin.php:273
+#: inc/form-builder/submissions/class-wizard-submission-status.php:221
 msgid "Ontvangen"
 msgstr ""
 
-#: inc/form-builder/submissions/class-wizard-children-table.php:83
+#: inc/form-builder/submissions/class-wizard-children-table.php:85
 msgid "Nog geen kinderen ingeschreven. Zodra een formulier velden met de betekenis “voornaam van het kind” heeft, verschijnen ze hier."
 msgstr ""
 
+#: inc/form-builder/submissions/class-wizard-children-table.php:268
+#: inc/form-builder/submissions/class-wizard-submission-admin.php:754
+msgid "ja"
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-children-table.php:271
+#: inc/form-builder/submissions/class-wizard-submission-admin.php:761
+msgid "nee"
+msgstr ""
+
 #. translators: %d: age in years.
-#: inc/form-builder/submissions/class-wizard-children-table.php:284
+#: inc/form-builder/submissions/class-wizard-children-table.php:314
 #, php-format
 msgid "%d jaar"
 msgid_plural "%d jaar"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/form-builder/submissions/class-wizard-children-table.php:311
-#: inc/form-builder/submissions/class-wizard-submission-admin.php:405
+#: inc/form-builder/submissions/class-wizard-children-table.php:341
+#: inc/form-builder/submissions/class-wizard-submission-admin.php:687
 msgid "Alle kampen"
 msgstr ""
 
-#: inc/form-builder/submissions/class-wizard-children-table.php:325
+#: inc/form-builder/submissions/class-wizard-children-table.php:355
 msgid "Alle statussen"
 msgstr ""
 
-#: inc/form-builder/submissions/class-wizard-children-table.php:338
+#: inc/form-builder/submissions/class-wizard-children-table.php:368
 msgid "Filter"
 msgstr ""
 
-#: inc/form-builder/submissions/class-wizard-submission-admin.php:47
+#: inc/form-builder/submissions/class-wizard-ideal.php:250
+msgid "Deze inschrijving bestaat niet."
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-ideal.php:257
+msgid "Deze inschrijving is geannuleerd."
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-ideal.php:266
+msgid "Er staat niets meer open."
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-ideal.php:295
+msgid "De betaling kon niet worden gestart."
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-ideal.php:306
+msgid "Mollie gaf geen geldige betaallink terug."
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-ideal.php:336
+msgid "Deze betaallink klopt niet of is verlopen. Neem contact op met de organisatie."
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-ideal.php:337
+msgid "Betaallink onbekend"
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-ideal.php:344
+msgid "Er zijn net te veel betaalpogingen gedaan. Probeer het over een paar minuten opnieuw."
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-ideal.php:345
+msgid "Even wachten"
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-ideal.php:360
+msgid "Betalen lukt nu niet"
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-ideal.php:677
+msgid "Deze link blijft werken; je kunt ook later betalen."
+msgstr ""
+
+#. translators: 1: site name, 2: registration number.
+#: inc/form-builder/submissions/class-wizard-ideal.php:947
+#, php-format
+msgid "%1$s inschrijving %2$d"
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-ideal.php:948
+#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:42
+#: inc/summer-camp/admin/class-cjw-summer-camp-first-run.php:351
+#: inc/summer-camp/admin/class-cjw-summer-camp-first-run.php:431
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:152
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:1026
+msgid "Zomerkamp"
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-payments-admin.php:67
+msgid "Betalingen"
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-payments-admin.php:97
+msgid "Te betalen"
+msgstr ""
+
+#. translators: %s: the amount the form worked out.
+#: inc/form-builder/submissions/class-wizard-payments-admin.php:105
+#, php-format
+msgid "formulier: %s"
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-payments-admin.php:118
+msgid "Openstaand"
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-payments-admin.php:148
+msgid "Vink aan en sla op om een betaling te verwijderen."
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-payments-admin.php:152
+msgid "Betaling toevoegen"
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-payments-admin.php:155
+#: inc/form-builder/submissions/class-wizard-submission-detail.php:102
+msgid "Bedrag"
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-payments-admin.php:164
+msgid "Bedrag, bijvoorbeeld 72,50"
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-payments-admin.php:169
+#: inc/summer-camp/fields/cjw_repeater_field.php:35
+msgid "Datum"
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-payments-admin.php:172
+msgid "Manier"
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-payments-admin.php:181
+msgid "Notitie"
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-payments-admin.php:189
+msgid "Notitie, bijvoorbeeld “aan de poort”"
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-payments-admin.php:194
+msgid "Te betalen aanpassen"
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-payments-admin.php:206
+msgid "Alleen invullen als er een ander bedrag geldt dan het formulier uitrekende, bijvoorbeeld bij het minimabeleid. Leeg laten om het bedrag van het formulier te gebruiken."
+msgstr ""
+
+#. translators: 1: camp year, 2: amount owed, 3: amount received.
+#: inc/form-builder/submissions/class-wizard-payments-admin.php:303
+#, php-format
+msgid "Kampjaar %1$s: %2$s te betalen, %3$s ontvangen"
+msgstr ""
+
+#. translators: 1: outstanding amount, 2: number of registrations.
+#: inc/form-builder/submissions/class-wizard-payments-admin.php:314
+#, php-format
+msgid "%1$s openstaand bij %2$d inschrijving"
+msgid_plural "%1$s openstaand bij %2$d inschrijvingen"
+msgstr[0] ""
+msgstr[1] ""
+
+#: inc/form-builder/submissions/class-wizard-payments-admin.php:326
+msgid "alles voldaan"
+msgstr ""
+
+#. translators: %s: amount received.
+#: inc/form-builder/submissions/class-wizard-payments-admin.php:354
+#, php-format
+msgid "voldaan · %s"
+msgstr ""
+
+#. translators: 1: amount received, 2: amount owed.
+#: inc/form-builder/submissions/class-wizard-payments-admin.php:364
+#, php-format
+msgid "%1$s van %2$s"
+msgstr ""
+
+#. translators: %s: outstanding amount.
+#: inc/form-builder/submissions/class-wizard-payments-admin.php:370
+#, php-format
+msgid "%s open"
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-payments.php:59
+msgid "Overboeking"
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-payments.php:60
+msgid "Contant"
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-payments.php:61
+msgid "iDEAL"
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-payments.php:62
+msgid "Anders"
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-submission-admin.php:66
 msgid "Inzendingsgegevens"
 msgstr ""
 
-#: inc/form-builder/submissions/class-wizard-submission-admin.php:56
+#: inc/form-builder/submissions/class-wizard-submission-admin.php:75
 msgid "Interne notities"
 msgstr ""
 
-#: inc/form-builder/submissions/class-wizard-submission-admin.php:76
+#: inc/form-builder/submissions/class-wizard-submission-admin.php:95
 msgid "Formulier:"
 msgstr ""
 
-#: inc/form-builder/submissions/class-wizard-submission-admin.php:77
-#: inc/form-builder/submissions/class-wizard-submission-admin.php:279
+#: inc/form-builder/submissions/class-wizard-submission-admin.php:96
+#: inc/form-builder/submissions/class-wizard-submission-admin.php:451
 msgid "Onbekend"
 msgstr ""
 
-#: inc/form-builder/submissions/class-wizard-submission-admin.php:83
+#: inc/form-builder/submissions/class-wizard-submission-admin.php:102
 msgid "Toon ook de vragen die niet zijn ingevuld"
 msgstr ""
 
-#: inc/form-builder/submissions/class-wizard-submission-admin.php:178
+#: inc/form-builder/submissions/class-wizard-submission-admin.php:197
 msgid "Alleen zichtbaar voor beheerders. Wordt nooit naar de ouder gestuurd."
 msgstr ""
 
-#: inc/form-builder/submissions/class-wizard-submission-admin.php:232
+#: inc/form-builder/submissions/class-wizard-submission-admin.php:258
 msgid "Naam"
 msgstr ""
 
-#: inc/form-builder/submissions/class-wizard-submission-admin.php:379
+#: inc/form-builder/submissions/class-wizard-submission-admin.php:262
+msgid "Betaling"
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-submission-admin.php:388
+msgid "Bekijken"
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-submission-admin.php:422
+msgid "bevestiging mislukt"
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-submission-admin.php:490
+msgid "Alle fototoestemming"
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-submission-admin.php:494
+msgid "Zonder toestemming"
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-submission-admin.php:499
+msgid "Alleen met toestemming"
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-submission-admin.php:661
 msgid "Alle formulieren"
 msgstr ""
 
-#: inc/form-builder/submissions/class-wizard-submission-admin.php:386
+#: inc/form-builder/submissions/class-wizard-submission-admin.php:668
 #: inc/form-builder/submissions/class-wizard-submission-exporter.php:69
 msgid "Zonder titel"
 msgstr ""
 
-#. translators: %s: form title.
-#: inc/form-builder/submissions/class-wizard-submission-confirmation.php:70
+#. translators: %d: the earlier registration's number.
+#: inc/form-builder/submissions/class-wizard-submission-admin.php:724
 #, php-format
-msgid "Bevestiging van je inschrijving voor %s"
+msgid "mogelijk dubbel met #%d"
 msgstr ""
 
-#: inc/form-builder/submissions/class-wizard-submission-confirmation.php:104
-msgid "Bedankt voor je inschrijving. We hebben hem goed ontvangen en nemen contact met je op als er iets nodig is."
+#. translators: 1: children without consent, 2: children on the registration.
+#: inc/form-builder/submissions/class-wizard-submission-admin.php:764
+#, php-format
+msgid "%1$d van %2$d niet"
 msgstr ""
 
-#. translators: %s: form title.
-#: inc/form-builder/submissions/class-wizard-submission-confirmation.php:112
+#. translators: %d: submission number.
+#: inc/form-builder/submissions/class-wizard-submission-confirmation.php:141
 #, php-format
-msgid "Inschrijving: %s"
+msgid "De bevestigingsmail voor inschrijving #%d is niet verstuurd. De ouder heeft dus niets ontvangen, terwijl het formulier wel zei dat er een bevestiging aankomt."
 msgstr ""
 
-#. translators: %s: contact e-mail address.
-#: inc/form-builder/submissions/class-wizard-submission-confirmation.php:123
+#. translators: %s: error message from the mail server.
+#: inc/form-builder/submissions/class-wizard-submission-confirmation.php:151
 #, php-format
-msgid "Vragen? Mail ons op %s."
+msgid "De mailserver meldde: %s"
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-submission-confirmation.php:156
+msgid "Neem contact op met deze ouder, en controleer daarna of er meer inschrijvingen zonder bevestiging zijn blijven staan. Je krijgt pas weer een melding als het versturen eerst weer is gelukt."
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-submission-confirmation.php:163
+msgid "Bevestigingsmail niet verstuurd"
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-submission-confirmation.php:177
+msgid "Dit formulier stuurt een bevestiging naar de ouder, maar vraagt nergens om een e-mailadres. Er is dus niemand om de bevestiging naartoe te sturen."
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-submission-confirmation.php:180
+msgid "Voeg een e-mailveld toe aan het formulier en geef het de betekenis “E-mailadres van de ouder”, of zet de bevestiging uit in de instellingen van dit formulier."
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-submission-confirmation.php:187
+msgid "Formulier belooft een bevestiging maar vraagt geen e-mailadres"
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-submission-confirmation.php:226
+#: inc/form-builder/submissions/class-wizard-submission-detail.php:131
+#: inc/form-builder/submissions/class-wizard-submission-status.php:222
+#: inc/shared/class-cjw-mail-safe-mode.php:383
+#: inc/shared/class-cjw-status-endpoint.php:398
+#: inc/summer-camp/admin/class-cjw-mollie-panel.php:239
+#: inc/summer-camp/admin/class-cjw-summer-camp-digest.php:467
+#: inc/summer-camp/admin/class-cjw-summer-camp-mail.php:308
+#: inc/summer-camp/admin/class-cjw-summer-camp-settings-history.php:403
+msgid "j F Y \\o\\m H:i"
+msgstr ""
+
+#. translators: %s: date and time the confirmation was sent.
+#: inc/form-builder/submissions/class-wizard-submission-confirmation.php:232
+#, php-format
+msgid "Verstuurd op %s"
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-submission-confirmation.php:235
+msgid "Verstuurd"
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-submission-confirmation.php:236
+msgid "Niet verstuurd: dit formulier vroeg geen e-mailadres"
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-submission-confirmation.php:237
+msgid "Versturen mislukt"
 msgstr ""
 
 #: inc/form-builder/submissions/class-wizard-submission-detail.php:40
@@ -527,52 +946,113 @@ msgstr ""
 msgid "Geen opgeslagen gegevens gevonden."
 msgstr ""
 
-#: inc/form-builder/submissions/class-wizard-submission-detail.php:88
+#: inc/form-builder/submissions/class-wizard-submission-detail.php:90
 msgid "Kind(eren)"
 msgstr ""
 
-#: inc/form-builder/submissions/class-wizard-submission-detail.php:100
-msgid "Bedrag"
+#: inc/form-builder/submissions/class-wizard-submission-detail.php:121
+msgid "Niet vastgelegd"
+msgstr ""
+
+#. translators: %s: date and time.
+#: inc/form-builder/submissions/class-wizard-submission-detail.php:130
+#, php-format
+msgid "Akkoord op %s"
 msgstr ""
 
 #. translators: %s: the value that will be copied.
-#: inc/form-builder/submissions/class-wizard-submission-detail.php:145
+#: inc/form-builder/submissions/class-wizard-submission-detail.php:167
 #, php-format
 msgid "Kopieer %s"
 msgstr ""
 
-#: inc/form-builder/submissions/class-wizard-submission-detail.php:148
+#: inc/form-builder/submissions/class-wizard-submission-detail.php:170
 msgid "kopieer"
 msgstr ""
 
 #. translators: %s: camp fee in euros.
-#: inc/form-builder/submissions/class-wizard-submission-detail.php:184
+#: inc/form-builder/submissions/class-wizard-submission-detail.php:204
 #, php-format
 msgid "€%s kampgeld"
 msgstr ""
 
 #. translators: %s: donation in euros.
-#: inc/form-builder/submissions/class-wizard-submission-detail.php:192
+#: inc/form-builder/submissions/class-wizard-submission-detail.php:212
 #, php-format
 msgid "€%s donatie"
 msgstr ""
 
 #. translators: %d: number of children whose camp carries no price.
-#: inc/form-builder/submissions/class-wizard-submission-detail.php:210
+#: inc/form-builder/submissions/class-wizard-submission-detail.php:230
+#: inc/form-builder/submissions/class-wizard-submission-detail.php:277
 #, php-format
 msgid "%d kamp zonder prijs in de naam"
 msgid_plural "%d kampen zonder prijs in de naam"
 msgstr[0] ""
 msgstr[1] ""
 
+#. translators: %s: the amount the form worked out.
+#: inc/form-builder/submissions/class-wizard-submission-detail.php:252
+#, php-format
+msgid "aangepast, formulier: %s"
+msgstr ""
+
+#. translators: 1: camp fee, 2: donation.
+#: inc/form-builder/submissions/class-wizard-submission-detail.php:258
+#, php-format
+msgid "%1$s kampgeld + %2$s donatie"
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-submission-detail.php:265
+msgid "voldaan"
+msgstr ""
+
+#. translators: %s: outstanding amount.
+#: inc/form-builder/submissions/class-wizard-submission-detail.php:269
+#, php-format
+msgid "%s openstaand"
+msgstr ""
+
 #. translators: %d: position of the child in the registration.
-#: inc/form-builder/submissions/class-wizard-submission-detail.php:277
+#: inc/form-builder/submissions/class-wizard-submission-detail.php:335
 #, php-format
 msgid "Kind %d"
 msgstr ""
 
-#: inc/form-builder/submissions/class-wizard-submission-detail.php:431
+#: inc/form-builder/submissions/class-wizard-submission-detail.php:494
 msgid "Ja"
+msgstr ""
+
+#. translators: %d: number of registrations.
+#: inc/form-builder/submissions/class-wizard-submission-digest.php:58
+#, php-format
+msgid "Er is deze week %d inschrijving binnengekomen."
+msgid_plural "Er zijn deze week %d inschrijvingen binnengekomen."
+msgstr[0] ""
+msgstr[1] ""
+
+#: inc/form-builder/submissions/class-wizard-submission-digest.php:77
+msgid "Nieuwe inschrijvingen"
+msgstr ""
+
+#. translators: 1: number of registrations, 2: camp year.
+#: inc/form-builder/submissions/class-wizard-submission-digest.php:108
+#, php-format
+msgid "In totaal %1$d inschrijving voor kamp %2$s."
+msgid_plural "In totaal %1$d inschrijvingen voor kamp %2$s."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: 1: number of children signed up, 2: camp name.
+#: inc/form-builder/submissions/class-wizard-submission-digest.php:130
+#, php-format
+msgid "%1$d × %2$s"
+msgstr ""
+
+#. translators: %s: per-camp counts, already joined.
+#: inc/form-builder/submissions/class-wizard-submission-digest.php:142
+#, php-format
+msgid "Aangemeld per kamp: %s. Eén inschrijving kan twee kinderen voor verschillende kampen bevatten, dus deze aantallen kunnen samen hoger uitkomen dan het totaal."
 msgstr ""
 
 #: inc/form-builder/submissions/class-wizard-submission-exporter.php:28
@@ -605,71 +1085,62 @@ msgstr ""
 msgid "CSV-export staat niet aan voor dit formulier."
 msgstr ""
 
-#. translators: %s: form title.
-#: inc/form-builder/submissions/class-wizard-submission-notifier.php:40
-#, php-format
-msgid "Nieuwe inzending voor %s"
-msgstr ""
-
-#. translators: %s: form title.
-#: inc/form-builder/submissions/class-wizard-submission-notifier.php:69
-#, php-format
-msgid "Er is een nieuwe inschrijving binnengekomen voor: %s"
-msgstr ""
-
-#: inc/form-builder/submissions/class-wizard-submission-notifier.php:73
-msgid "De gegevens staan in de beveiligde omgeving en worden bewust niet meegestuurd in deze e-mail."
-msgstr ""
-
-#. translators: %s: admin submissions list URL.
-#: inc/form-builder/submissions/class-wizard-submission-notifier.php:77
-#, php-format
-msgid "Bekijk de inschrijving: %s"
-msgstr ""
-
-#: inc/form-builder/submissions/class-wizard-submission-privacy.php:48
-#: inc/form-builder/submissions/class-wizard-submission-privacy.php:63
-#: inc/form-builder/submissions/class-wizard-submission-privacy.php:106
+#: inc/form-builder/submissions/class-wizard-submission-privacy.php:51
+#: inc/form-builder/submissions/class-wizard-submission-privacy.php:69
+#: inc/form-builder/submissions/class-wizard-submission-privacy.php:114
 msgid "Kampinschrijvingen"
 msgstr ""
 
-#: inc/form-builder/submissions/class-wizard-submission-privacy.php:92
+#: inc/form-builder/submissions/class-wizard-submission-privacy.php:100
 msgid "Ingediend op"
 msgstr ""
 
 #. translators: %d: number of registrations anonymised.
-#: inc/form-builder/submissions/class-wizard-submission-privacy.php:163
+#: inc/form-builder/submissions/class-wizard-submission-privacy.php:173
 #, php-format
 msgid "Bij %d kampinschrijving zijn de persoonsgegevens gewist. De inschrijving zelf blijft geteld voor de jaarstatistiek, zonder gegevens die naar een persoon te herleiden zijn."
 msgid_plural "Bij %d kampinschrijvingen zijn de persoonsgegevens gewist. De inschrijvingen zelf blijven geteld voor de jaarstatistiek, zonder gegevens die naar een persoon te herleiden zijn."
 msgstr[0] ""
 msgstr[1] ""
 
-#. translators: 1: form title, 2: submission date and time.
-#: inc/form-builder/submissions/class-wizard-submission-repository.php:105
+#: inc/form-builder/submissions/class-wizard-submission-repository.php:140
+#: inc/form-builder/submissions/class-wizard-submissions-post-type.php:23
+msgid "Inschrijving"
+msgstr ""
+
+#. translators: %d: submission number.
+#: inc/form-builder/submissions/class-wizard-submission-repository.php:455
 #, php-format
-msgid "%1$s - %2$s"
+msgid "Inschrijving #%d"
 msgstr ""
 
 #. translators: %s: camp year the anonymised submission belonged to.
-#: inc/form-builder/submissions/class-wizard-submission-repository.php:355
+#: inc/form-builder/submissions/class-wizard-submission-repository.php:759
 #, php-format
 msgid "Gewiste inschrijving (%s)"
 msgstr ""
 
+#: inc/form-builder/submissions/class-wizard-submission-retention.php:51
+msgid "Bewaartermijn opschonen"
+msgstr ""
+
 #: inc/form-builder/submissions/class-wizard-submission-status.php:44
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:376
 msgid "Nieuw"
 msgstr ""
 
 #: inc/form-builder/submissions/class-wizard-submission-status.php:45
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:377
 msgid "Bevestigd"
 msgstr ""
 
 #: inc/form-builder/submissions/class-wizard-submission-status.php:46
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:378
 msgid "Betaald"
 msgstr ""
 
 #: inc/form-builder/submissions/class-wizard-submission-status.php:47
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:379
 msgid "Geannuleerd"
 msgstr ""
 
@@ -705,17 +1176,490 @@ msgid_plural "Geannuleerd <span class=\"count\">(%s)</span>"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/form-builder/submissions/class-wizard-submission-status.php:186
+#: inc/form-builder/submissions/class-wizard-submission-status.php:228
+msgid "Bevestiging aan ouder"
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-submission-status.php:249
 msgid "Status inschrijving"
 msgstr ""
 
-#: inc/form-builder/submissions/class-wizard-submissions-post-type.php:22
-#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:202
-msgid "Inzendingen"
+#: inc/form-builder/submissions/class-wizard-submission-status.php:275
+msgid "Naar prullenbak"
 msgstr ""
 
-#: inc/form-builder/submissions/class-wizard-submissions-post-type.php:23
-msgid "Inzending"
+#: inc/form-builder/submissions/class-wizard-submission-status.php:286
+#: inc/summer-camp/admin/class-cjw-summer-camp-digest.php:497
+msgid "Opslaan"
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-submissions-post-type.php:22
+#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:253
+#: inc/summer-camp/admin/class-cjw-summer-camp-digest.php:214
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:321
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:367
+#: inc/summer-camp/admin/class-cjw-system-dashboard-widget.php:158
+msgid "Inschrijvingen"
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-submissions-post-type.php:28
+msgid "Inschrijving bekijken"
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-submissions-post-type.php:29
+msgid "Inschrijvingen zoeken"
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-submissions-post-type.php:30
+msgid "Geen inschrijvingen gevonden."
+msgstr ""
+
+#: inc/form-builder/submissions/class-wizard-submissions-post-type.php:31
+msgid "Geen inschrijvingen in de prullenbak."
+msgstr ""
+
+#. translators: 1: number of registrations, 2: camp year.
+#: inc/form-builder/submissions/class-wizard-year-rollover.php:83
+#, php-format
+msgid "%1$d inschrijving van %2$s en eerder wordt geanonimiseerd: namen, adressen, e-mailadressen en opmerkingen worden gewist. Het aantal inschrijvingen per kamp blijft bewaard."
+msgid_plural "%1$d inschrijvingen van %2$s en eerder worden geanonimiseerd: namen, adressen, e-mailadressen en opmerkingen worden gewist. Het aantal inschrijvingen per kamp blijft bewaard."
+msgstr[0] ""
+msgstr[1] ""
+
+#: inc/shared/class-cjw-admin-menu.php:91
+msgid "Je hebt geen toegang tot deze pagina."
+msgstr ""
+
+#: inc/shared/class-cjw-admin-menu.php:92
+msgid "Geen toegang"
+msgstr ""
+
+#. translators: 1: job name, 2: number of days.
+#: inc/shared/class-cjw-cron-heartbeat.php:177
+#, php-format
+msgid "De geplande taak \"%1$s\" heeft al %2$d dagen niet gedraaid. Zolang dat zo blijft, gebeurt het werk van die taak niet."
+msgstr ""
+
+#: inc/shared/class-cjw-cron-heartbeat.php:185
+msgid "Dit komt bijna altijd doordat WP-Cron niet meer afgaat: die draait alleen als iemand de site bezoekt, en sommige hostingpakketten zetten hem uit. Vraag de host om een echte cronjob in te stellen."
+msgstr ""
+
+#. translators: %s: job name.
+#: inc/shared/class-cjw-cron-heartbeat.php:205
+#, php-format
+msgid "Geplande taak staat stil: %s"
+msgstr ""
+
+#: inc/shared/class-cjw-fatal-error-watch.php:108
+msgid "De website is gecrasht"
+msgstr ""
+
+#: inc/shared/class-cjw-fatal-error-watch.php:109
+msgid "Er is een fout opgetreden waardoor de website halverwege is gestopt. Bezoekers zagen op dat moment een lege of kapotte pagina."
+msgstr ""
+
+#. translators: 1: file path, 2: line number.
+#: inc/shared/class-cjw-fatal-error-watch.php:115
+#: inc/shared/class-cjw-status-endpoint.php:407
+#, php-format
+msgid "in %1$s op regel %2$d"
+msgstr ""
+
+#: inc/shared/class-cjw-fatal-error-watch.php:118
+msgid "Stuur dit bericht door naar wie de website onderhoudt. Je krijgt pas weer een melding als de website op een andere plek crasht, of nadat je deze melding op het tabblad Beheer hebt weggehaald."
+msgstr ""
+
+#: inc/shared/class-cjw-fatal-error-watch.php:170
+#: inc/shared/class-cjw-mail-safe-mode.php:500
+msgid "Je hebt geen toestemming hiervoor."
+msgstr ""
+
+#. translators: %s: WordPress environment type, e.g. "staging".
+#: inc/shared/class-cjw-mail-safe-mode.php:95
+#, php-format
+msgid "WordPress meldt dat dit een %s-omgeving is."
+msgstr ""
+
+#. translators: 1: this site's host name, 2: the confirmed live host name.
+#: inc/shared/class-cjw-mail-safe-mode.php:106
+#, php-format
+msgid "Deze website draait op %1$s, terwijl %2$s is bevestigd als de live website."
+msgstr ""
+
+#. translators: 1: intended recipients, 2: this site's host name.
+#: inc/shared/class-cjw-mail-safe-mode.php:213
+#, php-format
+msgid "[Mail-veiligmodus] Deze mail is niet verstuurd naar %1$s. Hij komt van de kopie op %2$s."
+msgstr ""
+
+#: inc/shared/class-cjw-mail-safe-mode.php:214
+msgid "(geen ontvanger)"
+msgstr ""
+
+#: inc/shared/class-cjw-mail-safe-mode.php:289
+msgid "Dit is een kopie van de website: mail-veiligmodus staat aan."
+msgstr ""
+
+#. translators: %s: e-mail address.
+#: inc/shared/class-cjw-mail-safe-mode.php:295
+#, php-format
+msgid "Elke mail die de website zou versturen gaat in plaats daarvan naar %s, met [TEST] in het onderwerp. Ouders ontvangen niets."
+msgstr ""
+
+#: inc/shared/class-cjw-mail-safe-mode.php:300
+msgid "Er is geen geldig beheerdersadres, dus er wordt helemaal geen mail verstuurd."
+msgstr ""
+
+#: inc/shared/class-cjw-mail-safe-mode.php:321
+msgid "Mail-veiligmodus"
+msgstr ""
+
+#: inc/shared/class-cjw-mail-safe-mode.php:324
+msgid "Een teruggezette kopie van de website bevat echte inschrijvingen. Zodra de live website hier is bevestigd, herkent elke kopie zichzelf aan zijn andere webadres en stuurt hij geen mail meer naar ouders: alles gaat dan naar de beheerder, met [TEST] in het onderwerp."
+msgstr ""
+
+#: inc/shared/class-cjw-mail-safe-mode.php:333
+msgid "Aan: dit is een kopie."
+msgstr ""
+
+#: inc/shared/class-cjw-mail-safe-mode.php:336
+msgid "Uit: mail wordt gewoon verstuurd."
+msgstr ""
+
+#: inc/shared/class-cjw-mail-safe-mode.php:341
+msgid "Deze website"
+msgstr ""
+
+#. translators: %s: WordPress environment type.
+#: inc/shared/class-cjw-mail-safe-mode.php:346
+#, php-format
+msgid "(omgeving volgens WordPress: %s)"
+msgstr ""
+
+#: inc/shared/class-cjw-mail-safe-mode.php:353
+#: inc/summer-camp/admin/class-cjw-system-dashboard-widget.php:220
+msgid "Live website"
+msgstr ""
+
+#: inc/shared/class-cjw-mail-safe-mode.php:358
+msgid "Nog niet bevestigd."
+msgstr ""
+
+#: inc/shared/class-cjw-mail-safe-mode.php:359
+msgid "Tot die tijd wordt een kopie alleen herkend als de hostingpartij de omgeving als test heeft gemarkeerd."
+msgstr ""
+
+#: inc/shared/class-cjw-mail-safe-mode.php:364
+msgid "Tegengehouden mail"
+msgstr ""
+
+#: inc/shared/class-cjw-mail-safe-mode.php:367
+msgid "Nog geen."
+msgstr ""
+
+#. translators: %d: number of redirected mails.
+#: inc/shared/class-cjw-mail-safe-mode.php:372
+#, php-format
+msgid "%d mail is doorgestuurd naar de beheerder."
+msgid_plural "%d mails zijn doorgestuurd naar de beheerder."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: 1: date and time, 2: subject, 3: intended recipient.
+#: inc/shared/class-cjw-mail-safe-mode.php:382
+#, php-format
+msgid "%1$s: “%2$s” voor %3$s"
+msgstr ""
+
+#. translators: %s: this site's host name.
+#: inc/shared/class-cjw-mail-safe-mode.php:406
+#, php-format
+msgid "Dit is de live website: %s"
+msgstr ""
+
+#: inc/shared/class-cjw-mail-safe-mode.php:409
+msgid "Bevestig opnieuw"
+msgstr ""
+
+#: inc/shared/class-cjw-mail-safe-mode.php:422
+msgid "Vergeet de live website"
+msgstr ""
+
+#: inc/shared/class-cjw-mail-safe-mode.php:423
+msgid "Alleen nodig als de website naar een ander webadres verhuist. Bevestig het nieuwe adres daarna meteen op de nieuwe live website."
+msgstr ""
+
+#: inc/shared/class-cjw-mail-templates.php:58
+msgid "Het jaarthema, bijvoorbeeld “Piraten”"
+msgstr ""
+
+#: inc/shared/class-cjw-mail-templates.php:59
+msgid "Het kampjaar, bijvoorbeeld “2027”"
+msgstr ""
+
+#: inc/shared/class-cjw-mail-templates.php:60
+msgid "De kampdata als één regel, bijvoorbeeld “11 t/m 18 juli 2027”"
+msgstr ""
+
+#: inc/shared/class-cjw-mail-templates.php:61
+msgid "De eerste dag van het kamp"
+msgstr ""
+
+#: inc/shared/class-cjw-mail-templates.php:62
+msgid "De laatste dag van het kamp"
+msgstr ""
+
+#: inc/shared/class-cjw-mail-templates.php:63
+msgid "De kamplocatie"
+msgstr ""
+
+#: inc/shared/class-cjw-mail-templates.php:64
+msgid "De datum waarop de inschrijvingen sluiten"
+msgstr ""
+
+#: inc/shared/class-cjw-mail-templates.php:65
+#: inc/shared/class-cjw-privacy-notice.php:39
+msgid "Het contact-e-mailadres van de organisatie"
+msgstr ""
+
+#: inc/shared/class-cjw-mail-templates.php:66
+#: inc/shared/class-cjw-privacy-notice.php:38
+msgid "De naam van de website"
+msgstr ""
+
+#: inc/shared/class-cjw-mail-templates.php:67
+msgid "Het adres van de website"
+msgstr ""
+
+#: inc/shared/class-cjw-mail-templates.php:80
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:418
+msgid "Bevestiging aan de ouder"
+msgstr ""
+
+#: inc/shared/class-cjw-mail-templates.php:81
+msgid "Gaat naar de ouder zodra een inschrijving binnenkomt. Dit is de enige mail die een ouder van de website krijgt, dus het is ook de plek om te vertellen wat er daarna gebeurt."
+msgstr ""
+
+#: inc/shared/class-cjw-mail-templates.php:83
+msgid "De naam of namen van de ingeschreven kinderen"
+msgstr ""
+
+#: inc/shared/class-cjw-mail-templates.php:84
+msgid "Voor welk kamp of welke kampen is ingeschreven"
+msgstr ""
+
+#: inc/shared/class-cjw-mail-templates.php:85
+msgid "Het te betalen bedrag, inclusief een eventuele donatie"
+msgstr ""
+
+#: inc/shared/class-cjw-mail-templates.php:86
+msgid "Het inschrijfnummer, handig om bij vragen te noemen"
+msgstr ""
+
+#: inc/shared/class-cjw-mail-templates.php:88
+msgid "Bevestiging van je inschrijving"
+msgstr ""
+
+#: inc/shared/class-cjw-mail-templates.php:93
+msgid "Gaat op de verjaardag van een ingeschreven kind naar het e-mailadres waarmee is ingeschreven. Alleen voor kinderen die dit kampjaar zijn ingeschreven, en alleen zolang de gegevens nog bewaard worden."
+msgstr ""
+
+#: inc/shared/class-cjw-mail-templates.php:95
+msgid "De naam van het jarige kind"
+msgstr ""
+
+#: inc/shared/class-cjw-mail-templates.php:96
+msgid "De leeftijd die het kind vandaag wordt"
+msgstr ""
+
+#: inc/shared/class-cjw-mail-templates.php:98
+msgid "Hiep hiep hoera, {child_name}!"
+msgstr ""
+
+#: inc/shared/class-cjw-mail-templates.php:102
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:420
+msgid "Bericht aan de organisatie"
+msgstr ""
+
+#: inc/shared/class-cjw-mail-templates.php:103
+msgid "Gaat naar de organisatie zodra iemand het formulier heeft ingevuld. Bevat met opzet geen gegevens van kinderen: die horen in de beveiligde omgeving te blijven en niet in mailboxen, doorgestuurde berichten en back-ups terecht te komen. Er zijn daarom geen tokens voor namen of adressen beschikbaar."
+msgstr ""
+
+#: inc/shared/class-cjw-mail-templates.php:105
+msgid "De naam van het formulier dat is ingevuld"
+msgstr ""
+
+#: inc/shared/class-cjw-mail-templates.php:106
+msgid "Het inschrijfnummer"
+msgstr ""
+
+#: inc/shared/class-cjw-mail-templates.php:107
+msgid "De link naar het overzicht met inschrijvingen"
+msgstr ""
+
+#: inc/shared/class-cjw-mail-templates.php:109
+msgid "Nieuwe inschrijving voor {form_title}"
+msgstr ""
+
+#: inc/shared/class-cjw-mail-templates.php:257
+msgid "Hoi,"
+msgstr ""
+
+#: inc/shared/class-cjw-mail-templates.php:258
+msgid "Bedankt voor je inschrijving. We hebben hem goed ontvangen."
+msgstr ""
+
+#: inc/shared/class-cjw-mail-templates.php:260
+msgid "Ingeschreven: <strong>{child_names}</strong><br>"
+msgstr ""
+
+#: inc/shared/class-cjw-mail-templates.php:261
+msgid "Kamp: {camp_choices}<br>"
+msgstr ""
+
+#: inc/shared/class-cjw-mail-templates.php:262
+msgid "Te betalen: {amount_due}<br>"
+msgstr ""
+
+#: inc/shared/class-cjw-mail-templates.php:263
+#: inc/shared/class-cjw-mail-templates.php:293
+msgid "Inschrijfnummer: {registration_number}"
+msgstr ""
+
+#: inc/shared/class-cjw-mail-templates.php:265
+msgid "Het kamp is van {camp_date_range}. We nemen contact met je op als er nog iets nodig is."
+msgstr ""
+
+#: inc/shared/class-cjw-mail-templates.php:266
+msgid "Vragen? Mail ons gerust op {camp_contact_email}."
+msgstr ""
+
+#: inc/shared/class-cjw-mail-templates.php:278
+msgid "Hoera, {child_name} is vandaag {child_age} jaar geworden!"
+msgstr ""
+
+#: inc/shared/class-cjw-mail-templates.php:279
+msgid "Wij wensen je een hele fijne verjaardag, en we zien je graag op het zomerkamp."
+msgstr ""
+
+#: inc/shared/class-cjw-mail-templates.php:280
+msgid "Groetjes van de hele kampleiding"
+msgstr ""
+
+#: inc/shared/class-cjw-mail-templates.php:292
+msgid "Er is een nieuwe inschrijving binnengekomen voor {form_title}."
+msgstr ""
+
+#: inc/shared/class-cjw-mail-templates.php:294
+msgid "De gegevens staan in de beveiligde omgeving en worden bewust niet meegestuurd in deze e-mail."
+msgstr ""
+
+#: inc/shared/class-cjw-mail-templates.php:295
+msgid "Bekijk de inschrijving"
+msgstr ""
+
+#: inc/shared/class-cjw-mail-tokens.php:101
+msgid "en"
+msgstr ""
+
+#: inc/shared/class-cjw-mollie.php:101
+msgid "Er is nog geen Mollie-testsleutel ingesteld."
+msgstr ""
+
+#: inc/shared/class-cjw-mollie.php:102
+msgid "Er is nog geen Mollie-sleutel voor de live-modus ingesteld."
+msgstr ""
+
+#: inc/shared/class-cjw-mollie.php:106
+msgid "Dit is een kopie van de website. Er worden hier geen betalingen aangemaakt."
+msgstr ""
+
+#: inc/shared/class-cjw-mollie.php:110
+msgid "De website draait niet op https, en zonder https mag er niet betaald worden."
+msgstr ""
+
+#: inc/shared/class-cjw-mollie.php:155
+msgid "Testmodus"
+msgstr ""
+
+#: inc/shared/class-cjw-mollie.php:156
+msgid "Live"
+msgstr ""
+
+#: inc/shared/class-cjw-mollie.php:338
+msgid "Er valt niets te betalen."
+msgstr ""
+
+#: inc/shared/class-cjw-mollie.php:373
+msgid "Dat is geen geldig betaalkenmerk."
+msgstr ""
+
+#: inc/shared/class-cjw-mollie.php:416
+msgid "Er is geen Mollie-sleutel ingesteld."
+msgstr ""
+
+#. translators: %d: HTTP status code.
+#: inc/shared/class-cjw-mollie.php:492
+#, php-format
+msgid "Mollie antwoordde met foutcode %d."
+msgstr ""
+
+#: inc/shared/class-cjw-privacy-notice.php:40
+msgid "Hoe lang een inschrijving bewaard blijft, in woorden — bijvoorbeeld “12 maanden na afloop van het kamp”"
+msgstr ""
+
+#: inc/shared/class-cjw-privacy-notice.php:41
+msgid "De datum waarop de gegevens van dit kampjaar gewist worden, als de kampdata bekend zijn"
+msgstr ""
+
+#: inc/shared/class-cjw-privacy-notice.php:42
+msgid "Het adres van de privacyverklaring; laat leeg om de link onderaan automatisch te laten toevoegen"
+msgstr ""
+
+#: inc/shared/class-cjw-privacy-notice.php:95
+msgid "Ik heb dit gelezen en ga akkoord met het gebruik van deze gegevens."
+msgstr ""
+
+#: inc/shared/class-cjw-privacy-notice.php:106
+msgid "Voor de inschrijving vragen we gegevens van je kind: de naam, de geboortedatum en wat we moeten weten om goed voor hem of haar te zorgen, zoals allergieën of medicijnen."
+msgstr ""
+
+#: inc/shared/class-cjw-privacy-notice.php:107
+msgid "{organisatie} gebruikt die gegevens alleen om het kamp te organiseren. We geven ze niet aan anderen. De leiding ziet alleen wat ze tijdens het kamp nodig heeft."
+msgstr ""
+
+#: inc/shared/class-cjw-privacy-notice.php:108
+msgid "We bewaren de inschrijving {bewaartermijn}. Daarna worden de persoonsgegevens automatisch gewist."
+msgstr ""
+
+#: inc/shared/class-cjw-privacy-notice.php:109
+msgid "Wil je weten welke gegevens we van je kind hebben, of wil je ze laten aanpassen of wissen? Mail dan naar {contact_email}."
+msgstr ""
+
+#: inc/shared/class-cjw-privacy-notice.php:139
+msgid "totdat je ons vraagt ze te wissen"
+msgstr ""
+
+#. translators: %d: number of months.
+#: inc/shared/class-cjw-privacy-notice.php:144
+#, php-format
+msgid "%d maand na afloop van het kamp"
+msgid_plural "%d maanden na afloop van het kamp"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: 1: period in words, 2: the date the data is erased.
+#: inc/shared/class-cjw-privacy-notice.php:152
+#, php-format
+msgid "%1$s, dus tot %2$s"
+msgstr ""
+
+#: inc/shared/class-cjw-privacy-notice.php:235
+msgid "Lees de volledige privacyverklaring"
+msgstr ""
+
+#: inc/shared/class-cjw-privacy-notice.php:243
+msgid "De organisatie"
 msgstr ""
 
 #: inc/shared/class-cjw-roles-notice.php:64
@@ -738,120 +1682,544 @@ msgstr ""
 msgid "Begrepen, verberg deze melding"
 msgstr ""
 
-#: inc/shared/class-cjw-roles.php:87
+#: inc/shared/class-cjw-roles.php:198
+msgid "Leiding"
+msgstr ""
+
+#: inc/shared/class-cjw-roles.php:204
 msgid "Kampbeheerder"
 msgstr ""
 
-#: inc/shared/class-summer-camp-service.php:498
+#: inc/shared/class-cjw-status-endpoint.php:347
+msgid "Statuspagina voor bewaking"
+msgstr ""
+
+#: inc/shared/class-cjw-status-endpoint.php:350
+msgid "De website meldt problemen per mail, en juist een website die helemaal stilstaat kan geen mail meer sturen. Laat daarom een bewakingsdienst van buitenaf dit adres controleren; die merkt het wél als de website niet meer antwoordt."
+msgstr ""
+
+#: inc/shared/class-cjw-status-endpoint.php:356
+msgid "Nu"
+msgstr ""
+
+#: inc/shared/class-cjw-status-endpoint.php:359
+msgid "In orde."
+msgstr ""
+
+#: inc/shared/class-cjw-status-endpoint.php:365
+msgid "Er is iets mis dat nu geld of gegevens kost."
+msgstr ""
+
+#: inc/shared/class-cjw-status-endpoint.php:366
+msgid "Er is iets mis dat aandacht nodig heeft."
+msgstr ""
+
+#: inc/shared/class-cjw-status-endpoint.php:379
+msgid "Adres om te bewaken"
+msgstr ""
+
+#: inc/shared/class-cjw-status-endpoint.php:383
+msgid "Plak dit adres in een gratis bewakingsdienst zoals UptimeRobot. Stel in dat er alarm geslagen wordt zodra “status”:“ok” niet meer in het antwoord staat; dan hoor je het ook als de website nog wel draait maar iets anders is vastgelopen. Kan de dienst alleen naar de foutcode kijken? Zet dan &strict=1 achter het adres: bij een ernstige storing antwoordt de website dan met foutcode 503."
+msgstr ""
+
+#: inc/shared/class-cjw-status-endpoint.php:388
+msgid "Laatste crash"
+msgstr ""
+
+#: inc/shared/class-cjw-status-endpoint.php:391
+msgid "Geen. De website is niet vastgelopen sinds deze melding voor het laatst is weggehaald."
+msgstr ""
+
+#. translators: %s: date and time.
+#: inc/shared/class-cjw-status-endpoint.php:397
+#, php-format
+msgid "Op %s."
+msgstr ""
+
+#: inc/shared/class-cjw-status-endpoint.php:422
+msgid "Dit is opgelost, haal de melding weg"
+msgstr ""
+
+#. translators: 1: job name, 2: number of days.
+#: inc/shared/class-cjw-status-endpoint.php:479
+#, php-format
+msgid "%1$s heeft al %2$d dagen niet gedraaid."
+msgstr ""
+
+#: inc/shared/class-cjw-status-endpoint.php:542
+msgid "De website is vastgelopen."
+msgstr ""
+
+#: inc/shared/class-summer-camp-service.php:614
 msgid "Zomerkamp Avonturen"
 msgstr ""
 
 #. translators: %s: date range for the summer camp.
-#: inc/shared/class-summer-camp-service.php:519
+#: inc/shared/class-summer-camp-service.php:635
 #, php-format
 msgid "%s - een onvergetelijk avontuur wacht je!"
 msgstr ""
 
-#: inc/shared/class-summer-camp-service.php:524
+#: inc/shared/class-summer-camp-service.php:640
 msgid "Een onvergetelijk avontuur wacht je!"
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:42
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:151
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:872
-msgid "Zomerkamp"
+#: inc/summer-camp/admin/class-cjw-mollie-panel.php:55
+msgid "Alleen een beheerder van de website kan de Mollie-sleutel wijzigen."
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:74
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:869
+#: inc/summer-camp/admin/class-cjw-mollie-panel.php:101
+msgid "Alleen een beheerder van de website kan tussen test en live wisselen."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-mollie-panel.php:143
+msgid "iDEAL-betalingen (Mollie)"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-mollie-panel.php:146
+msgid "Ouders betalen het inschrijfgeld met iDEAL. De website slaat de inschrijving eerst op en stuurt de ouder daarna naar Mollie, zodat een mislukte betaling nooit een inschrijving kost. Mollie meldt de uitkomst terug aan de website; de website vraagt die uitkomst altijd zelf na bij Mollie en gelooft niets wat een browser beweert."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-mollie-panel.php:147
+msgid "Bewaar hier beide sleutels. Dan is het proefdraaien voor een nieuw kampjaar één klik, en betalingen die nog onderweg zijn komen ook na het omzetten netjes binnen: die worden nagevraagd met de sleutel waarmee ze zijn gestart."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-mollie-panel.php:156
+msgid "Ouders kunnen betalen."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-mollie-panel.php:160
+msgid "De website staat in testmodus. Een ouder doorloopt iDEAL zonder dat er geld wordt overgemaakt, en de inschrijving komt toch op “betaald” te staan."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-mollie-panel.php:168
+msgid "Betalen staat uit."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-mollie-panel.php:178
+msgid "in gebruik"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-mollie-panel.php:183
+msgid "Nog geen sleutel."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-mollie-panel.php:192
+msgid "De inschrijvingen staan open. In testmodus lijkt betalen te lukken terwijl er geen geld binnenkomt. Toch omzetten?"
+msgstr ""
+
+#. translators: %s: the mode being switched to, e.g. "Live".
+#: inc/summer-camp/admin/class-cjw-mollie-panel.php:196
+#, php-format
+msgid "Zet om naar %s"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-mollie-panel.php:209
+msgid "verwijder"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-mollie-panel.php:216
+msgid "Vastgezet in wp-config.php, dus niet via dit scherm te wijzigen of om te zetten. Dat is de veiligste plek: de sleutel staat dan niet in de database en dus ook niet in een back-up of een export."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-mollie-panel.php:223
+msgid "Meldadres voor Mollie"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-mollie-panel.php:228
+msgid "Dit adres geeft de website zelf aan Mollie mee bij elke betaling. Je hoeft het nergens in te vullen; het staat hier zodat je het kunt controleren."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-mollie-panel.php:234
+msgid "Laatste melding van Mollie"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-mollie-panel.php:237
+msgid "Nog geen. Dat is normaal zolang er niemand heeft betaald."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-mollie-panel.php:252
+msgid "Vervang de sleutel"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-mollie-panel.php:252
+msgid "Mollie API-sleutel"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-mollie-panel.php:262
+msgid "of"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-mollie-panel.php:265
+msgid "Te vinden in het Mollie-dashboard onder Ontwikkelaars → API-sleutels. Een sleutel die met test_ begint doet alles behalve echt geld overmaken; begin daarmee. De sleutel wordt hier nooit teruggelezen: laat dit veld leeg om hem te laten zoals hij is."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-mollie-panel.php:268
+msgid "Sleutel opslaan"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-mollie-panel.php:271
+msgid "Sleutel verwijderen"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-mollie-panel.php:276
+msgid "Alleen een beheerder van de website kan de Mollie-sleutel instellen of wijzigen."
+msgstr ""
+
+#. translators: %s: camp year.
+#: inc/summer-camp/admin/class-cjw-photo-consent-notice.php:50
+#, php-format
+msgid "Het ene kind van kampjaar %s heeft fototoestemming."
+msgstr ""
+
+#. translators: 1: number of children, 2: camp year.
+#: inc/summer-camp/admin/class-cjw-photo-consent-notice.php:55
+#, php-format
+msgid "Alle %1$d kinderen van kampjaar %2$s hebben fototoestemming."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-photo-consent-notice.php:64
+msgid "Let op bij het kiezen van foto’s."
+msgstr ""
+
+#. translators: 1: number of children without photo consent, 2: number of children, 3: camp year.
+#: inc/summer-camp/admin/class-cjw-photo-consent-notice.php:68
+#, php-format
+msgid "%1$d van de %2$d kinderen van kampjaar %3$s mag níet herkenbaar op een foto op de website."
+msgid_plural "%1$d van de %2$d kinderen van kampjaar %3$s mogen níet herkenbaar op een foto op de website."
+msgstr[0] ""
+msgstr[1] ""
+
+#: inc/summer-camp/admin/class-cjw-photo-consent-notice.php:83
+msgid "Zonder toestemming:"
+msgstr ""
+
+#. translators: %d: number of children whose registration has been anonymised.
+#: inc/summer-camp/admin/class-cjw-photo-consent-notice.php:92
+#, php-format
+msgid "Van %d kind is de naam al gewist na de bewaartermijn."
+msgid_plural "Van %d kinderen is de naam al gewist na de bewaartermijn."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: 1: children without photo consent, 2: children this camp year.
+#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:97
+#, php-format
+msgid "%1$d van %2$d kind zonder fototoestemming"
+msgid_plural "%1$d van %2$d kinderen zonder fototoestemming"
+msgstr[0] ""
+msgstr[1] ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:125
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:1023
 msgid "Open"
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:74
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:869
+#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:125
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:1023
 msgid "Gesloten"
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:81
+#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:132
 msgid "Kampdata nog niet ingesteld"
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:88
+#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:139
 msgid "Inschrijvingen:"
 msgstr ""
 
 #. translators: %s: registration deadline date.
-#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:94
+#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:145
 #, php-format
 msgid "— deadline %s"
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:99
+#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:150
 msgid "— geen deadline ingesteld"
 msgstr ""
 
 #. translators: 1: week price, 2: weekend price.
-#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:108
+#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:159
 #, php-format
 msgid "Week %1$s · Weekend %2$s"
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:130
+#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:181
 msgid "Aandachtspunten"
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:134
+#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:185
 msgid "Alles staat klaar, geen aandachtspunten."
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:158
+#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:209
 msgid "Er zijn nog geen kampdata (start- en einddatum) ingesteld."
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:162
+#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:213
 msgid "Er is nog geen contact-e-mailadres ingesteld."
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:166
+#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:217
 msgid "Er is nog geen gepubliceerde sponsor met een logo (uitgelichte afbeelding)."
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:170
+#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:221
 msgid "Er zijn nog geen foto’s voor het kampplakboek gekozen."
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:174
+#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:225
 msgid "Er is nog geen gepubliceerd inschrijfformulier."
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:188
+#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:239
 #: inc/summer-camp/admin/class-cjw-summer-camp-help-tabs.php:177
 msgid "Zomerkamp-instellingen"
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:192
+#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:243
+#: inc/summer-camp/admin/class-cjw-summer-camp-first-run.php:438
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:311
+#: inc/summer-camp/class-cjw-summer-camp-sponsor-post-type.php:52
 msgid "Sponsoren"
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:205
+#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:256
 msgid "Pagina’s"
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:239
+#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:290
 msgid "afgelopen"
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:243
+#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:294
 msgid "nu bezig"
 msgstr ""
 
 #. translators: %d: number of days until the camp starts.
-#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:250
+#: inc/summer-camp/admin/class-cjw-summer-camp-dashboard-widget.php:301
 #, php-format
 msgid "nog %d dag te gaan"
 msgid_plural "nog %d dagen te gaan"
 msgstr[0] ""
 msgstr[1] ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-digest.php:73
+#: inc/summer-camp/admin/class-cjw-summer-camp-digest.php:455
+msgid "Weekbericht"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-digest.php:205
+msgid "Dit heeft aandacht nodig"
+msgstr ""
+
+#. translators: 1: number of days, 2: deadline date.
+#: inc/summer-camp/admin/class-cjw-summer-camp-digest.php:295
+#, php-format
+msgid "Nog %1$d dag tot de inschrijfdeadline van %2$s."
+msgid_plural "Nog %1$d dagen tot de inschrijfdeadline van %2$s."
+msgstr[0] ""
+msgstr[1] ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-digest.php:305
+msgid "De inschrijvingen staan open."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-digest.php:306
+msgid "Let op: de inschrijvingen staan dicht."
+msgstr ""
+
+#. translators: %s: site name.
+#: inc/summer-camp/admin/class-cjw-summer-camp-digest.php:319
+#, php-format
+msgid "Weekbericht %s"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-digest.php:350
+msgid "Bekijk het zelf:"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-digest.php:353
+msgid "Dit bericht wordt alleen verstuurd als er iets te melden is. Je kunt het uitzetten op de Beheer-tab van de zomerkampinstellingen."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-digest.php:433
+msgid "Niets te melden"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-digest.php:434
+msgid "Er is deze week niets bijzonders. Op een gewone week wordt dit bericht dan ook niet verstuurd."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-digest.php:458
+msgid "Een mail op maandagochtend met wat er die week aandacht nodig heeft: nieuwe inschrijvingen, instellingen die nog ontbreken, en de deadline als die dichtbij komt. Is er niets te melden, dan komt er ook geen mail."
+msgstr ""
+
+#. translators: %s: date and time of the next scheduled send.
+#: inc/summer-camp/admin/class-cjw-summer-camp-digest.php:466
+#, php-format
+msgid "Het volgende weekbericht staat gepland voor %s."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-digest.php:474
+msgid "Het weekbericht gaat naar iedereen die het kamp beheert:"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-digest.php:476
+msgid "op dit moment niemand met een geldig e-mailadres."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-digest.php:494
+msgid "Stuur het weekbericht"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-digest.php:503
+msgid "Stuur nu een voorbeeld"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-digest.php:517
+#: inc/summer-camp/admin/class-cjw-summer-camp-mails-page.php:351
+#: inc/summer-camp/admin/class-cjw-summer-camp-settings-history.php:493
+msgid "Je hebt geen toestemming om deze actie uit te voeren."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-first-run.php:68
+#: inc/summer-camp/admin/class-cjw-summer-camp-first-run.php:321
+msgid "Inschrijfformulier"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-first-run.php:70
+msgid "Een formulier in de formulierbouwer, als concept."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-first-run.php:73
+msgid "Pagina “Inschrijven”"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-first-run.php:75
+msgid "De pagina met het inschrijfformulier, waar elke “Schrijf je in”-knop heen linkt."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-first-run.php:78
+msgid "Homepage"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-first-run.php:80
+msgid "Een vaste pagina met de zes blokken van de homepage, ingesteld als voorpagina."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-first-run.php:83
+msgid "Pagina’s “Zomerkamp” en “Praktische info”"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-first-run.php:85
+msgid "De twee pagina’s achter de kaarten op de homepage."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-first-run.php:88
+#: inc/summer-camp/admin/class-cjw-summer-camp-first-run.php:400
+#: inc/summer-camp/admin/class-cjw-summer-camp-first-run.php:405
+msgid "Privacyverklaring"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-first-run.php:90
+msgid "De pagina waar het inschrijfformulier naar verwijst. Wordt als concept aangemaakt; publiceer hem zelf na het nalezen."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-first-run.php:93
+#: inc/summer-camp/admin/class-cjw-summer-camp-first-run.php:412
+#: inc/summer-camp/admin/class-cjw-summer-camp-first-run.php:416
+msgid "Hoofdmenu"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-first-run.php:96
+msgid "Een menu met de pagina’s hierboven, gekoppeld aan de menuplek van het thema."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-first-run.php:97
+msgid "Het actieve thema heeft geen menuplek; er is niets in te richten."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-first-run.php:234
+msgid "De website is nog niet helemaal ingericht."
+msgstr ""
+
+#. translators: %s: comma-separated list of missing parts.
+#: inc/summer-camp/admin/class-cjw-summer-camp-first-run.php:238
+#, php-format
+msgid "Dit ontbreekt nog: %s."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-first-run.php:242
+msgid "Richt de website in met één klik"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-first-run.php:247
+msgid "Zo laten, verberg deze melding"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-first-run.php:266
+msgid "Website inrichten"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-first-run.php:269
+msgid "De pagina’s en het menu die de website nodig heeft om te werken. Wat er al is, blijft ongemoeid; alleen wat ontbreekt wordt aangemaakt."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-first-run.php:279
+msgid "Aanwezig."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-first-run.php:281
+msgid "Ontbreekt."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-first-run.php:294
+msgid "Maak aan wat ontbreekt"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-first-run.php:297
+msgid "Alleen een beheerder die pagina’s mag publiceren kan dit aanmaken."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-first-run.php:331
+#: inc/summer-camp/admin/class-cjw-summer-camp-first-run.php:435
+msgid "Inschrijven"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-first-run.php:354
+msgid "Hoe ziet een kampweek eruit?"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-first-run.php:355
+msgid "Vertel hier over de leeftijdsgroepen, het programma, het slapen in tenten en het leven op het kampterrein. Deze pagina zit achter de kaart “Zomerkamp” op de homepage."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-first-run.php:362
+#: inc/summer-camp/admin/class-cjw-summer-camp-first-run.php:432
+msgid "Praktische info"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-first-run.php:365
+msgid "Alles wat ouders willen weten"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-first-run.php:366
+msgid "Paklijst, data, kosten, vervoer, medicijnen en de antwoorden op de vragen die elk jaar terugkomen. Deze pagina zit achter de kaart “Praktische info” op de homepage."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-first-run.php:380
+#: inc/summer-camp/admin/class-cjw-summer-camp-first-run.php:430
+msgid "Home"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-first-run.php:401
+msgid "Beschrijf hier welke gegevens het inschrijfformulier vraagt, waarom, wie ze kan zien en hoe lang ze bewaard blijven."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-first-run.php:579
+msgid "Je hebt geen toestemming om de website in te richten."
+msgstr ""
 
 #: inc/summer-camp/admin/class-cjw-summer-camp-help-tabs.php:73
 msgid "Snel aan de slag"
@@ -886,8 +2254,8 @@ msgid "Sla je wijzigingen op met “Wijzigingen opslaan” voordat je naar een a
 msgstr ""
 
 #: inc/summer-camp/admin/class-cjw-summer-camp-help-tabs.php:87
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:178
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:812
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:179
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:882
 msgid "Algemeen"
 msgstr ""
 
@@ -900,8 +2268,8 @@ msgid "Je vindt hier ook de tekst die bezoekers zien wanneer de inschrijvingen g
 msgstr ""
 
 #: inc/summer-camp/admin/class-cjw-summer-camp-help-tabs.php:94
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:184
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:813
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:185
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:883
 msgid "Thema"
 msgstr ""
 
@@ -914,8 +2282,8 @@ msgid "Ook kies je hier de kleuren die de website gebruikt, zodat de site elk ja
 msgstr ""
 
 #: inc/summer-camp/admin/class-cjw-summer-camp-help-tabs.php:101
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:190
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:814
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:194
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:884
 msgid "Tarieven"
 msgstr ""
 
@@ -928,8 +2296,8 @@ msgid "Daarnaast stel je hier de periode en de prijzen van de vroegboekkorting i
 msgstr ""
 
 #: inc/summer-camp/admin/class-cjw-summer-camp-help-tabs.php:108
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:196
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:815
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:200
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:885
 msgid "Inhoud"
 msgstr ""
 
@@ -942,7 +2310,7 @@ msgid "Ook zet je hier de automatische verjaardagsmail aan of uit en bepaal je d
 msgstr ""
 
 #: inc/summer-camp/admin/class-cjw-summer-camp-help-tabs.php:115
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:816
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:886
 msgid "Website"
 msgstr ""
 
@@ -979,7 +2347,7 @@ msgid "Bepaal de volgorde op de website via het volgordeveld in het vak “Attri
 msgstr ""
 
 #: inc/summer-camp/admin/class-cjw-summer-camp-help-tabs.php:158
-msgid "Formulieren en inzendingen"
+msgid "Formulieren en Inschrijvingen"
 msgstr ""
 
 #: inc/summer-camp/admin/class-cjw-summer-camp-help-tabs.php:159
@@ -987,794 +2355,2356 @@ msgid "Hier beheer je de inschrijfformulieren van het zomerkamp. Publiceer een f
 msgstr ""
 
 #: inc/summer-camp/admin/class-cjw-summer-camp-help-tabs.php:160
-msgid "Binnengekomen inschrijvingen vind je onder “Inzendingen” in dit menu. Daar bekijk je elke inzending en exporteer je alle inzendingen als CSV-bestand."
+msgid "Binnengekomen inschrijvingen vind je onder “Inschrijvingen” in dit menu. Daar bekijk je elke inschrijving en exporteer je alle inschrijvingen als CSV-bestand."
 msgstr ""
 
 #: inc/summer-camp/admin/class-cjw-summer-camp-help-tabs.php:176
 msgid "Meer hulp"
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:42
+#: inc/summer-camp/admin/class-cjw-summer-camp-mail.php:67
+msgid "Je hebt geen toestemming om een testmail te versturen."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-mail.php:79
+msgid "Er is geen geldig e-mailadres opgegeven."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-mail.php:119
+msgid "Testmail van de zomerkampwebsite"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-mail.php:126
+msgid "De mailserver gaf geen reden op."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-mail.php:146
+msgid "Dit is een testmail van de zomerkampwebsite."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-mail.php:148
+msgid "Als je deze mail leest, kan de website mail versturen naar dit adres."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-mail.php:149
+msgid "Controleer ook of de mail niet in de map ongewenste mail (spam) is beland: dat telt als een probleem, ook al is de mail aangekomen."
+msgstr ""
+
+#. translators: %s: site home URL.
+#: inc/summer-camp/admin/class-cjw-summer-camp-mail.php:153
+#, php-format
+msgid "Verstuurd vanaf: %s"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-mail.php:253
+msgid "E-mail"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-mail.php:256
+msgid "De website stuurt twee soorten mail: een bericht aan de organisatie bij een nieuwe inschrijving, en een bevestiging aan de ouder. Controleer hier of dat werkt."
+msgstr ""
+
+#. translators: %s: e-mail address.
+#: inc/summer-camp/admin/class-cjw-summer-camp-mail.php:266
+#, php-format
+msgid "De testmail is verstuurd naar %s. Controleer of hij aankomt, en of hij niet in de map ongewenste mail belandt."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-mail.php:273
+msgid "De testmail is niet verstuurd."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-mail.php:285
+msgid "Verzendmethode"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-mail.php:288
+msgid "Er is een mailplugin actief die het versturen overneemt."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-mail.php:290
+msgid "Geen mailplugin actief."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-mail.php:291
+msgid "De website verstuurt mail rechtstreeks via de webserver. Grote mailproviders zoals Gmail en Outlook weigeren die mail vaak of zetten hem in de map ongewenste mail."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-mail.php:296
+msgid "Laatste test"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-mail.php:299
+msgid "Er is nog nooit een testmail verstuurd."
+msgstr ""
+
+#. translators: 1: date and time, 2: e-mail address.
+#: inc/summer-camp/admin/class-cjw-summer-camp-mail.php:305
+#, php-format
+msgid "Gelukt op %1$s, naar %2$s."
+msgstr ""
+
+#. translators: 1: date and time, 2: e-mail address.
+#: inc/summer-camp/admin/class-cjw-summer-camp-mail.php:307
+#, php-format
+msgid "Mislukt op %1$s, naar %2$s."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-mail.php:309
+msgid "geen adres"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-mail.php:316
+msgid "Dat is inmiddels lang geleden. Test opnieuw voordat de inschrijvingen opengaan."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-mail.php:328
+msgid "Stuur een testmail naar"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-mail.php:336
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:384
+msgid "Stuur een testmail"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-mails-page.php:56
+#: inc/summer-camp/admin/class-cjw-summer-camp-mails-page.php:57
+#: inc/summer-camp/admin/class-cjw-summer-camp-mails-page.php:146
+msgid "Mails"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-mails-page.php:112
+msgid "Anna en Sem"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-mails-page.php:113
+msgid "Anna"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-mails-page.php:115
+msgid "Weekkamp"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-mails-page.php:118
+msgid "Inschrijfformulier zomerkamp"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-mails-page.php:141
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:84
+msgid "Je hebt geen toestemming om deze pagina te bekijken."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-mails-page.php:149
+msgid "Hier staat wat de website mailt. Je kunt elke tekst aanpassen; laat je een veld leeg, dan wordt de standaardtekst weer gebruikt. Alle mails krijgen automatisch de kleuren van de site."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-mails-page.php:163
+msgid "Mails opslaan"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-mails-page.php:188
+msgid "standaardtekst"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-mails-page.php:197
+msgid "Onderwerp"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-mails-page.php:211
+msgid "Bericht"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-mails-page.php:230
+msgid "Beschikbare woorden"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-mails-page.php:233
+msgid "Deze woorden vult de website automatisch in. Neem ze precies zo over, inclusief de accolades."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-mails-page.php:249
+msgid "Opslaan en naar mijzelf sturen"
+msgstr ""
+
+#. translators: %s: the current user's e-mail address.
+#: inc/summer-camp/admin/class-cjw-summer-camp-mails-page.php:255
+#, php-format
+msgid "Gaat naar %s, met verzonnen gegevens."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-mails-page.php:263
+msgid "Bekijk een voorbeeld van deze mail"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-mails-page.php:265
+msgid "Met verzonnen gegevens, zodat je ziet hoe de mail eruitziet zonder dat er echte kindgegevens op je scherm staan. Het voorbeeld toont de laatst opgeslagen tekst."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-mails-page.php:267
+msgid "Onderwerp:"
+msgstr ""
+
+#. translators: %s: template name.
+#: inc/summer-camp/admin/class-cjw-summer-camp-mails-page.php:273
+#, php-format
+msgid "Voorbeeld van %s"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-mails-page.php:297
+msgid "De mails zijn opgeslagen."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-mails-page.php:298
+msgid "De mails zijn opgeslagen en de voorbeeldmail is naar je eigen adres verstuurd."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-mails-page.php:299
+msgid "De voorbeeldmail kon niet worden verstuurd. Controleer op de Beheer-tab of de website wel mail kan versturen."
+msgstr ""
+
+#. translators: %s: link to the Beheer tab.
+#: inc/summer-camp/admin/class-cjw-summer-camp-mails-page.php:331
+#, php-format
+msgid "Let op: er is nog geen mailplugin actief, dus de website verstuurt mail rechtstreeks via de webserver. Opgemaakte mail wordt dan vaker geweigerd of als ongewenst gemarkeerd dan gewone tekst. Regel dat eerst op de %s."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-mails-page.php:335
+msgid "Beheer-tab"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:50
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:51
+msgid "Handleiding"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:66
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:176
+msgid "Het kampjaar in stappen"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:67
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:272
+msgid "Wat staat waar"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:68
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:358
+msgid "Inschrijvingen bekijken"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:69
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:401
+msgid "De mails aanpassen"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:70
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:448
+msgid "Als er iets misgaat"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:71
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:539
+msgid "Eenmalig instellen"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:72
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:589
+msgid "Updates"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:89
+msgid "Handleiding zomerkampwebsite"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:92
+msgid "Alles wat je moet weten om deze website een jaar lang te draaien. Je hebt er geen programmeur voor nodig en je hoeft niets te installeren."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:95
+msgid "Inhoud van de handleiding"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:179
+msgid "De website volgt elk jaar dezelfde ronde. Werk hem van boven naar beneden af en je slaat niets over."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:181
+msgid "1. Meteen na het kamp"
+msgstr ""
+
+#. translators: %s: link to the Beheer tab.
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:186
+#, php-format
+msgid "Ga naar %s en klik op <strong>Start kampjaar</strong>. De oude instellingen worden bewaard, het jaartal springt een jaar vooruit, de data worden leeggemaakt en de inschrijvingen gaan dicht."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:187
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:301
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:474
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:488
+msgid "Zomerkamp → Beheer"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:189
+msgid "De inschrijvingen van het afgelopen kamp worden daarbij geanonimiseerd: namen, adressen en opmerkingen verdwijnen, de aantallen blijven. Dat hoort zo — die gegevens gaan over kinderen en horen niet jarenlang te blijven staan."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:190
+msgid "Zet de foto’s van dit kamp in het kampplakboek, zolang iedereen nog weet welke leuk waren."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:194
+msgid "2. In de winter: het nieuwe thema"
+msgstr ""
+
+#. translators: %s: link to the Thema tab.
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:199
+#, php-format
+msgid "Vul op %s de themanaam en de teksten van de grote banner in."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:200
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:281
+msgid "Zomerkamp → Thema"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:202
+msgid "Kies een nieuwe sfeerfoto. Krijg je een waarschuwing dat de foto te groot is, maak hem dan eerst kleiner — anders wordt de site traag op een telefoon."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:203
+msgid "De kleuren op het Thema-tabblad kleuren de hele website mee. Verander ze rustig, maar kijk daarna even op de homepage."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:207
+msgid "3. In het voorjaar: data en prijzen"
+msgstr ""
+
+#. translators: %s: link to the Algemeen tab.
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:212
+#, php-format
+msgid "Vul op %s de begin- en einddatum van het kamp in, de rijdata, en de datum waarop de inschrijvingen sluiten."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:213
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:276
+msgid "Zomerkamp → Algemeen"
+msgstr ""
+
+#. translators: %s: link to the Tarieven tab.
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:217
+#, php-format
+msgid "Zet op %s de prijzen voor dit jaar, en de periode waarin de vroegboekkorting geldt."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:218
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:286
+msgid "Zomerkamp → Tarieven"
+msgstr ""
+
+#. translators: %s: link to the forms screen.
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:222
+#, php-format
+msgid "Loop het inschrijfformulier na op %s: kloppen de vragen, de kampkeuzes en de bedragen nog?"
+msgstr ""
+
+#. translators: %s: link to the Mails screen.
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:227
+#, php-format
+msgid "Lees op %s de bevestigingsmail door: klopt de tekst nog, en staan de juiste bedragen en data erin? Met de knop “Opslaan en naar mijzelf sturen” zie je meteen hoe hij eruitziet."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:230
+msgid "Stuur een testmail (Beheer-tabblad) en schrijf jezelf één keer proefin. Krijg je een bevestiging in je inbox? Dan werkt het."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:234
+msgid "4. Inschrijvingen openzetten"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:237
+msgid "Zet op het tabblad Algemeen het vinkje <strong>Inschrijvingen geopend</strong> aan. Vanaf dat moment kan iedereen zich inschrijven, tot de deadline."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:238
+msgid "Controleer of de homepage klopt: de juiste data, de juiste prijzen, de nieuwe foto’s."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:242
+msgid "5. Tijdens de inschrijfperiode"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:245
+msgid "Zet het weekbericht aan op het Beheer-tabblad. Je krijgt dan op maandagochtend een mail met wat er die week is binnengekomen en wat er nog mist. Is er niets te melden, dan komt er ook geen mail."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:246
+msgid "Zet inschrijvingen op <em>Bevestigd</em> zodra je ze hebt nagekeken, en op <em>Betaald</em> als het geld binnen is. Zo kun je in één oogopslag zien wie er nog moet betalen."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:247
+msgid "Komt iemand te laat? Op het Beheer-tabblad staat een privélink waarmee die persoon zich alsnog kan inschrijven, ook als de inschrijvingen dicht zijn. Deel die link alleen persoonlijk."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:251
+msgid "6. Vlak voor het kamp"
+msgstr ""
+
+#. translators: %s: link to the children overview.
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:256
+#, php-format
+msgid "Open %s voor het overzicht per kind: wie gaat er mee, naar welk kamp, met welke bijzonderheden."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:257
+msgid "Inschrijvingen → Kinderen"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:259
+msgid "Download de lijst als bestand als je hem op papier wilt meenemen. Ga zorgvuldig om met die lijst: er staan gegevens van kinderen op."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:277
+msgid "Kampdata, locatie, leeftijden, rijdata, deadline, of de inschrijvingen open staan, en hoe lang inschrijvingen bewaard blijven."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:278
+msgid "Bovenaan de homepage en op de inschrijfpagina."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:282
+msgid "Het jaarthema, de grote foto bovenaan de homepage met de teksten en knoppen erop, en de kleuren van de site."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:283
+msgid "De banner bovenaan de homepage, en de kleuren van de hele website."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:287
+msgid "De prijs voor een week en een weekend, en een apart prijzenpaar voor de vroegboekkorting met de periode waarin die geldt."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:288
+msgid "Op de inschrijfpagina en overal waar een bedrag genoemd wordt."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:291
+msgid "Zomerkamp → Inhoud"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:292
+msgid "Teksten die in het inschrijfformulier en in mails aan ouders worden gebruikt."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:293
+msgid "In het formulier en in de bevestigingsmail."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:296
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:511
+msgid "Zomerkamp → Website"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:297
+msgid "Alle teksten en foto’s van de homepage: het welkomstblok, de drie kaarten, het kampplakboek, het sponsorblok, de oproepbanner, de contactgegevens en de voettekst."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:298
+msgid "De homepage, van boven tot onder, en de voettekst op elke pagina."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:302
+msgid "Geen instellingen maar knoppen: een testmail versturen, het weekbericht aanzetten, een eerdere versie van de instellingen terugzetten, en een nieuw kampjaar starten."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:303
+msgid "Nergens — dit tabblad verandert de website niet uit zichzelf."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:307
+msgid "De teksten van de mails die de website verstuurt: de bevestiging aan de ouder, de verjaardagsmail en het bericht aan de organisatie."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:308
+msgid "In de mailbox van ouders en van de organisatie. De opmaak en de kleuren komen automatisch van de site."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:312
+msgid "Eén sponsor per item, met het logo als uitgelichte afbeelding en een link naar hun website."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:313
+msgid "Het sponsorblok op de homepage."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:317
+msgid "Het inschrijfformulier: de stappen, de vragen en de voorwaarden."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:318
+msgid "De inschrijfpagina."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:322
+msgid "Alles wat er is binnengekomen, met een status per inschrijving."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:323
+msgid "Nergens — deze gegevens zijn alleen voor de organisatie."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:331
+msgid "Scherm"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:332
+msgid "Wat je er instelt"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:333
+msgid "Waar je het terugziet"
+msgstr ""
+
+#. translators: %s: link to the submissions list.
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:366
+#, php-format
+msgid "Alles wat binnenkomt staat onder %s. Je kunt daar niets zelf toevoegen: een inschrijving ontstaat alleen doordat iemand het formulier invult, zodat de lijst altijd klopt met wat er echt is ingevuld."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:374
+msgid "De statussen"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:376
+msgid "net binnengekomen, nog niet bekeken."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:377
+msgid "nagekeken en akkoord; het kind heeft een plek."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:378
+msgid "het geld is binnen."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:379
+msgid "gaat niet door. Deze staan in een apart tabblad en tellen niet mee."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:382
+msgid "Handige dingen om te weten"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:384
+msgid "Bovenaan een inschrijving zie je of de ouder een bevestigingsmail heeft gekregen, en wanneer. Staat daar “Versturen mislukt”, dan heeft die ouder niets ontvangen — bel of mail ze zelf even."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:385
+msgid "Met de zoekbalk zoek je op naam van het kind, op e-mailadres van de ouder en op kamp."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:386
+msgid "Het overzicht “Kinderen” zet alle kinderen onder elkaar in plaats van per inschrijving. Handig als één ouder twee kinderen heeft opgegeven."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:387
+msgid "Inschrijvingen worden vanzelf geanonimiseerd als ze oud genoeg zijn. Hoe lang ze bewaard blijven stel je in op het tabblad Algemeen, in maanden na afloop van het kamp."
+msgstr ""
+
+#. translators: %s: link to the Mails screen.
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:409
+#, php-format
+msgid "De website verstuurt drie mails, en je kunt ze alle drie zelf schrijven op %s. Je hebt daar geen programmeur voor nodig."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:418
+msgid "gaat naar de ouder zodra iemand zich inschrijft. Dit is de enige mail die een ouder van de website krijgt."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:419
+msgid "gaat op de verjaardag van een ingeschreven kind naar het adres waarmee is ingeschreven. Zet hem aan op het tabblad Inhoud."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:420
+msgid "laat jullie weten dat er een inschrijving binnen is. Hier staan met opzet geen gegevens van kinderen in."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:423
+msgid "Woorden die de website zelf invult"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:425
+msgid "In de teksten kun je woorden tussen accolades gebruiken, zoals {child_names} of {camp_date_range}. Die vult de website in op het moment dat de mail verstuurd wordt. Zo staan de namen, data en bedragen er altijd goed in, zonder dat je ze elk jaar overtypt. Onder elk tekstvak staat precies welke woorden je in díe mail mag gebruiken."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:428
+msgid "Voordat je iets verstuurt"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:430
+msgid "Klap “Bekijk een voorbeeld” open. Je ziet de mail met verzonnen gegevens, dus zonder echte kindgegevens op je scherm."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:431
+msgid "Klik op “Opslaan en naar mijzelf sturen”. Dan weet je zeker hoe hij eruitziet in een echte mailbox."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:432
+msgid "Maak je een tekstvak leeg, dan komt de standaardtekst terug. Je kunt dus niets onherstelbaar wissen."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:435
+msgid "De kleuren en de opmaak van de mails komen automatisch van de website. Je hoeft daar niets voor te doen — pas je op het tabblad Thema de kleuren aan, dan veranderen de mails mee."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:454
+msgid "Iemand zegt dat het inschrijfformulier niet werkt"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:457
+msgid "Probeer het zelf, op je telefoon en op een computer. Vul het formulier één keer helemaal in."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:458
+msgid "Staan de inschrijvingen wel open, en is de deadline nog niet voorbij? Kijk op het tabblad Algemeen."
+msgstr ""
+
+#. translators: %s: link to Site Health.
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:461
+#, php-format
+msgid "Kijk bij %s of er een rood punt bij “Zomerkamp” staat. Daar staat meestal precies wat er mist."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:462
+msgid "Gereedschap → Websitediagnose"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:464
+msgid "Krijgt iemand de melding dat er te veel inschrijvingen vanaf zijn internetverbinding zijn gedaan? Dan is de beveiliging tegen misbruik aangeslagen. Laat die persoon het over een uur nog eens proberen, of schrijf hem handmatig in."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:468
+msgid "Ouders krijgen geen bevestigingsmail"
+msgstr ""
+
+#. translators: %s: link to the Beheer tab.
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:473
+#, php-format
+msgid "Stuur een testmail vanaf %s naar je eigen adres."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:476
+msgid "Komt hij niet aan, kijk dan ook in je map ongewenste mail. Daar terechtkomen telt als een probleem, ook al is de mail aangekomen."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:477
+msgid "Lukt het versturen helemaal niet, dan staat de reden erbij. Dat is bijna altijd iets aan de mailinstellingen — zie het hoofdstuk hieronder."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:481
+msgid "Ik heb per ongeluk instellingen overschreven"
+msgstr ""
+
+#. translators: %s: link to the Beheer tab.
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:487
+#, php-format
+msgid "Geen paniek. Op %s staat een lijst met eerdere versies van de instellingen. Klik op <strong>Zet terug</strong> bij de versie van vóór je fout. Ook dat terugzetten kun je weer ongedaan maken."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:498
+msgid "De website is helemaal niet bereikbaar"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:499
+msgid "Dan kun je hier niets doen — deze pagina is dan ook weg. Bel degene die de website onderhoudt, en daarna zo nodig het hostingbedrijf."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:501
+msgid "Wie je belt"
+msgstr ""
+
+#. translators: %s: link to the Website tab.
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:510
+#, php-format
+msgid "Hier staat nog niemand. Vul op %s bij <strong>Wie onderhoudt de website</strong> een naam, telefoonnummer en e-mailadres in — anders eindigt deze handleiding nergens."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:542
+msgid "Drie dingen die je één keer regelt en daarna jaren met rust laat. Ze kunnen niet vanaf deze pagina — er is iemand voor nodig die bij de hosting en bij de domeinnaam kan. Doe ze samen met degene die de website onderhoudt, en vink ze hieronder af zodra ze klaar zijn."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:544
+msgid "1. Zorgen dat mail aankomt"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:545
+msgid "Zonder dit verstuurt de website mail rechtstreeks vanaf de webserver. Gmail en Outlook vertrouwen die mail niet en gooien hem vaak weg of zetten hem bij ongewenste mail. Ouders merken dat als eerste: die krijgen geen bevestiging en denken dat de inschrijving is mislukt."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:548
+msgid "Vraag bij het hostingbedrijf om de gegevens van een mailpostvak op het eigen domein: serveradres, poort, gebruikersnaam en wachtwoord."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:549
+msgid "Installeer een mailplugin die het versturen overneemt — bijvoorbeeld FluentSMTP of WP Mail SMTP, allebei gratis — en vul die gegevens daar in."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:550
+msgid "Laat bij de domeinnaam drie regels instellen die aan de rest van de wereld vertellen dat deze server namens jullie mag mailen: SPF, DKIM en DMARC. Het hostingbedrijf weet wat daarmee bedoeld wordt en doet dit meestal voor je."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:551
+msgid "Stuur daarna een testmail vanaf het Beheer-tabblad, naar een Gmail-adres én naar een Outlook-adres. Kijk in beide gevallen ook in de map ongewenste mail."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:555
+msgid "2. Reservekopieën, en één keer uitproberen"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:556
+msgid "Op deze website staan gegevens van kinderen. Erop vertrouwen dat het hostingbedrijf wel een back-up zal hebben, is geen plan: bijna niemand heeft ooit geprobeerd of zo’n back-up echt terug te zetten is."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:559
+msgid "Zorg dat er elke dag een kopie wordt gemaakt van zowel de database als de geüploade bestanden, en dat die kopie ergens anders wordt bewaard dan op dezelfde server."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:560
+msgid "Bewaar de kopieën van de laatste dertig dagen. Sommige problemen merk je pas weken later."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:561
+msgid "Zet één keer daadwerkelijk een kopie terug op een testomgeving. Klok hoe lang het duurt en schrijf op wie het gedaan heeft. Dit is de stap die iedereen overslaat, en het is de enige stap die bewijst dat de rest werkt."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:562
+msgid "Zet in de agenda dat je dat elk jaar opnieuw doet, na het kamp."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:566
+msgid "3. Een wachter die waarschuwt als de site eruit ligt"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:567
+msgid "Het weekbericht kan niet vertellen dat de website plat ligt: een website die plat ligt verstuurt niets. Daar heb je een dienst van buitenaf voor nodig die elke paar minuten kijkt of de site nog antwoordt."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:570
+msgid "Maak een account bij een gratis uptime-dienst, bijvoorbeeld UptimeRobot of Better Stack."
+msgstr ""
+
+#. translators: %s: registration page URL.
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:573
+#, php-format
+msgid "Laat hem niet de homepage in de gaten houden maar de <strong>inschrijfpagina</strong>: %s. Dat is de pagina waarvan het stukgaan geld kost, en het is de pagina die het eerst stukgaat."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:576
+msgid "Laat de waarschuwing naar twee mensen gaan, niet naar één. Vakanties vallen samen met het kampseizoen."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:592
+msgid "Zonder afspraak gebeurt er één van twee dingen: er wordt drie jaar niets bijgewerkt, of er gaat vanzelf iets bij dat het inschrijfformulier sloopt in de week voor het kamp. Allebei komen ze op hetzelfde neer — niemand had iets gekozen. Dit is de afspraak:"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:595
+msgid "Kleine updates van WordPress: automatisch."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:595
+msgid "Dat zijn de beveiligingsupdates. Die wil je meteen hebben."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:596
+msgid "Plugins van anderen: automatisch."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:596
+msgid "Ze worden zelden geïnstalleerd en zelden gebruikt; achterlopen is hier het grotere risico."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:597
+msgid "De twee eigen onderdelen (het thema en de zomerkampplugin): niet automatisch."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:597
+msgid "Die worden bijgewerkt door wie de website onderhoudt, uit de eigen broncode."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:599
+msgid "Grote updates van WordPress: met opzet, in september of oktober."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:600
+msgid "Dus na het kamp en ruim voor de nieuwe inschrijvingen. Eerst uitproberen op een kopie, dan pas op de echte site, en daarna één keer het inschrijfformulier helemaal invullen om te zien of het nog werkt."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-manual.php:604
+msgid "Nooit een grote update in de weken rond de inschrijfdeadline of het kamp zelf. Als er dan iets breekt, breekt het precies wanneer niemand tijd heeft."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-rental-admin.php:48
+#: inc/summer-camp/class-cjw-summer-camp-rental-post-type.php:232
+msgid "Soort"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-rental-admin.php:49
+#: inc/summer-camp/class-cjw-summer-camp-rental-post-type.php:251
+msgid "Aantal"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-rental-admin.php:50
+msgid "Voor"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-rental-admin.php:51
+#: inc/summer-camp/class-cjw-summer-camp-rental-post-type.php:277
+msgid "Afmetingen"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-rental-admin.php:52
+#: inc/summer-camp/admin/class-cjw-summer-camp-sponsor-admin.php:57
+#: inc/summer-camp/admin/class-cjw-summer-camp-sponsor-admin.php:68
+msgid "Volgorde"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-rental-admin.php:82
+msgid "op aanvraag"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-settings-history.php:145
+msgid "Systeem"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-settings-history.php:374
+msgid "Eerdere versies van de instellingen"
+msgstr ""
+
+#. translators: %d: number of snapshots kept.
+#: inc/summer-camp/admin/class-cjw-summer-camp-settings-history.php:380
+#, php-format
+msgid "Elke keer dat de instellingen worden opgeslagen, bewaart de website de vorige versie. De laatste %d versies staan hieronder. Terugzetten kan altijd ongedaan gemaakt worden: ook dat wordt bewaard."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-settings-history.php:387
+msgid "Er zijn nog geen eerdere versies. Die verschijnen zodra de instellingen voor het eerst opnieuw worden opgeslagen."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-settings-history.php:392
+msgid "Opgeslagen op"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-settings-history.php:393
+msgid "Door"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-settings-history.php:394
+msgid "Aanleiding"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-settings-history.php:395
+msgid "Verschil met nu"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-settings-history.php:396
+msgid "Actie"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-settings-history.php:408
+msgid "gelijk aan nu"
+msgstr ""
+
+#. translators: %d: number of settings that differ.
+#: inc/summer-camp/admin/class-cjw-summer-camp-settings-history.php:413
+#, php-format
+msgid "%d instelling anders"
+msgid_plural "%d instellingen anders"
+msgstr[0] ""
+msgstr[1] ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-settings-history.php:428
+msgid "Weet je zeker dat je deze versie wilt terugzetten? De huidige instellingen worden bewaard, dus je kunt dit ongedaan maken."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-settings-history.php:430
+msgid "Zet terug"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-settings-history.php:442
+msgid "Instellingen als bestand"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-settings-history.php:445
+msgid "Bewaar een kopie van alle instellingen buiten de website, of zet een eerder bewaarde kopie terug. Handig voor een verhuizing naar een andere server, of om een werkende configuratie veilig te stellen voordat je gaat experimenteren."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-settings-history.php:452
+msgid "Download de instellingen"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-settings-history.php:460
+msgid "Zet een bestand terug"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-settings-history.php:462
+msgid "Lees het bestand in"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-settings-history.php:479
+msgid "WP-CLI"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-settings-history.php:482
+msgid "Instellingen opgeslagen"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-settings-history.php:482
+msgid "Automatisch"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:43
 msgid "Zomerkamp: kampdata"
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:47
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:48
 msgid "Zomerkamp: inschrijfdeadline"
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:52
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:53
 msgid "Zomerkamp: contact-e-mailadres"
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:57
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:58
 msgid "Zomerkamp: sponsorlogo’s"
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:62
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:63
 msgid "Zomerkamp: kampplakboek"
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:84
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:68
+msgid "Zomerkamp: e-mail"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:73
+msgid "Zomerkamp: geplande taken"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:78
+msgid "Zomerkamp: inschrijfpagina"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:83
+msgid "Zomerkamp: e-mailadres van de ouder"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:88
+msgid "Zomerkamp: inrichting van de website"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:93
+msgid "Zomerkamp: mail-veiligmodus"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:98
+msgid "Zomerkamp: iDEAL-betalingen"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:120
 msgid "De kampdata zijn nog niet ingesteld"
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:86
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:122
 msgid "Er zijn nog geen start- en einddatum voor het zomerkamp ingesteld. Zonder kampdata kan de website geen data, aftelling of inschrijfperiode tonen."
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:94
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:130
 msgid "De einddatum van het kamp ligt vóór de startdatum"
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:96
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:132
 msgid "De einddatum van het zomerkamp ligt vóór de startdatum. Controleer en corrigeer de kampdata."
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:103
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:139
 msgid "De kampdata zijn ingesteld"
 msgstr ""
 
 #. translators: %s: camp date range.
-#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:107
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:143
 #, php-format
 msgid "De kampdata zijn ingesteld: %s."
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:128
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:164
 msgid "De inschrijfdeadline is nog niet ingesteld"
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:130
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:166
 msgid "Er is nog geen deadline voor de inschrijvingen ingesteld. Zonder deadline blijven de inschrijvingen open zolang ze op “open” staan."
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:138
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:174
 msgid "De inschrijfdeadline ligt na de start van het kamp"
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:140
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:176
 msgid "De deadline voor inschrijvingen ligt na de startdatum van het zomerkamp. Kies een deadline die op of vóór de startdatum ligt."
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:147
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:183
 msgid "De inschrijfdeadline is ingesteld"
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:149
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:185
 msgid "De deadline voor inschrijvingen is ingesteld en ligt niet na de startdatum van het kamp."
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:166
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:202
 msgid "Het contact-e-mailadres ontbreekt of is ongeldig"
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:168
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:204
 msgid "Er is geen geldig contact-e-mailadres ingesteld. Bezoekers kunnen daardoor geen contact opnemen via de website."
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:175
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:211
 msgid "Het contact-e-mailadres is ingesteld"
 msgstr ""
 
 #. translators: %s: configured contact e-mail address.
-#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:179
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:215
 #, php-format
 msgid "Het contact-e-mailadres is ingesteld: %s."
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:197
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:233
 msgid "Het sponsor-berichttype is niet actief"
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:199
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:235
 msgid "Het sponsor-berichttype is niet actief, dus er zijn geen sponsorlogo’s om te controleren."
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:208
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:244
 msgid "Alle gepubliceerde sponsoren hebben een logo"
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:210
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:246
 msgid "Alle gepubliceerde sponsoren hebben een logo (uitgelichte afbeelding) en worden op de website getoond."
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:218
-#: inc/summer-camp/admin/class-cjw-summer-camp-sponsor-admin.php:205
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:254
+#: inc/summer-camp/admin/class-cjw-summer-camp-sponsor-admin.php:178
 msgid "(geen titel)"
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:225
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:261
 msgid "Niet alle gepubliceerde sponsoren hebben een logo"
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:227
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:263
 msgid "De volgende gepubliceerde sponsoren hebben geen logo (uitgelichte afbeelding) en worden daarom niet op de website getoond:"
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:232
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:268
 msgid "Beheer de sponsoren"
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:249
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:285
 msgid "Er zijn nog geen foto’s voor het kampplakboek gekozen"
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:251
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:287
 msgid "Er is nog geen enkele foto voor het kampplakboek op de homepage gekozen. Kies minimaal één foto om de fotomuur te vullen."
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:258
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:294
 msgid "Het kampplakboek bevat foto’s"
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:260
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:296
 msgid "Er is minimaal één foto voor het kampplakboek op de homepage gekozen."
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:281
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:320
+msgid "De laatste testmail is niet aangekomen"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:322
+msgid "De website kon de laatste testmail niet versturen. Zolang dat zo is, krijgen ouders geen bevestiging van hun inschrijving en krijgt de organisatie geen bericht bij een nieuwe inschrijving."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:331
+msgid "Er is nog nooit een testmail verstuurd"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:333
+msgid "Niemand weet of deze website mail kan versturen. Dat blijkt pas als een ouder zich inschrijft en geen bevestiging krijgt. Stuur eenmalig een testmail om het zeker te weten."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:341
+msgid "Mail wordt verstuurd door de webserver zelf"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:343
+msgid "De testmail is gelukt, maar er is geen mailplugin actief. De website verstuurt mail dan rechtstreeks via de webserver, en grote mailproviders zoals Gmail en Outlook weigeren die mail vaak of zetten hem in de map ongewenste mail. Dat gaat vooral mis bij ouders, niet bij de organisatie."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:351
+msgid "De laatste testmail is lang geleden"
+msgstr ""
+
+#. translators: %s: date of the last successful test.
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:355
+#, php-format
+msgid "De laatste geslaagde testmail is van %s. Er is sindsdien een kampseizoen voorbij; test opnieuw voordat de inschrijvingen opengaan."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:364
+msgid "De website kan mail versturen"
+msgstr ""
+
+#. translators: %s: date of the last successful test.
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:368
+#, php-format
+msgid "De laatste testmail is gelukt op %s, en er is een mailplugin actief die het versturen verzorgt."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:406
+msgid "De geplande taken draaien"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:408
+msgid "Het opschonen van oude inschrijvingen, de verjaardagsmail en het weekbericht zijn recent gedraaid."
+msgstr ""
+
+#. translators: 1: job name, 2: number of days.
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:422
+#, php-format
+msgid "%1$s: al %2$d dagen niet gedraaid"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:430
+msgid "Er staan geplande taken stil"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:432
+msgid "Deze geplande taken hebben te lang niet gedraaid:"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:434
+msgid "Zolang het opschonen stilstaat, blijven gegevens van kinderen langer bewaard dan aan ouders is verteld. Vraag de host om WP-Cron te controleren of een echte cronjob in te stellen."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:460
+msgid "De inschrijfknoppen linken naar het inschrijfformulier"
+msgstr ""
+
+#. translators: %s: page address.
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:464
+#, php-format
+msgid "Elke “Schrijf je in”-knop op de website linkt naar %s."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:472
+msgid "De inschrijfknoppen wijzen nergens heen"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:474
+msgid "Er is geen gepubliceerde pagina gevonden met het inschrijfformulier (de [cjw_wizard]-shortcode), en bij “Pagina met inschrijfformulier” is geen adres ingevuld. De website verbergt daarom elke “Schrijf je in”-knop."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:477
+msgid "Publiceer de pagina met het formulier, of vul het adres in bij de zomerkamp-instellingen."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:502
+msgid "De formulierbouwer is niet geladen"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:504
+msgid "Er zijn geen formulieren om te controleren."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:513
+msgid "Elk formulier weet welk veld het e-mailadres van de ouder is"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:515
+msgid "Bevestigingen en AVG-verzoeken gaan naar het veld dat daarvoor is gemarkeerd."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:531
+msgid "Een formulier weet niet welk veld het e-mailadres van de ouder is"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:533
+msgid "Bij deze formulieren is geen veld gemarkeerd met de betekenis “E-mailadres van de ouder”. De website raadt dan welk veld het is, en bij een formulier met een noodcontact kan die gok verkeerd uitvallen: de bevestiging en een AVG-verzoek gaan dan naar het verkeerde adres."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:536
+msgid "Open het formulier, kies bij het e-mailveld van de ouder de betekenis “E-mailadres van de ouder” en sla op."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:556
+msgid "De website is ingericht"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:558
+msgid "De homepage, de inschrijfpagina, de privacyverklaring en het menu zijn er."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:570
+msgid "De website is nog niet helemaal ingericht"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:572
+msgid "Dit ontbreekt nog:"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:573
+msgid "Op het tabblad Beheer maakt één knop aan wat ontbreekt, zonder iets te overschrijven."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:593
+msgid "Mail-veiligmodus staat aan: dit is een kopie"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:596
+msgid "Mail gaat naar de beheerder in plaats van naar ouders."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:603
+msgid "Een kopie van deze website zou geen mail naar ouders sturen"
+msgstr ""
+
+#. translators: %s: host name.
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:607
+#, php-format
+msgid "%s is bevestigd als de live website; een kopie op een ander adres herkent zichzelf."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:615
+msgid "Een kopie van deze website zou nog mail naar ouders sturen"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:617
+msgid "De live website is nog niet bevestigd. Een teruggezette kopie -- om een update te oefenen, bijvoorbeeld -- bevat echte inschrijvingen en zou verjaardagsmails en bevestigingen naar echte ouders sturen."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:620
+msgid "Klik op het tabblad Beheer op “Dit is de live website”."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:643
+msgid "Er wordt niet met iDEAL betaald"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:645
+msgid "Geen formulier vraagt om een iDEAL-betaling, en er is geen Mollie-sleutel ingesteld. Dat is een geldige combinatie."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:651
+msgid "Een formulier vraagt om iDEAL, maar Mollie is niet ingesteld"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:653
+msgid "Het inschrijfformulier wil dat de ouder afrekent met iDEAL, en er is geen Mollie-sleutel. Niemand kan zijn inschrijving afronden."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:661
+msgid "Betalen met iDEAL staat uit"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:673
+msgid "iDEAL staat in testmodus"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:675
+msgid "De ingestelde Mollie-sleutel is een testsleutel. Ouders doorlopen de betaling zonder dat er geld wordt overgemaakt, terwijl de website de inschrijving als betaald bijschrijft."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:680
+msgid "De inschrijvingen staan nu open, dus dit is geld dat niet binnenkomt."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:681
+msgid "Zet een live-sleutel klaar voordat de inschrijvingen opengaan."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:689
+msgid "Ouders kunnen met iDEAL betalen"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:691
+msgid "Er is een live Mollie-sleutel ingesteld en de website draait op https."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:733
 msgid "CJW Zomerkamp"
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:308
+#: inc/summer-camp/admin/class-cjw-summer-camp-site-health.php:760
 msgid "Open de zomerkamp-instellingen"
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-sponsor-admin.php:81
-#: inc/summer-camp/admin/class-cjw-summer-camp-sponsor-admin.php:92
+#: inc/summer-camp/admin/class-cjw-summer-camp-sponsor-admin.php:53
+#: inc/summer-camp/admin/class-cjw-summer-camp-sponsor-admin.php:64
 msgid "Logo"
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-sponsor-admin.php:85
-#: inc/summer-camp/admin/class-cjw-summer-camp-sponsor-admin.php:96
-msgid "Volgorde"
-msgstr ""
-
-#: inc/summer-camp/admin/class-cjw-summer-camp-sponsor-admin.php:190
+#: inc/summer-camp/admin/class-cjw-summer-camp-sponsor-admin.php:163
 msgid "Let op:"
 msgstr ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-sponsor-admin.php:192
+#: inc/summer-camp/admin/class-cjw-summer-camp-sponsor-admin.php:165
 msgid "de volgende gepubliceerde sponsor heeft geen logo (uitgelichte afbeelding) en wordt niet op de website getoond:"
 msgid_plural "de volgende gepubliceerde sponsoren hebben geen logo (uitgelichte afbeelding) en worden niet op de website getoond:"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/summer-camp/admin/class-cjw-summer-camp-sponsor-admin.php:245
+#: inc/summer-camp/admin/class-cjw-summer-camp-sponsor-admin.php:218
 msgid "(geen logo — wordt niet getoond)"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:150
+#: inc/summer-camp/admin/class-cjw-summer-camp-year.php:83
+msgid "Je hebt geen toestemming om een nieuw kampjaar te starten."
+msgstr ""
+
+#. translators: %s: the camp year that was closed.
+#: inc/summer-camp/admin/class-cjw-summer-camp-year.php:125
+#, php-format
+msgid "Archief van kampjaar %s"
+msgstr ""
+
+#. translators: 1: outgoing camp year, 2: incoming camp year.
+#: inc/summer-camp/admin/class-cjw-summer-camp-year.php:200
+#, php-format
+msgid "De huidige instellingen worden bewaard als “Archief van kampjaar %1$s”, en het jaarthema springt naar %2$s."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-year.php:204
+msgid "De kampdata, de inschrijfdeadline, de rijdata en de periode van de vroegboekkorting worden leeggemaakt."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-year.php:205
+msgid "De inschrijvingen gaan dicht, totdat je ze zelf weer openzet."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-year.php:206
+msgid "Foto’s, teksten, prijzen, kleuren en de contactgegevens blijven staan."
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-year.php:232
+msgid "Nieuw kampjaar starten"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-year.php:235
+msgid "Doe dit één keer per jaar, als het kamp achter de rug is en je aan het volgende jaar begint. Dit is wat er dan gebeurt:"
+msgstr ""
+
+#. translators: %s: the new camp year.
+#: inc/summer-camp/admin/class-cjw-summer-camp-year.php:252
+#, php-format
+msgid "Typ %s om te bevestigen"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-summer-camp-year.php:266
+msgid "Start kampjaar"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-system-dashboard-widget.php:54
+msgid "CJW · Systeem"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-system-dashboard-widget.php:87
+msgid "Storing"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-system-dashboard-widget.php:88
+msgid "Let op"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-system-dashboard-widget.php:89
+msgid "In orde"
+msgstr ""
+
+#. translators: 1: number of registrations, 2: camp year.
+#: inc/summer-camp/admin/class-cjw-system-dashboard-widget.php:133
+#, php-format
+msgid "%1$d inschrijving voor %2$s"
+msgid_plural "%1$d inschrijvingen voor %2$s"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: number of registrations in the last seven days.
+#: inc/summer-camp/admin/class-cjw-system-dashboard-widget.php:139
+#, php-format
+msgid "%d in de afgelopen 7 dagen"
+msgid_plural "%d in de afgelopen 7 dagen"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: number of children without photo consent.
+#: inc/summer-camp/admin/class-cjw-system-dashboard-widget.php:153
+#, php-format
+msgid "%d kind zonder fototoestemming"
+msgid_plural "%d kinderen zonder fototoestemming"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s: human readable time difference, e.g. "6 hours".
+#: inc/summer-camp/admin/class-cjw-system-dashboard-widget.php:185
+#, php-format
+msgid "%s geleden"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-system-dashboard-widget.php:188
+msgid "nog nooit gedraaid"
+msgstr ""
+
+#. translators: %s: human readable time difference.
+#: inc/summer-camp/admin/class-cjw-system-dashboard-widget.php:194
+#, php-format
+msgid "volgende over %s"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-system-dashboard-widget.php:197
+msgid "niet ingepland"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-system-dashboard-widget.php:206
+msgid "Geplande taken"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-system-dashboard-widget.php:219
+msgid "Kopie — mail gaat naar de beheerder"
+msgstr ""
+
+#. translators: 1: plugin version, 2: WordPress version, 3: PHP version.
+#: inc/summer-camp/admin/class-cjw-system-dashboard-widget.php:224
+#, php-format
+msgid "CJW %1$s · WordPress %2$s · PHP %3$s"
+msgstr ""
+
+#. translators: 1: how long ago, 2: file, 3: line.
+#: inc/summer-camp/admin/class-cjw-system-dashboard-widget.php:235
+#, php-format
+msgid "Vastgelopen %1$s geleden in %2$s op regel %3$d"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-system-dashboard-widget.php:242
+msgid "Omgeving"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-system-dashboard-widget.php:261
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:887
+msgid "Beheer"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-system-dashboard-widget.php:263
+msgid "Websitediagnose"
+msgstr ""
+
+#: inc/summer-camp/admin/class-cjw-system-dashboard-widget.php:264
+msgid "Statuspagina"
+msgstr ""
+
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:151
 msgid "Zomerkamp instellingen"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:179
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:180
 msgid "Stel hier de kampdata, de locatie en de inschrijvingen voor het zomerkamp in."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:185
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:187
 msgid "Bepaal hier het jaarthema en de uitstraling van de grote banner (hero) bovenaan de homepage."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:191
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:195
 msgid "Beheer hier de kampprijzen en de periode van de vroegboekkorting."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:197
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:201
 msgid "Teksten die worden gebruikt bij het inschrijfformulier en in e-mails naar ouders."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:206
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:210
 msgid "Jaarthema"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:207
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:211
 msgid "Vertel bezoekers waar het kampthema van dit jaar over gaat; deze omschrijving verschijnt in het themablok op de homepage."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:212
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:216
 msgid "Introductie homepage"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:213
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:218
 msgid "Het welkomstblok dat bezoekers direct onder de grote banner op de homepage zien."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:218
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:225
 msgid "Kaarten homepage"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:219
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:226
 msgid "De drie klikbare kaarten op de homepage die bezoekers naar de belangrijkste onderdelen van de website leiden."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:224
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:231
 msgid "Kampplakboek"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:225
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:233
 msgid "Het fotoblok in plakboekstijl op de homepage, met maximaal vijf polaroidfoto’s van eerdere kampen."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:230
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:240
 msgid "Sponsors"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:231
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:241
 msgid "Het blok op de homepage waarin je sponsors bedankt en nieuwe sponsors werft."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:236
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:246
 msgid "Oproep-banner"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:237
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:247
 msgid "De opvallende gekleurde banner onderaan de homepage die bezoekers aanspoort om in te schrijven."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:242
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:252
 msgid "Contact & social"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:243
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:253
 msgid "Contactgegevens, social media en de teksten in de voettekst (footer) onderaan elke pagina."
 msgstr ""
 
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:273
+msgid "Deze tekst staat op de laatste stap van het inschrijfformulier, boven het vinkje waarmee de ouder akkoord gaat. Laat leeg om de standaardtekst te gebruiken."
+msgstr ""
+
 #: inc/summer-camp/cjw-summer-camp-settings-page.php:274
+msgid "Woorden tussen accolades vult de website zelf in, zodat de tekst klopt ook als je later iets aan de instellingen verandert:"
+msgstr ""
+
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:309
 msgid "Start zomerkamp"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:275
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:310
 msgid "Eerste dag van het zomerkamp. Formaat: dd-mm-jjjj, bijvoorbeeld 11-07-2026. Verschijnt onder andere bovenaan de homepage en op de inschrijfpagina."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:280
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:315
 msgid "Eind zomerkamp"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:281
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:316
 msgid "Laatste dag van het zomerkamp. Formaat: dd-mm-jjjj. Moet na de startdatum liggen."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:286
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:321
 msgid "Leeftijden"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:287
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:322
 msgid "Voor welke leeftijden het kamp bedoeld is, bijvoorbeeld “6 t/m 17 jaar”. Verschijnt bij de kampgegevens op de website."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:292
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:327
 msgid "Locatie"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:293
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:328
 msgid "Naam en plaats van de kamplocatie, bijvoorbeeld “Landgoed Brockhausen, Stokkum”. Verschijnt bij de kampgegevens op de website."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:298
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:333
 msgid "Rijdata"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:299
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:334
 msgid "Data waarop kinderen gebracht en opgehaald worden. Vul per rij een datum (dd-mm-jjjj) en een korte omschrijving in, bijvoorbeeld “Heenreis week”. Klik op “Voeg toe” voor een extra rij en op “Verwijder” om een rij te wissen."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:304
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:339
 msgid "Deadline inschrijvingen"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:305
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:340
 msgid "Laatste dag waarop ouders kunnen inschrijven. Formaat: dd-mm-jjjj. Na deze datum sluit het inschrijfformulier automatisch."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:310
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:345
 msgid "Inschrijvingen gesloten tekst"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:311
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:346
 msgid "Deze tekst zien bezoekers op de inschrijfpagina zodra de inschrijvingen gesloten zijn. Leg bijvoorbeeld uit wanneer de volgende inschrijfronde start of hoe ouders contact kunnen opnemen."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:316
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:351
 msgid "Inschrijvingen open"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:317
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:352
 msgid "Vink aan om de inschrijvingen te openen. Haal het vinkje weg om de inschrijvingen direct te sluiten, ook vóór de deadline."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:322
-msgid "Inzendingen bewaren (maanden)"
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:357
+msgid "Inschrijvingen bewaren (maanden)"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:328
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:363
 msgid "Aantal maanden ná de einddatum van het kamp dat inschrijvingen bewaard blijven. Daarna worden de persoonsgegevens automatisch gewist; het aantal inschrijvingen per jaar blijft bewaard. Inschrijvingen bevatten gegevens van kinderen, dus bewaar ze niet langer dan nodig. Standaard 12 maanden, net tot vóór het volgende kamp. Vul 0 in om nooit automatisch te wissen."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:334
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:369
 msgid "Pagina met inschrijfformulier"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:335
-msgid "Volledig webadres van de pagina met het inschrijfformulier, beginnend met https://. Dit adres wordt gebruikt om de unieke late-inschrijflink hieronder te maken."
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:370
+msgid "Volledig webadres van de pagina met het inschrijfformulier, beginnend met https://. Elke “Schrijf je in”-knop op de website linkt hierheen, en de unieke late-inschrijflink hieronder wordt ervan gemaakt. Laat leeg om de website zelf de gepubliceerde pagina met het formulier te laten vinden."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:340
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:375
 msgid "Unieke late-inschrijving link"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:341
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:376
 msgid "Vink “Maak een nieuwe unieke link bij opslaan” aan als de huidige link niet meer gebruikt mag worden; de oude link werkt daarna niet meer."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:348
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:383
 msgid "Themajaar"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:349
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:384
 msgid "Het jaar van dit kamp, bijvoorbeeld 2026. Wordt op meerdere plekken op de website getoond, onder andere in de inschrijfkaart op de homepage."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:354
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:389
 msgid "Themanaam"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:355
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:390
 msgid "De naam van het kampthema van dit jaar, bijvoorbeeld “Jungle Avontuur”. Verschijnt onder andere in het themablok op de homepage."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:360
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:395
 msgid "Hero titel"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:361
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:396
 msgid "Grote titel in de banner (hero) bovenaan de homepage. Verschijnt groot over de hero-afbeelding heen."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:366
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:401
 msgid "Hero subtitel"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:367
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:402
 msgid "Korte ondertitel onder de hero-titel, bijvoorbeeld een slogan van één zin. Laat leeg om geen ondertitel te tonen."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:372
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:407
 msgid "Hero afbeelding"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:373
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:412
 msgid "Grote sfeerfoto achter de tekst bovenaan de homepage. Kies een liggende foto van goede kwaliteit (minimaal 1600 pixels breed werkt het best)."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:378
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:421
 msgid "Alt-tekst hero afbeelding"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:379
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:422
 msgid "Korte omschrijving van de hero-afbeelding voor blinde en slechtziende bezoekers en voor zoekmachines, bijvoorbeeld “Kinderen spelen bij het kampvuur”."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:384
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:427
 msgid "Primaire knop tekst"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:385
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:428
 msgid "Tekst op de opvallende (eerste) knop in de banner, bijvoorbeeld “Schrijf je in”. Laat leeg om deze knop te verbergen."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:390
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:433
 msgid "Primaire knop link"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:391
-msgid "Webadres waar de eerste knop naartoe linkt. Begin met https://, bijvoorbeeld https://www.voorbeeld.nl/inschrijven."
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:434
+msgid "Webadres waar de eerste knop naartoe linkt. Laat leeg om naar de pagina met het inschrijfformulier te linken; vul alleen iets in als de knop ergens anders heen moet, beginnend met https://."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:396
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:439
 msgid "Secundaire knop tekst"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:397
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:440
 msgid "Tekst op de tweede (minder opvallende) knop in de banner. Laat leeg om deze knop te verbergen."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:402
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:445
 msgid "Secundaire knop link"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:403
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:446
 msgid "Webadres waar de tweede knop naartoe linkt. Begin met https://."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:408
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:451
 msgid "Primaire kleur"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:409
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:452
 msgid "Hoofdkleur van het thema; wordt gebruikt voor knoppen en accenten op de hele website. Klik op het kleurvak om een andere kleur te kiezen."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:414
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:457
 msgid "Secundaire kleur"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:415
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:458
 msgid "Tweede themakleur; wordt gebruikt voor achtergronden en decoraties."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:420
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:463
 msgid "Accentkleur"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:421
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:464
 msgid "Opvallende accentkleur voor kleine details, zoals markeringen en linkjes."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:426
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:469
 msgid "Hero tekstkleur"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:427
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:470
 msgid "Kleur van de tekst in de banner. Kies wit bij een donkere foto en een donkere kleur bij een lichte foto, zodat de tekst goed leesbaar blijft."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:432
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:475
 msgid "Hero afbeelding overlay (%)"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:433
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:476
 msgid "Donkere waas over de hero-afbeelding zodat de tekst beter leesbaar wordt. Van 0 tot 90%: 0 = geen waas, 90 = bijna zwart."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:440
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:483
 msgid "Vroegboekkorting startdatum"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:441
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:484
 msgid "Eerste dag waarop de vroegboekkorting geldt. Formaat: dd-mm-jjjj."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:446
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:489
 msgid "Vroegboekkorting einddatum"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:447
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:490
 msgid "Laatste dag van de vroegboekkorting. Formaat: dd-mm-jjjj. Moet na de startdatum liggen; daarna gelden automatisch de normale prijzen."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:452
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:495
 msgid "Prijs week vroegboekkorting"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:453
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:496
 msgid "Prijs voor een hele week mét vroegboekkorting. In euro’s, zonder €-teken, bijvoorbeeld 95."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:458
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:501
 msgid "Prijs weekend vroegboekkorting"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:459
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:502
 msgid "Prijs voor het weekend mét vroegboekkorting. In euro’s, zonder €-teken."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:464
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:875
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:507
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:1032
 msgid "Prijs week"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:465
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:508
 msgid "Normale prijs voor een hele week. In euro’s, zonder €-teken."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:470
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:879
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:513
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:1036
 msgid "Prijs weekend"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:471
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:514
 msgid "Normale prijs voor het weekend. In euro’s, zonder €-teken."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:478
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:521
 msgid "Introductietekst"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:479
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:522
 msgid "Welkomsttekst die bovenaan het inschrijfformulier wordt getoond. Vertel kort wat ouders kunnen verwachten. Laat leeg om geen introductietekst te tonen."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:484
-msgid "Verjaardagsmail actief"
-msgstr ""
-
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:485
-msgid "Nog niet actief — deze instelling wordt gebruikt zodra de verjaardagsmail-functie beschikbaar is."
-msgstr ""
-
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:490
-msgid "Tekst verjaardagsmail"
-msgstr ""
-
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:491
-msgid "Nog niet actief — deze tekst wordt gebruikt zodra de verjaardagsmail-functie beschikbaar is."
-msgstr ""
-
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:499
-msgid "Omschrijving jaarthema"
-msgstr ""
-
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:500
-msgid "Uitgebreide omschrijving van het jaarthema. Verschijnt in het themablok op de homepage, onder de banner. Laat leeg om het themablok zonder omschrijving te tonen."
-msgstr ""
-
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:508
-msgid "Titel introductie"
-msgstr ""
-
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:509
-msgid "Titel van het welkomstblok op de homepage. Tekst na een | krijgt de handgetekende onderstreping, bijvoorbeeld “Welkom bij |CJW Zomerkampen”."
-msgstr ""
-
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:515
-msgid "Tekst introductie"
-msgstr ""
-
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:516
-msgid "Welkomsttekst van de homepage. Vertel in een paar zinnen wat de CJW-zomerkampen zijn en voor wie ze bedoeld zijn."
-msgstr ""
-
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:522
-msgid "Introductiefoto homepage"
-msgstr ""
-
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:523
-msgid "Sfeerfoto naast de welkomsttekst op de homepage. Laat leeg om geen foto te tonen."
-msgstr ""
-
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:531
-msgid "Titel kaart “Zomerkamp”"
-msgstr ""
-
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:532
-msgid "Titel van de kaart over het zomerkamp. Tekst na een | krijgt de handgetekende onderstreping, bijvoorbeeld “Het |zomerkamp”."
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:527
+msgid "Privacytekst op het formulier"
 msgstr ""
 
 #: inc/summer-camp/cjw-summer-camp-settings-page.php:538
-msgid "Tekst kaart “Zomerkamp”"
+msgid "Verjaardagsmail actief"
 msgstr ""
 
 #: inc/summer-camp/cjw-summer-camp-settings-page.php:539
-msgid "Korte tekst (één à twee zinnen) op de kaart over het zomerkamp."
+msgid "Stuurt op de verjaardag van een ingeschreven kind een felicitatie naar het e-mailadres waarmee is ingeschreven. Alleen voor kinderen die dit kampjaar meegaan, en alleen zolang de inschrijving nog bewaard wordt. De tekst schrijf je bij Zomerkamp → Mails."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:545
-msgid "Pagina kaart “Zomerkamp”"
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:547
+msgid "Omschrijving jaarthema"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:546
-msgid "De pagina waar bezoekers naartoe gaan als ze op de kaart “Zomerkamp” klikken."
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:548
+msgid "Uitgebreide omschrijving van het jaarthema. Verschijnt in het themablok op de homepage, onder de banner. Laat leeg om het themablok zonder omschrijving te tonen."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:552
-msgid "Titel kaart “Praktische info”"
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:556
+msgid "Titel introductie"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:553
-msgid "Titel van de kaart met praktische informatie. Tekst na een | krijgt de handgetekende onderstreping, bijvoorbeeld “Praktische |info”."
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:557
+msgid "Titel van het welkomstblok op de homepage. Tekst na een | krijgt de handgetekende onderstreping, bijvoorbeeld “Welkom bij |CJW Zomerkampen”."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:559
-msgid "Tekst kaart “Praktische info”"
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:563
+msgid "Tekst introductie"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:560
-msgid "Korte tekst (één à twee zinnen) op de kaart met praktische informatie."
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:564
+msgid "Welkomsttekst van de homepage. Vertel in een paar zinnen wat de CJW-zomerkampen zijn en voor wie ze bedoeld zijn."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:566
-msgid "Pagina kaart “Praktische info”"
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:570
+msgid "Introductiefoto homepage"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:567
-msgid "De pagina waar bezoekers naartoe gaan als ze op de kaart “Praktische info” klikken."
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:575
+msgid "Sfeerfoto naast de welkomsttekst op de homepage. Laat leeg om geen foto te tonen."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:573
-msgid "Titel inschrijfkaart"
-msgstr ""
-
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:574
-msgid "Titel van de inschrijfkaart. Tekst na een | krijgt de handgetekende onderstreping, bijvoorbeeld “Schrijf je |in”."
-msgstr ""
-
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:580
-msgid "Tekst inschrijfkaart"
-msgstr ""
-
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:581
-msgid "Korte tekst op de inschrijfkaart. Typ <code>{jaar}</code> om automatisch het kampjaar in te vullen, bijvoorbeeld “Schrijf je nu in voor zomerkamp {jaar}”."
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:588
+msgid "Titel kaart “Zomerkamp”"
 msgstr ""
 
 #: inc/summer-camp/cjw-summer-camp-settings-page.php:589
-msgid "Titel kampplakboek"
+msgid "Titel van de kaart over het zomerkamp. Tekst na een | krijgt de handgetekende onderstreping, bijvoorbeeld “Het |zomerkamp”."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:590
-msgid "Titel boven het fotoblok. Tekst na een | krijgt de handgetekende onderstreping, bijvoorbeeld “Ons |kampplakboek”."
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:595
+msgid "Tekst kaart “Zomerkamp”"
 msgstr ""
 
 #: inc/summer-camp/cjw-summer-camp-settings-page.php:596
+msgid "Korte tekst (één à twee zinnen) op de kaart over het zomerkamp."
+msgstr ""
+
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:602
+msgid "Pagina kaart “Zomerkamp”"
+msgstr ""
+
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:603
+msgid "De pagina waar bezoekers naartoe gaan als ze op de kaart “Zomerkamp” klikken."
+msgstr ""
+
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:609
+msgid "Titel kaart “Praktische info”"
+msgstr ""
+
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:610
+msgid "Titel van de kaart met praktische informatie. Tekst na een | krijgt de handgetekende onderstreping, bijvoorbeeld “Praktische |info”."
+msgstr ""
+
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:616
+msgid "Tekst kaart “Praktische info”"
+msgstr ""
+
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:617
+msgid "Korte tekst (één à twee zinnen) op de kaart met praktische informatie."
+msgstr ""
+
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:623
+msgid "Pagina kaart “Praktische info”"
+msgstr ""
+
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:624
+msgid "De pagina waar bezoekers naartoe gaan als ze op de kaart “Praktische info” klikken."
+msgstr ""
+
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:630
+msgid "Titel inschrijfkaart"
+msgstr ""
+
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:631
+msgid "Titel van de inschrijfkaart. Tekst na een | krijgt de handgetekende onderstreping, bijvoorbeeld “Schrijf je |in”."
+msgstr ""
+
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:637
+msgid "Tekst inschrijfkaart"
+msgstr ""
+
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:638
+msgid "Korte tekst op de inschrijfkaart. Typ <code>{jaar}</code> om automatisch het kampjaar in te vullen, bijvoorbeeld “Schrijf je nu in voor zomerkamp {jaar}”."
+msgstr ""
+
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:646
+msgid "Titel kampplakboek"
+msgstr ""
+
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:647
+msgid "Titel boven het fotoblok. Tekst na een | krijgt de handgetekende onderstreping, bijvoorbeeld “Ons |kampplakboek”."
+msgstr ""
+
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:653
 msgid "Introzin kampplakboek"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:597
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:654
 msgid "Korte introzin onder de titel van het fotoblok."
 msgstr ""
 
 #. translators: %d: polaroid slot number.
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:606
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:663
 #, php-format
 msgid "Foto %d kampplakboek"
 msgstr ""
 
 #. translators: %d: polaroid slot number.
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:612
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:669
 #, php-format
 msgid "Foto %d in het plakboek. Liggende foto’s werken het best; de foto wordt automatisch bijgesneden. Laat leeg om deze plek in het plakboek leeg te laten."
 msgstr ""
 
 #. translators: %d: polaroid slot number.
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:620
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:682
 #, php-format
 msgid "Bijschrift foto %d"
 msgstr ""
 
 #. translators: %d: polaroid slot number.
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:626
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:688
 #, php-format
 msgid "Kort bijschrift onder foto %d, zoals op een echte polaroid, bijvoorbeeld “Kampvuur 2025”. Laat leeg om geen bijschrift te tonen."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:636
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:698
 msgid "Titel sponsorblok"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:637
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:699
 msgid "Titel boven het sponsorblok. Tekst na een | krijgt de handgetekende onderstreping, bijvoorbeeld “Onze |sponsors”."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:643
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:705
 msgid "Introzin sponsorblok"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:644
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:706
 msgid "Korte introzin onder de titel van het sponsorblok, bijvoorbeeld een bedankje aan alle sponsors."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:650
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:712
 msgid "Knoptekst sponsorwerving"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:651
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:713
 msgid "Tekst op de knop of link waarmee nieuwe sponsors zich kunnen melden, bijvoorbeeld “Word ook sponsor”."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:659
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:721
 msgid "Titel oproep-banner"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:660
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:722
 msgid "Titel in de oproep-banner. Tekst na een | krijgt de handgetekende onderstreping, bijvoorbeeld “Ga je |mee?”."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:666
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:728
 msgid "Tekst oproep-banner"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:667
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:729
 msgid "Korte aansporende tekst in de oproep-banner, bijvoorbeeld “Wacht niet te lang: vol = vol!”."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:675
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:737
 msgid "Contact-e-mailadres"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:676
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:738
 msgid "E-mailadres waarop ouders de kampleiding kunnen bereiken. Verschijnt in de voettekst van de website."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:682
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:744
 msgid "Facebook-URL"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:683
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:745
 msgid "Volledig webadres van de Facebook-pagina, bijvoorbeeld https://www.facebook.com/cjwbrummen. Laat leeg om het Facebook-icoon te verbergen."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:689
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:751
 msgid "Instagram-URL"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:690
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:752
 msgid "Volledig webadres van het Instagram-account, bijvoorbeeld https://www.instagram.com/cjwbrummen. Laat leeg om het Instagram-icoon te verbergen."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:696
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:758
 msgid "Tekst over CJW (footer)"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:697
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:759
 msgid "Korte tekst over CJW in de voettekst van elke pagina (twee à drie zinnen)."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:703
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:765
 msgid "Organisatienaam (footer)"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:704
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:766
 msgid "Naam van de organisatie zoals die onderaan in de voettekst staat, bijvoorbeeld “CJW Brummen”."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:754
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:772
+msgid "Wie onderhoudt de website"
+msgstr ""
+
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:773
+msgid "Naam, telefoonnummer en e-mailadres van wie je belt als de website zelf stuk is. Deze gegevens staan nergens op de openbare site; ze staan in de Handleiding, zodat de volgende vrijwilliger weet bij wie hij moet zijn."
+msgstr ""
+
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:823
 msgid "Vroegboekkorting einddatum moet na de startdatum liggen."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:806
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:876
 msgid "Je hebt geen toestemming om deze instellingen te bekijken."
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:826
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:897
 msgid "Zomerkamp Instellingen"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:870
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:970
+msgid "De eerdere versie van de instellingen is teruggezet."
+msgstr ""
+
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:971
+msgid "Die versie kon niet worden teruggezet. Ververs de pagina en probeer het opnieuw."
+msgstr ""
+
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:972
+msgid "De instellingen uit het bestand zijn ingelezen."
+msgstr ""
+
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:973
+msgid "Dat bestand kon niet worden ingelezen. Kies een bestand dat eerder met “Download de instellingen” is gemaakt."
+msgstr ""
+
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:974
+msgid "Het weekbericht staat aan. Is er niets te melden, dan komt er die week geen mail."
+msgstr ""
+
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:975
+msgid "Het weekbericht staat uit."
+msgstr ""
+
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:976
+msgid "Het voorbeeld is verstuurd naar iedereen die het kamp beheert."
+msgstr ""
+
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:977
+msgid "Het voorbeeld kon niet worden verstuurd. Controleer hierboven of de website wel mail kan versturen."
+msgstr ""
+
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:978
+msgid "Het nieuwe kampjaar is gestart. Vul de nieuwe kampdata in en zet de inschrijvingen open zodra je zover bent."
+msgstr ""
+
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:979
+msgid "Er is niets veranderd: het ingetypte jaartal klopte niet."
+msgstr ""
+
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:980
+msgid "Wat ontbrak is aangemaakt. Loop de nieuwe pagina’s na en vul ze met eigen tekst; de privacyverklaring staat als concept klaar."
+msgstr ""
+
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:981
+msgid "Er ontbrak niets; er is niets aangemaakt."
+msgstr ""
+
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:982
+msgid "Dit webadres is vastgelegd als de live website. Elke kopie op een ander adres stuurt vanaf nu geen mail meer naar ouders."
+msgstr ""
+
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:983
+msgid "De live website is vergeten. Bevestig het nieuwe adres zodra de website daar draait."
+msgstr ""
+
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:984
+msgid "De crashmelding is weggehaald. De statuspagina meldt weer “ok”, en een volgende crash wordt opnieuw gemeld."
+msgstr ""
+
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:985
+msgid "De testsleutel is opgeslagen. Zet de website om naar testmodus en vul het formulier één keer helemaal in."
+msgstr ""
+
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:986
+msgid "De live-sleutel is opgeslagen. De website blijft staan waar hij stond; zet hem zelf om naar live zodra je zover bent."
+msgstr ""
+
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:987
+msgid "De sleutel is verwijderd."
+msgstr ""
+
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:988
+msgid "Dat lijkt geen Mollie-sleutel. Een sleutel begint met live_ of test_ en is een stuk langer."
+msgstr ""
+
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:989
+msgid "Er is niets gewijzigd; de sleutels zijn gebleven zoals ze waren."
+msgstr ""
+
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:990
+msgid "De website staat nu in testmodus. Betalingen lijken te lukken zonder dat er geld wordt overgemaakt, dus zet hem terug naar live voordat de inschrijvingen opengaan."
+msgstr ""
+
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:991
+msgid "De website staat nu op live. Betalingen van ouders komen echt binnen."
+msgstr ""
+
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:992
+msgid "Omzetten lukte niet: voor die modus is nog geen sleutel opgeslagen."
+msgstr ""
+
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:1024
 msgid "Actief"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:870
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:1024
 msgid "Niet actief"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:873
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:1027
 msgid "Deadline"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:874
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:1028
+msgid "Inschrijfpagina"
+msgstr ""
+
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:1030
+msgid "Geen pagina met het formulier gevonden"
+msgstr ""
+
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:1031
 msgid "Vroegboekkorting"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:886
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:1043
 msgid "Zomerkamp status"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:898
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:1055
 msgid "Niet ingesteld"
 msgstr ""
 
-#: inc/summer-camp/cjw-summer-camp-settings-page.php:905
+#: inc/summer-camp/cjw-summer-camp-settings-page.php:1062
 msgid "Late inschrijving"
+msgstr ""
+
+#: inc/summer-camp/class-cjw-summer-camp-rental-post-type.php:96
+msgid "Groepstent"
+msgstr ""
+
+#: inc/summer-camp/class-cjw-summer-camp-rental-post-type.php:97
+msgid "Partytent"
+msgstr ""
+
+#: inc/summer-camp/class-cjw-summer-camp-rental-post-type.php:98
+msgid "Slaapmateriaal"
+msgstr ""
+
+#: inc/summer-camp/class-cjw-summer-camp-rental-post-type.php:99
+msgid "Overig materiaal"
+msgstr ""
+
+#: inc/summer-camp/class-cjw-summer-camp-rental-post-type.php:118
+#: inc/summer-camp/class-cjw-summer-camp-rental-post-type.php:119
+msgid "Verhuurmateriaal"
+msgstr ""
+
+#: inc/summer-camp/class-cjw-summer-camp-rental-post-type.php:120
+msgid "Nieuw verhuurmateriaal"
+msgstr ""
+
+#: inc/summer-camp/class-cjw-summer-camp-rental-post-type.php:121
+msgid "Verhuurmateriaal bewerken"
+msgstr ""
+
+#: inc/summer-camp/class-cjw-summer-camp-rental-post-type.php:122
+msgid "Verhuurmateriaal zoeken"
+msgstr ""
+
+#: inc/summer-camp/class-cjw-summer-camp-rental-post-type.php:123
+msgid "Geen verhuurmateriaal gevonden."
+msgstr ""
+
+#: inc/summer-camp/class-cjw-summer-camp-rental-post-type.php:124
+msgid "Geen verhuurmateriaal in de prullenbak."
+msgstr ""
+
+#: inc/summer-camp/class-cjw-summer-camp-rental-post-type.php:164
+msgid "Gegevens van dit materiaal"
+msgstr ""
+
+#: inc/summer-camp/class-cjw-summer-camp-rental-post-type.php:245
+msgid "Groepstenten met een aantal én een capaciteit tellen mee in de \"Past het?\"-hulp op de verhuurpagina."
+msgstr ""
+
+#: inc/summer-camp/class-cjw-summer-camp-rental-post-type.php:253
+msgid "Hoeveel CJW er heeft. Laat 0 staan voor \"op aanvraag\"."
+msgstr ""
+
+#: inc/summer-camp/class-cjw-summer-camp-rental-post-type.php:257
+msgid "Voor hoeveel personen"
+msgstr ""
+
+#: inc/summer-camp/class-cjw-summer-camp-rental-post-type.php:265
+msgid "tot"
+msgstr ""
+
+#: inc/summer-camp/class-cjw-summer-camp-rental-post-type.php:273
+msgid "Per stuk. Vul het tweede veld alleen in bij een bereik, zoals 8 tot 10 personen. Laat beide op 0 als personen niet van toepassing zijn."
+msgstr ""
+
+#: inc/summer-camp/class-cjw-summer-camp-rental-post-type.php:280
+msgid "lengte"
+msgstr ""
+
+#: inc/summer-camp/class-cjw-summer-camp-rental-post-type.php:281
+msgid "breedte"
+msgstr ""
+
+#: inc/summer-camp/class-cjw-summer-camp-rental-post-type.php:282
+msgid "hoogte voor"
+msgstr ""
+
+#: inc/summer-camp/class-cjw-summer-camp-rental-post-type.php:283
+msgid "hoogte midden"
+msgstr ""
+
+#: inc/summer-camp/class-cjw-summer-camp-rental-post-type.php:296
+msgid "In centimeters. Lengte en breedte tekenen de plattegrond op schaal; laat ze op 0 bij materiaal zonder grondvlak, zoals matrassen."
+msgstr ""
+
+#: inc/summer-camp/class-cjw-summer-camp-rental-post-type.php:301
+msgid "Toelichting"
+msgstr ""
+
+#: inc/summer-camp/class-cjw-summer-camp-rental-post-type.php:309
+msgid "Eén regel onder het materiaal, bijvoorbeeld \"Groepstent met vast grondzeil\"."
+msgstr ""
+
+#: inc/summer-camp/class-cjw-summer-camp-rental-post-type.php:315
+msgid "Prijzen staan bewust niet op de site: die gaan per aanvraag. Zet het contactadres in de tekst van de verhuurpagina zelf."
+msgstr ""
+
+#: inc/summer-camp/class-cjw-summer-camp-sponsor-post-type.php:53
+msgid "Sponsor"
+msgstr ""
+
+#: inc/summer-camp/class-cjw-summer-camp-sponsor-post-type.php:54
+msgid "Nieuwe sponsor"
+msgstr ""
+
+#: inc/summer-camp/class-cjw-summer-camp-sponsor-post-type.php:55
+msgid "Sponsor bewerken"
+msgstr ""
+
+#: inc/summer-camp/class-cjw-summer-camp-sponsor-post-type.php:56
+msgid "Sponsoren zoeken"
+msgstr ""
+
+#: inc/summer-camp/class-cjw-summer-camp-sponsor-post-type.php:57
+msgid "Geen sponsoren gevonden."
+msgstr ""
+
+#: inc/summer-camp/class-cjw-summer-camp-sponsor-post-type.php:58
+msgid "Geen sponsoren in de prullenbak."
+msgstr ""
+
+#: inc/summer-camp/class-cjw-summer-camp-sponsor-post-type.php:87
+#: inc/summer-camp/class-cjw-summer-camp-sponsor-post-type.php:107
+msgid "Website van de sponsor"
+msgstr ""
+
+#: inc/summer-camp/class-cjw-summer-camp-sponsor-post-type.php:113
+msgid "https://voorbeeld.nl"
+msgstr ""
+
+#: inc/summer-camp/class-cjw-summer-camp-sponsor-post-type.php:116
+msgid "Het logo op de voorpagina linkt hiernaartoe. Laat leeg om er geen link van te maken."
+msgstr ""
+
+#: inc/summer-camp/class-cjw-summer-camp-status-checks.php:86
+msgid "er is geen pagina met het inschrijfformulier"
+msgstr ""
+
+#: inc/summer-camp/class-cjw-summer-camp-status-checks.php:90
+msgid "er is geen gepubliceerd formulier"
+msgstr ""
+
+#. translators: %s: why paying is switched off.
+#: inc/summer-camp/class-cjw-summer-camp-status-checks.php:96
+#, php-format
+msgid "het formulier wil met iDEAL laten betalen, maar dat kan niet (%s)"
+msgstr ""
+
+#. translators: %s: what is missing, as a sentence fragment.
+#: inc/summer-camp/class-cjw-summer-camp-status-checks.php:105
+#, php-format
+msgid "De inschrijvingen staan open, maar niemand kan zich inschrijven: %s."
+msgstr ""
+
+#: inc/summer-camp/class-cjw-summer-camp-status-checks.php:106
+msgid " en "
+msgstr ""
+
+#: inc/summer-camp/class-cjw-summer-camp-status-checks.php:134
+msgid "Er is nog nooit getest of de website mail kan versturen."
+msgstr ""
+
+#: inc/summer-camp/class-cjw-summer-camp-status-checks.php:142
+msgid "De laatste testmail is niet aangekomen."
+msgstr ""
+
+#: inc/summer-camp/class-cjw-summer-camp-status-checks.php:154
+msgid "Er is al lang niet meer getest of de website mail kan versturen."
 msgstr ""
 
 #: inc/summer-camp/fields/cjw_late_registration_link_field.php:66
@@ -1790,34 +4720,58 @@ msgid "Maak een nieuwe unieke link bij opslaan"
 msgstr ""
 
 #. translators: %s: field label.
-#: inc/summer-camp/fields/cjw_media_field.php:27
+#: inc/summer-camp/fields/cjw_media_field.php:75
 #, php-format
 msgid "Kies afbeelding: %s"
 msgstr ""
 
-#: inc/summer-camp/fields/cjw_media_field.php:28
-#: inc/summer-camp/fields/cjw_media_field.php:52
+#: inc/summer-camp/fields/cjw_media_field.php:76
+#: inc/summer-camp/fields/cjw_media_field.php:110
 msgid "Kies afbeelding"
 msgstr ""
 
-#: inc/summer-camp/fields/cjw_media_field.php:33
+#: inc/summer-camp/fields/cjw_media_field.php:81
 msgid "Gebruik deze afbeelding"
 msgstr ""
 
-#: inc/summer-camp/fields/cjw_media_field.php:47
+#: inc/summer-camp/fields/cjw_media_field.php:98
 msgid "Geen afbeelding gekozen"
 msgstr ""
 
-#: inc/summer-camp/fields/cjw_media_field.php:53
+#: inc/summer-camp/fields/cjw_media_field.php:111
 msgid "Verwijder afbeelding"
+msgstr ""
+
+#. translators: %s: file size, already formatted.
+#: inc/summer-camp/fields/cjw_media_field.php:148
+#, php-format
+msgid "Deze afbeelding is %s groot."
+msgstr ""
+
+#. translators: %d: image width in pixels.
+#: inc/summer-camp/fields/cjw_media_field.php:153
+#, php-format
+msgid "Deze afbeelding is %d pixels breed."
+msgstr ""
+
+#: inc/summer-camp/fields/cjw_media_field.php:157
+msgid "Daardoor laadt de pagina traag, vooral op een telefoon met mobiel internet."
+msgstr ""
+
+#. translators: %s: file size, already formatted.
+#: inc/summer-camp/fields/cjw_media_field.php:173
+#, php-format
+msgid "Maak de afbeelding kleiner: houd ongeveer %s aan."
+msgstr ""
+
+#. translators: 1: width in pixels, 2: height in pixels, 3: file size, already formatted.
+#: inc/summer-camp/fields/cjw_media_field.php:180
+#, php-format
+msgid "Maak de afbeelding kleiner: ongeveer %1$d bij %2$d pixels en hooguit %3$s."
 msgstr ""
 
 #: inc/summer-camp/fields/cjw_page_field.php:24
 msgid "— Geen pagina —"
-msgstr ""
-
-#: inc/summer-camp/fields/cjw_repeater_field.php:35
-msgid "Datum"
 msgstr ""
 
 #: inc/summer-camp/fields/cjw_repeater_field.php:36
@@ -1828,6 +4782,6 @@ msgstr ""
 msgid "Voeg toe"
 msgstr ""
 
-#: inc/summer-camp/fields/cjw_repeater_field.php:98
+#: inc/summer-camp/fields/cjw_repeater_field.php:99
 msgid "Verwijder"
 msgstr ""
