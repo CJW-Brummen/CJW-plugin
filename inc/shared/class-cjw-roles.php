@@ -62,12 +62,23 @@ final class CJW_Roles
      * version instead, which costs one autoloaded option read and is the only
      * way a capability change actually reaches a running site.
      */
-    public const string VERSION = '2';
+    public const string VERSION = '4';
 
     /**
      * Where the installed capability map version is recorded.
      */
     private const string OPTION_VERSION = 'cjw_roles_version';
+
+    /**
+     * What this plugin last granted each role, as role => capability names.
+     *
+     * Kept so a capability can be taken away again. Without it the install is
+     * add-only: it tops a role up with anything new and has no way to tell a
+     * capability it granted last version from one an administrator added by
+     * hand, so it can never remove either. A tightening -- which is the kind of
+     * change that matters most here -- would never reach a running site.
+     */
+    private const string OPTION_INSTALLED = 'cjw_roles_installed';
 
     /**
      * The stock roles Leiding replaces.
@@ -105,7 +116,15 @@ final class CJW_Roles
     /**
      * What Leiding can do: the website, all of it.
      *
-     * This is WordPress's Editor role with two deliberate omissions.
+     * This is WordPress's Editor role with the blog taken out of it and two
+     * further deliberate omissions.
+     *
+     * There are no posts on this site and never will be (see CJW_Admin_Menu),
+     * so Leiding holds no `*_posts` capability and no `moderate_comments`.
+     * Pages, media and the sponsor wall are the whole job. This is why the
+     * sponsor post type is registered against page capabilities rather than
+     * the default post ones -- without that, taking the post capabilities away
+     * would have quietly taken Sponsoren with them.
      *
      * `unfiltered_html` is not here. It lets a user save raw <script> into a
      * post, which any later visitor -- including an administrator -- then runs.
@@ -125,19 +144,7 @@ final class CJW_Roles
     private const array LEIDING_CAPABILITIES = [
         'read',
         'upload_files',
-        'moderate_comments',
         'manage_categories',
-
-        'edit_posts',
-        'edit_others_posts',
-        'edit_published_posts',
-        'edit_private_posts',
-        'publish_posts',
-        'read_private_posts',
-        'delete_posts',
-        'delete_others_posts',
-        'delete_published_posts',
-        'delete_private_posts',
 
         'edit_pages',
         'edit_others_pages',
@@ -218,6 +225,15 @@ final class CJW_Roles
             }
         }
 
+        update_option(
+            self::OPTION_INSTALLED,
+            [
+                self::ROLE_LEIDING => self::LEIDING_CAPABILITIES,
+                self::ROLE => [ ...self::LEIDING_CAPABILITIES, ...self::CAMP_MANAGER_CAPABILITIES ],
+            ],
+            true
+        );
+
         update_option(self::OPTION_VERSION, self::VERSION, true);
     }
 
@@ -266,6 +282,39 @@ final class CJW_Roles
                 $existing->add_cap($capability);
             }
         }
+
+        foreach (self::revoked($slug, $existing, $capabilities) as $capability) {
+            $existing->remove_cap($capability);
+        }
+    }
+
+    /**
+     * Capabilities to take back off a role.
+     *
+     * Anything this plugin granted last time and no longer declares. A
+     * capability an administrator added by hand is not in the record, so it
+     * survives -- which is the whole reason the record exists.
+     *
+     * With no record yet, the role's own capabilities stand in for it. Both CJW
+     * roles were created by this plugin and by nothing else, so everything they
+     * hold was granted here; the alternative is that the first tightening after
+     * this mechanism lands silently does nothing.
+     *
+     * @param string $slug Role slug.
+     * @param WP_Role $role The role as it currently stands.
+     * @param array<int, string> $capabilities What it should hold now.
+     * @return array<int, string>
+     */
+    private static function revoked(string $slug, WP_Role $role, array $capabilities): array
+    {
+        $record = get_option(self::OPTION_INSTALLED);
+        $record = is_array($record) ? $record : [];
+
+        $previous = isset($record[ $slug ]) && is_array($record[ $slug ])
+            ? $record[ $slug ]
+            : array_keys(array_filter((array) $role->capabilities));
+
+        return array_values(array_diff($previous, $capabilities));
     }
 
     /**

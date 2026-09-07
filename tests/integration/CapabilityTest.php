@@ -80,7 +80,8 @@ final class CapabilityTest extends CJW_IntegrationTestCase
         $id = self::factory()->user->create([ 'role' => CJW_Roles::ROLE_LEIDING ]);
         wp_set_current_user($id);
 
-        $this->assertTrue(current_user_can('edit_posts'));
+        // Leiding can rewrite any page on the site, which is a good deal more
+        // than the Contributor this used to describe could do.
         $this->assertTrue(current_user_can('edit_others_pages'));
         $this->assertFalse(current_user_can(CJW_Roles::CAPABILITY));
     }

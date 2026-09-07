@@ -43,13 +43,34 @@ final class RolesAndAccessTest extends CJW_IntegrationTestCase
         foreach (
             [
                 'read', 'upload_files',
-                'edit_posts', 'edit_others_posts', 'publish_posts', 'delete_others_posts',
-                'edit_pages', 'edit_others_pages', 'publish_pages', 'delete_others_pages',
+                'edit_pages', 'edit_others_pages', 'edit_published_pages', 'publish_pages',
+                'delete_pages', 'delete_others_pages', 'delete_published_pages',
             ] as $capability
         ) {
             $this->assertTrue(
                 user_can($user, $capability),
                 "Leiding cannot '{$capability}', which is part of keeping the website."
+            );
+        }
+    }
+
+    public function testLeidingHoldsNoPostCapabilities(): void
+    {
+        // There are no posts on this site and never will be. A role carrying
+        // capabilities for content that cannot exist is how a menu nobody wants
+        // comes back later.
+        $user = $this->actAsLeiding();
+
+        foreach (
+            [
+                'edit_posts', 'edit_others_posts', 'edit_published_posts', 'edit_private_posts',
+                'publish_posts', 'read_private_posts', 'delete_posts', 'delete_others_posts',
+                'delete_published_posts', 'delete_private_posts', 'moderate_comments',
+            ] as $capability
+        ) {
+            $this->assertFalse(
+                user_can($user, $capability),
+                "Leiding holds '{$capability}', for content this site does not have."
             );
         }
     }
@@ -125,6 +146,55 @@ final class RolesAndAccessTest extends CJW_IntegrationTestCase
                 "A Kampbeheerder holds '{$capability}', which is site administration."
             );
         }
+    }
+
+    /* Taking a capability back
+    --------------------------------------------- */
+
+    public function testACapabilityGrantedByAnEarlierVersionIsTakenBack(): void
+    {
+        // The install used to be add-only: it could top a role up but never
+        // trim it, so removing a capability from the map reached a fresh site
+        // and no existing one. Removing the post capabilities from Leiding was
+        // exactly that change, and it did nothing on the site it was written on.
+        $role = get_role(CJW_Roles::ROLE_LEIDING);
+        $role->add_cap('edit_posts');
+
+        // The record is what tells a capability this plugin granted from one
+        // somebody added by hand. Written as though an earlier version had
+        // granted edit_posts, which is what actually happened.
+        $record = get_option('cjw_roles_installed');
+        $record[ CJW_Roles::ROLE_LEIDING ][] = 'edit_posts';
+        update_option('cjw_roles_installed', $record);
+
+        $this->assertTrue(user_can($this->actAsLeiding(), 'edit_posts'));
+
+        CJW_Roles::install();
+        unset($GLOBALS['wp_roles']);
+
+        $this->assertFalse(
+            user_can($this->actAsLeiding(), 'edit_posts'),
+            'A capability this plugin no longer grants is still on the role.'
+        );
+    }
+
+    public function testACapabilityAnAdministratorAddedByHandSurvives(): void
+    {
+        // The reason the install records what it granted rather than simply
+        // rebuilding the role: an administrator who widened Leiding on purpose
+        // should not have it undone by the next plugin update.
+        CJW_Roles::install();
+
+        $role = get_role(CJW_Roles::ROLE_LEIDING);
+        $role->add_cap('export');
+
+        CJW_Roles::install();
+        unset($GLOBALS['wp_roles']);
+
+        $this->assertTrue(
+            user_can($this->actAsLeiding(), 'export'),
+            'A capability added by hand was thrown away by a reinstall.'
+        );
     }
 
     /* The stock roles are gone, and their people are not
@@ -293,7 +363,9 @@ final class RolesAndAccessTest extends CJW_IntegrationTestCase
     public function testLeidingCanStillManageSponsors(): void
     {
         // Sponsor logos are pictures on the front page: website content, and
-        // deliberately left where Leiding can reach them.
+        // deliberately left where Leiding can reach them. This is the assertion
+        // that catches it if the sponsor post type ever goes back to the
+        // default post capabilities, which Leiding no longer holds.
         $this->actAsLeiding();
 
         $type = get_post_type_object(CJW_Summer_Camp_Sponsor_Post_Type::POST_TYPE);
