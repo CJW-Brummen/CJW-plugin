@@ -68,6 +68,7 @@ final class SettingsScreensRenderTest extends CJW_IntegrationTestCase
 
         foreach ([
             'Website inrichten',
+            'iDEAL-betalingen (Mollie)',
             'Statuspagina voor bewaking',
             'E-mail',
             'Mail-veiligmodus',
@@ -76,6 +77,32 @@ final class SettingsScreensRenderTest extends CJW_IntegrationTestCase
         ] as $panel) {
             $this->assertStringContainsString($panel, $html, $panel);
         }
+    }
+
+    /**
+     * Both key slots are on screen, so the yearly rehearsal is a switch rather
+     * than a trip to the Mollie dashboard for a key somebody has to re-paste.
+     */
+    public function testTheMolliePanelOffersBothKeysAndTheSwitch(): void
+    {
+        CJW_Mollie::storeKey('test_abcdefghij1234567890ABCDE');
+        CJW_Mollie::storeKey('live_zyxwvutsrq0987654321ZYXWV');
+
+        $html = $this->renderTab('beheer');
+
+        $this->assertStringContainsString('Testmodus', $html);
+        $this->assertStringContainsString('Live', $html);
+        $this->assertStringContainsString(CJW_Mollie::maskedKey(CJW_Mollie::MODE_TEST), $html);
+        $this->assertStringContainsString(CJW_Mollie::maskedKey(CJW_Mollie::MODE_LIVE), $html);
+        $this->assertStringContainsString('in gebruik', $html);
+        $this->assertStringContainsString(CJW_Mollie_Panel::ACTION_MODE, $html, 'and a way to switch');
+
+        // The full keys are never rendered back to the browser.
+        $this->assertStringNotContainsString('test_abcdefghij1234567890ABCDE', $html);
+        $this->assertStringNotContainsString('live_zyxwvutsrq0987654321ZYXWV', $html);
+
+        CJW_Mollie::clearKey(CJW_Mollie::MODE_TEST);
+        CJW_Mollie::clearKey(CJW_Mollie::MODE_LIVE);
     }
 
     public function testTheStatusPanelShowsTheCrashAndTheWayToClearIt(): void

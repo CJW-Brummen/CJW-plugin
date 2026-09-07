@@ -33,18 +33,109 @@ final class MollieTest extends CJW_TestCase
     {
         $this->assertFalse(CJW_Mollie::isConfigured());
         $this->assertFalse(CJW_Mollie::isUsable());
-        $this->assertStringContainsString('geen Mollie-sleutel', CJW_Mollie::unusableReason());
+        $this->assertStringContainsString('testsleutel', CJW_Mollie::unusableReason());
     }
 
-    public function testAKeyIsRecognisedAndTheModeComesFromItRatherThanASwitch(): void
+    /**
+     * A fresh site is in test mode, which is the harmless half of the switch.
+     */
+    public function testTestModeIsWhereASiteStarts(): void
     {
-        $this->assertTrue(CJW_Mollie::storeKey(self::LIVE));
-        $this->assertTrue(CJW_Mollie::isConfigured());
-        $this->assertSame(CJW_Mollie::MODE_LIVE, CJW_Mollie::mode());
+        $this->assertSame(CJW_Mollie::MODE_TEST, CJW_Mollie::mode());
+    }
 
-        CJW_Mollie::storeKey(self::TEST);
+    /**
+     * The prefix files the key; there is no dropdown to get wrong.
+     */
+    public function testAKeyIsFiledUnderTheModeItsPrefixNames(): void
+    {
+        $this->assertSame(CJW_Mollie::MODE_LIVE, CJW_Mollie::storeKey(self::LIVE));
+        $this->assertSame(CJW_Mollie::MODE_TEST, CJW_Mollie::storeKey(self::TEST));
+
+        $this->assertTrue(CJW_Mollie::hasKey(CJW_Mollie::MODE_LIVE));
+        $this->assertTrue(CJW_Mollie::hasKey(CJW_Mollie::MODE_TEST));
+    }
+
+    /**
+     * Pasting the live key is not the same as going live. That is the point of
+     * the switch: both keys sit there all year and the mode is a decision.
+     */
+    public function testStoringTheLiveKeyDoesNotGoLiveByItself(): void
+    {
+        CJW_Mollie::storeKey(self::LIVE);
 
         $this->assertSame(CJW_Mollie::MODE_TEST, CJW_Mollie::mode());
+        $this->assertFalse(CJW_Mollie::isConfigured(), 'there is no test key yet');
+    }
+
+    public function testSwitchingChangesWhichKeyIsUsed(): void
+    {
+        CJW_Mollie::storeKey(self::TEST);
+        CJW_Mollie::storeKey(self::LIVE);
+
+        $this->assertTrue(CJW_Mollie::setMode(CJW_Mollie::MODE_LIVE));
+        $this->assertSame(CJW_Mollie::MODE_LIVE, CJW_Mollie::mode());
+        $this->assertStringStartsWith('live_', CJW_Mollie::maskedKey());
+
+        $this->assertTrue(CJW_Mollie::setMode(CJW_Mollie::MODE_TEST));
+        $this->assertStringStartsWith('test_', CJW_Mollie::maskedKey());
+    }
+
+    /**
+     * A switch that leaves the site unable to take a payment would only be
+     * discovered by the first parent who tried.
+     */
+    public function testSwitchingToAModeWithNoKeyIsRefused(): void
+    {
+        CJW_Mollie::storeKey(self::TEST);
+
+        $this->assertFalse(CJW_Mollie::setMode(CJW_Mollie::MODE_LIVE));
+        $this->assertSame(CJW_Mollie::MODE_TEST, CJW_Mollie::mode());
+    }
+
+    public function testAnUnknownModeIsRefused(): void
+    {
+        CJW_Mollie::storeKey(self::TEST);
+
+        $this->assertFalse(CJW_Mollie::setMode('sandbox'));
+    }
+
+    /**
+     * Both keys live side by side, which is what makes the yearly rehearsal a
+     * switch rather than a copy-paste from the Mollie dashboard.
+     */
+    public function testBothKeysAreKeptAndShownApart(): void
+    {
+        CJW_Mollie::storeKey(self::TEST);
+        CJW_Mollie::storeKey(self::LIVE);
+
+        $this->assertStringStartsWith('test_', CJW_Mollie::maskedKey(CJW_Mollie::MODE_TEST));
+        $this->assertStringStartsWith('live_', CJW_Mollie::maskedKey(CJW_Mollie::MODE_LIVE));
+    }
+
+    public function testRemovingTheKeyInUseFallsBackToTheOtherMode(): void
+    {
+        CJW_Mollie::storeKey(self::TEST);
+        CJW_Mollie::storeKey(self::LIVE);
+        CJW_Mollie::setMode(CJW_Mollie::MODE_LIVE);
+
+        CJW_Mollie::clearKey(CJW_Mollie::MODE_LIVE);
+
+        $this->assertFalse(CJW_Mollie::hasKey(CJW_Mollie::MODE_LIVE));
+        $this->assertSame(CJW_Mollie::MODE_TEST, CJW_Mollie::mode(), 'never left pointing at an empty slot');
+        $this->assertTrue(CJW_Mollie::isConfigured());
+    }
+
+    /**
+     * A key stored before there were two slots keeps working.
+     */
+    public function testAKeyFromBeforeTheSwitchIsMovedIntoPlace(): void
+    {
+        $GLOBALS['cjw_test_options'][ CJW_Mollie::OPTION_KEY ] = self::LIVE;
+
+        $this->assertTrue(CJW_Mollie::hasKey(CJW_Mollie::MODE_LIVE));
+        $this->assertSame(CJW_Mollie::MODE_LIVE, CJW_Mollie::mode(), 'and stays in the mode it was in');
+        $this->assertTrue(CJW_Mollie::isConfigured());
     }
 
     /**
@@ -67,7 +158,7 @@ final class MollieTest extends CJW_TestCase
     public function testSomethingThatIsNotAKeyIsRefused(string $candidate): void
     {
         $this->assertFalse(CJW_Mollie::looksLikeKey($candidate));
-        $this->assertFalse(CJW_Mollie::storeKey($candidate));
+        $this->assertSame('', CJW_Mollie::storeKey($candidate), 'it belongs in neither slot');
         $this->assertFalse(CJW_Mollie::isConfigured(), 'and nothing is stored');
     }
 
@@ -78,18 +169,19 @@ final class MollieTest extends CJW_TestCase
     {
         CJW_Mollie::storeKey(self::LIVE);
 
-        $masked = CJW_Mollie::maskedKey();
+        $masked = CJW_Mollie::maskedKey(CJW_Mollie::MODE_LIVE);
 
         $this->assertSame('live_••••BCDE', $masked, 'the prefix and the last four, nothing else');
         $this->assertStringNotContainsString('abcdefghij', $masked);
         $this->assertStringNotContainsString(self::LIVE, $masked);
     }
 
-    public function testAnEmptyKeyClearsIt(): void
+    public function testAKeyCanBeTakenOutAgain(): void
     {
-        CJW_Mollie::storeKey(self::LIVE);
+        CJW_Mollie::storeKey(self::TEST);
 
-        $this->assertTrue(CJW_Mollie::storeKey(''));
+        CJW_Mollie::clearKey(CJW_Mollie::MODE_TEST);
+
         $this->assertFalse(CJW_Mollie::isConfigured());
         $this->assertSame('', CJW_Mollie::maskedKey());
     }
@@ -102,6 +194,7 @@ final class MollieTest extends CJW_TestCase
     public function testACopyOfTheSiteRefusesToChargeAnybody(): void
     {
         CJW_Mollie::storeKey(self::LIVE);
+        CJW_Mollie::setMode(CJW_Mollie::MODE_LIVE);
         $GLOBALS['cjw_test_environment_type'] = 'staging';
 
         $this->assertTrue(CJW_Mollie::isConfigured());
@@ -112,6 +205,7 @@ final class MollieTest extends CJW_TestCase
     public function testAConfiguredProductionSiteMayCharge(): void
     {
         CJW_Mollie::storeKey(self::LIVE);
+        CJW_Mollie::setMode(CJW_Mollie::MODE_LIVE);
 
         $this->assertTrue(CJW_Mollie::isUsable());
         $this->assertSame('', CJW_Mollie::unusableReason());

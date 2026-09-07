@@ -982,10 +982,14 @@ class CJW_Summer_Camp_Settings_Page
             'host_confirmed' => ['success', __('Dit webadres is vastgelegd als de live website. Elke kopie op een ander adres stuurt vanaf nu geen mail meer naar ouders.', 'cjw')],
             'host_forgotten' => ['success', __('De live website is vergeten. Bevestig het nieuwe adres zodra de website daar draait.', 'cjw')],
             'fatal_cleared' => ['success', __('De crashmelding is weggehaald. De statuspagina meldt weer “ok”, en een volgende crash wordt opnieuw gemeld.', 'cjw')],
-            'mollie_saved' => ['success', __('De Mollie-sleutel is opgeslagen. Doe een testinschrijving voordat de inschrijvingen opengaan.', 'cjw')],
-            'mollie_cleared' => ['success', __('De Mollie-sleutel is verwijderd. Ouders kunnen nu niet met iDEAL betalen.', 'cjw')],
+            'mollie_saved_test' => ['success', __('De testsleutel is opgeslagen. Zet de website om naar testmodus en vul het formulier één keer helemaal in.', 'cjw')],
+            'mollie_saved_live' => ['success', __('De live-sleutel is opgeslagen. De website blijft staan waar hij stond; zet hem zelf om naar live zodra je zover bent.', 'cjw')],
+            'mollie_cleared' => ['success', __('De sleutel is verwijderd.', 'cjw')],
             'mollie_invalid' => ['error', __('Dat lijkt geen Mollie-sleutel. Een sleutel begint met live_ of test_ en is een stuk langer.', 'cjw')],
-            'mollie_unchanged' => ['success', __('Er is niets gewijzigd; de sleutel is gebleven zoals hij was.', 'cjw')],
+            'mollie_unchanged' => ['success', __('Er is niets gewijzigd; de sleutels zijn gebleven zoals ze waren.', 'cjw')],
+            'mollie_now_test' => ['success', __('De website staat nu in testmodus. Betalingen lijken te lukken zonder dat er geld wordt overgemaakt, dus zet hem terug naar live voordat de inschrijvingen opengaan.', 'cjw')],
+            'mollie_now_live' => ['success', __('De website staat nu op live. Betalingen van ouders komen echt binnen.', 'cjw')],
+            'mollie_mode_refused' => ['error', __('Omzetten lukte niet: voor die modus is nog geen sleutel opgeslagen.', 'cjw')],
         ];
 
         if (!array_key_exists($result, $notices)) {

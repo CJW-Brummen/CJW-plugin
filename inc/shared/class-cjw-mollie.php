@@ -26,14 +26,29 @@ if (! defined('ABSPATH')) {
 final class CJW_Mollie
 {
     /**
-     * Where the key is stored when it is not defined in wp-config.php.
+     * Where the legacy single key lived, before there were two slots.
      *
-     * Never added to the camp settings array. See the class docblock.
+     * Read once and moved into place; nothing writes it any more.
      */
     public const string OPTION_KEY = 'cjw_mollie_api_key';
 
     /**
+     * Both keys: 'test' and 'live'.
+     *
+     * Never added to the camp settings array. See the class docblock.
+     */
+    public const string OPTION_KEYS = 'cjw_mollie_keys';
+
+    /**
+     * Which of the two is in use.
+     */
+    public const string OPTION_MODE = 'cjw_mollie_mode';
+
+    /**
      * Set from wp-config.php to keep the key out of the database.
+     *
+     * Pins the mode with it: a site that hard-codes its credential is not one
+     * that wants a switch on a settings screen.
      */
     public const string CONSTANT = 'CJW_MOLLIE_API_KEY';
 
@@ -50,7 +65,7 @@ final class CJW_Mollie
     private const int TIMEOUT = 12;
 
     /**
-     * Whether this site can talk to Mollie at all.
+     * Whether this site can talk to Mollie at all, in the mode it is in.
      *
      * @return bool
      */
@@ -82,7 +97,9 @@ final class CJW_Mollie
     public static function unusableReason(): string
     {
         if (! self::isConfigured()) {
-            return __('Er is nog geen Mollie-sleutel ingesteld.', 'cjw');
+            return self::mode() === self::MODE_TEST
+                ? __('Er is nog geen Mollie-testsleutel ingesteld.', 'cjw')
+                : __('Er is nog geen Mollie-sleutel voor de live-modus ingesteld.', 'cjw');
         }
 
         if (CJW_Mail_Safe_Mode::isActive()) {
@@ -110,24 +127,80 @@ final class CJW_Mollie
     }
 
     /**
-     * Live or test, decided by the key itself rather than by a checkbox
-     * somebody can leave in the wrong position.
+     * Which mode the site is in.
+     *
+     * Test unless somebody has deliberately switched to live: a camp that
+     * forgets to switch loses a rehearsal, and one that forgets the other way
+     * loses a season's income.
      *
      * @return string
      */
     public static function mode(): string
     {
-        return str_starts_with(self::key(), 'live_') ? self::MODE_LIVE : self::MODE_TEST;
+        if (self::keyIsPinned()) {
+            return str_starts_with(self::pinnedKey(), 'live_') ? self::MODE_LIVE : self::MODE_TEST;
+        }
+
+        return get_option(self::OPTION_MODE) === self::MODE_LIVE ? self::MODE_LIVE : self::MODE_TEST;
     }
 
     /**
-     * The key, as shown on screen: enough to recognise, not enough to use.
+     * Both modes, with the label a screen shows.
+     *
+     * @return array<string, string>
+     */
+    public static function modes(): array
+    {
+        return [
+            self::MODE_TEST => __('Testmodus', 'cjw'),
+            self::MODE_LIVE => __('Live', 'cjw'),
+        ];
+    }
+
+    /**
+     * Switches which key is in use.
+     *
+     * Refuses a mode with no key behind it: a switch that leaves the site
+     * unable to take a payment is worse than no switch, and it would only be
+     * discovered by the first parent who tried.
+     *
+     * @param string $mode One of the MODE_ constants.
+     *
+     * @return bool Whether the switch happened.
+     */
+    public static function setMode(string $mode): bool
+    {
+        if (self::keyIsPinned() || ! array_key_exists($mode, self::modes()) || ! self::hasKey($mode)) {
+            return false;
+        }
+
+        update_option(self::OPTION_MODE, $mode, false);
+
+        return true;
+    }
+
+    /**
+     * Whether a key is stored for a mode.
+     *
+     * @param string $mode One of the MODE_ constants.
+     *
+     * @return bool
+     */
+    public static function hasKey(string $mode): bool
+    {
+        return self::keyFor($mode) !== '';
+    }
+
+    /**
+     * A key as shown on screen: enough to recognise, not enough to use.
+     *
+     * @param string|null $mode Which slot, or null for the one in use.
      *
      * @return string
      */
-    public static function maskedKey(): string
+    public static function maskedKey(?string $mode = null): string
     {
-        $key = self::key();
+        $key = $mode === null ? self::key() : self::keyFor($mode);
 
         if ($key === '') {
             return '';
@@ -145,33 +218,62 @@ final class CJW_Mollie
      */
     public static function keyIsPinned(): bool
     {
-        return defined(self::CONSTANT) && self::sanitizeKey((string) constant(self::CONSTANT)) !== '';
+        return self::pinnedKey() !== '';
     }
 
     /**
-     * Stores a key, or clears it when given an empty string.
+     * Stores a key in the slot its own prefix names.
+     *
+     * The prefix decides, not a dropdown: a key that says live_ is the live
+     * key, and there is no way to file it as anything else by mistake.
      *
      * @param string $key The key as typed.
      *
-     * @return bool Whether it looked like a Mollie key at all.
+     * @return string The mode it was filed under, or '' when it was refused.
      */
-    public static function storeKey(string $key): bool
+    public static function storeKey(string $key): string
     {
         $key = self::sanitizeKey($key);
 
-        if ($key === '') {
-            delete_option(self::OPTION_KEY);
-
-            return true;
-        }
-
         if (! self::looksLikeKey($key)) {
-            return false;
+            return '';
         }
 
-        update_option(self::OPTION_KEY, $key, false);
+        $mode = str_starts_with($key, 'live_') ? self::MODE_LIVE : self::MODE_TEST;
+        $keys = self::keys();
+        $keys[ $mode ] = $key;
 
-        return true;
+        update_option(self::OPTION_KEYS, $keys, false);
+
+        return $mode;
+    }
+
+    /**
+     * Forgets one of the two keys.
+     *
+     * Switches back to the other mode when the one in use is the one being
+     * removed, so the site is never left pointing at an empty slot.
+     *
+     * @param string $mode One of the MODE_ constants.
+     *
+     * @return void
+     */
+    public static function clearKey(string $mode): void
+    {
+        if (! array_key_exists($mode, self::modes())) {
+            return;
+        }
+
+        $keys = self::keys();
+        unset($keys[ $mode ]);
+
+        update_option(self::OPTION_KEYS, $keys, false);
+
+        $other = $mode === self::MODE_LIVE ? self::MODE_TEST : self::MODE_LIVE;
+
+        if (self::mode() === $mode) {
+            update_option(self::OPTION_MODE, self::hasKey($other) ? $other : self::MODE_TEST, false);
+        }
     }
 
     /**
@@ -263,7 +365,7 @@ final class CJW_Mollie
      *
      * @return array{ok: bool, payment?: array<string, mixed>, error?: string, status?: int}
      */
-    public static function getPayment(string $paymentId): array
+    public static function getPayment(string $paymentId, string $mode = ''): array
     {
         if (! self::looksLikePaymentId($paymentId)) {
             return [
@@ -272,7 +374,7 @@ final class CJW_Mollie
             ];
         }
 
-        return self::request('GET', 'payments/' . rawurlencode($paymentId));
+        return self::request('GET', 'payments/' . rawurlencode($paymentId), null, '', $mode);
     }
 
     /**
@@ -294,13 +396,19 @@ final class CJW_Mollie
      * @param string     $path        Path under the API root.
      * @param array|null $body        JSON body, for POST.
      * @param string     $idempotency Idempotency key, for POST.
+     * @param string     $mode        Which key to use, or '' for the one in use.
      * @param array<string, mixed>|null $body
      *
      * @return array{ok: bool, payment?: array<string, mixed>, error?: string, status?: int}
      */
-    private static function request(string $method, string $path, ?array $body = null, string $idempotency = ''): array
-    {
-        $key = self::key();
+    private static function request(
+        string $method,
+        string $path,
+        ?array $body = null,
+        string $idempotency = '',
+        string $mode = ''
+    ): array {
+        $key = $mode === '' ? self::key() : self::keyFor($mode);
 
         if ($key === '') {
             return [
@@ -395,15 +503,95 @@ final class CJW_Mollie
      */
     private static function key(): string
     {
-        if (defined(self::CONSTANT)) {
-            $pinned = self::sanitizeKey((string) constant(self::CONSTANT));
+        return self::keyFor(self::mode());
+    }
 
-            if ($pinned !== '') {
-                return $pinned;
+    /**
+     * The key stored for one mode, or ''.
+     *
+     * @param string $mode One of the MODE_ constants.
+     *
+     * @return string
+     */
+    private static function keyFor(string $mode): string
+    {
+        $pinned = self::pinnedKey();
+
+        if ($pinned !== '') {
+            // A pinned key answers for its own mode and for nothing else, so a
+            // webhook from the other mode is refused rather than looked up
+            // with a credential that cannot see it.
+            $pinnedMode = str_starts_with($pinned, 'live_') ? self::MODE_LIVE : self::MODE_TEST;
+
+            return $mode === $pinnedMode ? $pinned : '';
+        }
+
+        return self::keys()[ $mode ] ?? '';
+    }
+
+    /**
+     * The key hard-coded in wp-config.php, or ''.
+     *
+     * @return string
+     */
+    private static function pinnedKey(): string
+    {
+        if (! defined(self::CONSTANT)) {
+            return '';
+        }
+
+        $pinned = self::sanitizeKey((string) constant(self::CONSTANT));
+
+        return self::looksLikeKey($pinned) ? $pinned : '';
+    }
+
+    /**
+     * Both stored keys, keyed by mode.
+     *
+     * @return array<string, string>
+     */
+    private static function keys(): array
+    {
+        $stored = get_option(self::OPTION_KEYS, null);
+
+        if (! is_array($stored)) {
+            return self::migrateLegacyKey();
+        }
+
+        $keys = [];
+
+        foreach (self::modes() as $mode => $label) {
+            $key = self::sanitizeKey((string) ($stored[ $mode ] ?? ''));
+
+            if (self::looksLikeKey($key)) {
+                $keys[ $mode ] = $key;
             }
         }
 
-        return self::sanitizeKey((string) get_option(self::OPTION_KEY, ''));
+        return $keys;
+    }
+
+    /**
+     * Moves a key stored before there were two slots into the right one.
+     *
+     * @return array<string, string>
+     */
+    private static function migrateLegacyKey(): array
+    {
+        $legacy = self::sanitizeKey((string) get_option(self::OPTION_KEY, ''));
+
+        if (! self::looksLikeKey($legacy)) {
+            return [];
+        }
+
+        $mode = str_starts_with($legacy, 'live_') ? self::MODE_LIVE : self::MODE_TEST;
+        $keys = [ $mode => $legacy ];
+
+        update_option(self::OPTION_KEYS, $keys, false);
+        update_option(self::OPTION_MODE, $mode, false);
+        delete_option(self::OPTION_KEY);
+
+        return $keys;
     }
 
     /**

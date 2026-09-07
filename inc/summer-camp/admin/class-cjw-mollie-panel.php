@@ -21,6 +21,8 @@ final class CJW_Mollie_Panel
 {
     public const string ACTION_SAVE = 'cjw_mollie_save_key';
 
+    public const string ACTION_MODE = 'cjw_mollie_set_mode';
+
     /**
      * Registers the hooks.
      *
@@ -29,6 +31,7 @@ final class CJW_Mollie_Panel
     public static function init(): void
     {
         add_action('admin_post_' . self::ACTION_SAVE, [self::class, 'handleSave']);
+        add_action('admin_post_' . self::ACTION_MODE, [self::class, 'handleMode']);
     }
 
     /**
@@ -59,15 +62,20 @@ final class CJW_Mollie_Panel
             ? trim(sanitize_text_field(wp_unslash((string) $_POST['cjw_mollie_key'])))
             : '';
 
-        $result = 'mollie_saved';
+        $clear = isset($_POST['cjw_mollie_clear'])
+            ? sanitize_key(wp_unslash((string) $_POST['cjw_mollie_clear']))
+            : '';
 
-        if (isset($_POST['cjw_mollie_clear'])) {
-            CJW_Mollie::storeKey('');
+        if ($clear !== '') {
+            CJW_Mollie::clearKey($clear);
             $result = 'mollie_cleared';
         } elseif ($submitted === '') {
             $result = 'mollie_unchanged';
-        } elseif (!CJW_Mollie::storeKey($submitted)) {
-            $result = 'mollie_invalid';
+        } else {
+            $stored = CJW_Mollie::storeKey($submitted);
+            $result = $stored === ''
+                ? 'mollie_invalid'
+                : ($stored === CJW_Mollie::MODE_LIVE ? 'mollie_saved_live' : 'mollie_saved_test');
         }
 
         wp_safe_redirect(add_query_arg(
@@ -75,6 +83,39 @@ final class CJW_Mollie_Panel
                 'page' => 'cjw-summer-camp',
                 'tab' => 'beheer',
                 'cjw_result' => $result,
+            ],
+            admin_url('admin.php')
+        ));
+
+        exit;
+    }
+
+    /**
+     * Switches between the test key and the live key.
+     *
+     * @return void
+     */
+    public static function handleMode(): void
+    {
+        if (!self::mayEditKey()) {
+            wp_die(esc_html__('Alleen een beheerder van de website kan tussen test en live wisselen.', 'cjw'));
+        }
+
+        check_admin_referer(self::ACTION_MODE);
+
+        $mode = isset($_POST['cjw_mollie_mode'])
+            ? sanitize_key(wp_unslash((string) $_POST['cjw_mollie_mode']))
+            : '';
+
+        $done = CJW_Mollie::setMode($mode);
+
+        wp_safe_redirect(add_query_arg(
+            [
+                'page' => 'cjw-summer-camp',
+                'tab' => 'beheer',
+                'cjw_result' => $done
+                    ? ($mode === CJW_Mollie::MODE_LIVE ? 'mollie_now_live' : 'mollie_now_test')
+                    : 'mollie_mode_refused',
             ],
             admin_url('admin.php')
         ));
@@ -94,6 +135,7 @@ final class CJW_Mollie_Panel
         $reason = CJW_Mollie::unusableReason();
         $mode = CJW_Mollie::mode();
         $pinned = CJW_Mollie::keyIsPinned();
+        $registrationOpen = cjw_summer_camp()->isRegistrationOpen();
         $lastWebhook = class_exists('CJW_Wizard_Ideal') ? CJW_Wizard_Ideal::lastWebhook() : 0;
 
         ?>
@@ -102,6 +144,7 @@ final class CJW_Mollie_Panel
 
             <p class="description">
                 <?php esc_html_e('Ouders betalen het inschrijfgeld met iDEAL. De website slaat de inschrijving eerst op en stuurt de ouder daarna naar Mollie, zodat een mislukte betaling nooit een inschrijving kost. Mollie meldt de uitkomst terug aan de website; de website vraagt die uitkomst altijd zelf na bij Mollie en gelooft niets wat een browser beweert.', 'cjw'); ?>
+                <?php esc_html_e('Bewaar hier beide sleutels. Dan is het proefdraaien voor een nieuw kampjaar één klik, en betalingen die nog onderweg zijn komen ook na het omzetten netjes binnen: die worden nagevraagd met de sleutel waarmee ze zijn gestart.', 'cjw'); ?>
             </p>
 
             <table class="widefat striped cjw-tool-table">
@@ -112,7 +155,14 @@ final class CJW_Mollie_Panel
                             <?php if ($usable) : ?>
                                 <strong style="color:#007017;"><?php esc_html_e('Ouders kunnen betalen.', 'cjw'); ?></strong>
                                 <?php if ($mode === CJW_Mollie::MODE_TEST) : ?>
-                                    <br><strong style="color:#8a6116;"><?php esc_html_e('Let op: dit is een testsleutel. Er wordt geen echt geld overgemaakt.', 'cjw'); ?></strong>
+                                    <br><strong style="color:#8a6116;">
+                                        <?php
+                                        esc_html_e(
+                                            'De website staat in testmodus. Een ouder doorloopt iDEAL zonder dat er geld wordt overgemaakt, en de inschrijving komt toch op “betaald” te staan.',
+                                            'cjw'
+                                        );
+                                        ?>
+                                    </strong>
                                 <?php endif; ?>
                             <?php else : ?>
                                 <strong><?php esc_html_e('Betalen staat uit.', 'cjw'); ?></strong>
@@ -120,19 +170,55 @@ final class CJW_Mollie_Panel
                             <?php endif; ?>
                         </td>
                     </tr>
-                    <tr>
-                        <th scope="row"><?php esc_html_e('Sleutel', 'cjw'); ?></th>
-                        <td>
-                            <?php if (!$configured) : ?>
-                                <?php esc_html_e('Nog niet ingesteld.', 'cjw'); ?>
-                            <?php else : ?>
-                                <code><?php echo esc_html(CJW_Mollie::maskedKey()); ?></code>
-                                <?php if ($pinned) : ?>
-                                    <br><?php esc_html_e('Vastgezet in wp-config.php, dus niet via dit scherm te wijzigen. Dat is de veiligste plek: de sleutel staat dan niet in de database en dus ook niet in een back-up of een export.', 'cjw'); ?>
+                    <?php foreach (CJW_Mollie::modes() as $slot => $label) : ?>
+                        <tr>
+                            <th scope="row">
+                                <?php echo esc_html($label); ?>
+                                <?php if ($slot === $mode) : ?>
+                                    <br><strong><?php esc_html_e('in gebruik', 'cjw'); ?></strong>
                                 <?php endif; ?>
-                            <?php endif; ?>
-                        </td>
-                    </tr>
+                            </th>
+                            <td>
+                                <?php if (!CJW_Mollie::hasKey($slot)) : ?>
+                                    <?php esc_html_e('Nog geen sleutel.', 'cjw'); ?>
+                                <?php else : ?>
+                                    <code><?php echo esc_html(CJW_Mollie::maskedKey($slot)); ?></code>
+
+                                    <?php if ($slot !== $mode && !$pinned && self::mayEditKey()) : ?>
+                                        <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" style="display:inline-block;margin-left:8px;">
+                                            <?php wp_nonce_field(self::ACTION_MODE); ?>
+                                            <input type="hidden" name="action" value="<?php echo esc_attr(self::ACTION_MODE); ?>" />
+                                            <input type="hidden" name="cjw_mollie_mode" value="<?php echo esc_attr($slot); ?>" />
+                                            <button type="submit" class="button"<?php echo $slot === CJW_Mollie::MODE_TEST && $registrationOpen ? ' onclick="return confirm(' . esc_attr(wp_json_encode(__('De inschrijvingen staan open. In testmodus lijkt betalen te lukken terwijl er geen geld binnenkomt. Toch omzetten?', 'cjw'))) . ');"' : ''; ?>>
+                                                <?php
+                                                echo esc_html(sprintf(
+                                                    /* translators: %s: the mode being switched to, e.g. "Live". */
+                                                    __('Zet om naar %s', 'cjw'),
+                                                    $label
+                                                ));
+                                                ?>
+                                            </button>
+                                        </form>
+                                    <?php endif; ?>
+
+                                    <?php if (!$pinned && self::mayEditKey()) : ?>
+                                        <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" style="display:inline-block;margin-left:8px;">
+                                            <?php wp_nonce_field(self::ACTION_SAVE); ?>
+                                            <input type="hidden" name="action" value="<?php echo esc_attr(self::ACTION_SAVE); ?>" />
+                                            <button type="submit" class="button-link delete" name="cjw_mollie_clear" value="<?php echo esc_attr($slot); ?>">
+                                                <?php esc_html_e('verwijder', 'cjw'); ?>
+                                            </button>
+                                        </form>
+                                    <?php endif; ?>
+                                <?php endif; ?>
+
+                                <?php if ($pinned && $slot === $mode) : ?>
+                                    <br><?php esc_html_e('Vastgezet in wp-config.php, dus niet via dit scherm te wijzigen of om te zetten. Dat is de veiligste plek: de sleutel staat dan niet in de database en dus ook niet in een back-up of een export.', 'cjw'); ?>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+
                     <tr>
                         <th scope="row"><?php esc_html_e('Meldadres voor Mollie', 'cjw'); ?></th>
                         <td>

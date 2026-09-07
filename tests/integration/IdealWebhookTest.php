@@ -189,7 +189,7 @@ final class IdealWebhookTest extends CJW_IntegrationTestCase
      *
      * @param array<string, mixed> $payment
      */
-    private function given(array $payment, int $code = 200, bool $known = true): string
+    private function given(array $payment, int $code = 200, bool $known = true, string $mode = 'test'): string
     {
         $id = (string) $payment['id'];
 
@@ -199,19 +199,35 @@ final class IdealWebhookTest extends CJW_IntegrationTestCase
         ];
 
         if ($known) {
-            $attempts = get_post_meta($this->submissionId, CJW_Wizard_Ideal::META_ATTEMPTS, true);
-            $attempts = is_array($attempts) ? $attempts : [];
-            $attempts[ $id ] = [
-                'cents' => 12000,
-                'mode' => 'test',
-                'at' => time(),
-                'status' => '',
-                'url' => 'https://www.mollie.com/checkout/' . $id,
-            ];
-            update_post_meta($this->submissionId, CJW_Wizard_Ideal::META_ATTEMPTS, $attempts);
+            $this->registerAttempt($id, $mode);
         }
 
         return $id;
+    }
+
+    /**
+     * Records a payment this site started, the way rememberAttempt() does.
+     *
+     * @param string $id   Mollie payment id.
+     * @param string $mode The mode it was created in.
+     */
+    private function registerAttempt(string $id, string $mode = 'test'): void
+    {
+        $attempts = get_post_meta($this->submissionId, CJW_Wizard_Ideal::META_ATTEMPTS, true);
+        $attempts = is_array($attempts) ? $attempts : [];
+        $attempts[ $id ] = [
+            'cents' => 12000,
+            'mode' => $mode,
+            'at' => time(),
+            'status' => '',
+            'url' => 'https://www.mollie.com/checkout/' . $id,
+        ];
+        update_post_meta($this->submissionId, CJW_Wizard_Ideal::META_ATTEMPTS, $attempts);
+
+        // The queryable row rememberAttempt() writes beside the array: it is
+        // what lets the webhook trace an id to a registration without asking
+        // Mollie first.
+        add_post_meta($this->submissionId, CJW_Wizard_Ideal::META_PAYMENT, $id);
     }
 
     public function testAPaidPaymentIsRecordedOnceAndSettlesTheRegistration(): void
@@ -259,6 +275,7 @@ final class IdealWebhookTest extends CJW_IntegrationTestCase
         $this->assertFalse($result['handled']);
         $this->assertSame('foreign', $result['reason']);
         $this->assertSame(0, CJW_Wizard_Payments::paid($this->submissionId));
+        $this->assertSame([], $this->requests, 'and no API call is spent on a stranger\'s id');
     }
 
     public function testAPaymentPointingAtSomebodyElsesRegistrationIsIgnored(): void
@@ -279,6 +296,33 @@ final class IdealWebhookTest extends CJW_IntegrationTestCase
 
         $this->assertFalse(CJW_Wizard_Ideal::process($id)['handled']);
         $this->assertSame(0, CJW_Wizard_Payments::paid($this->submissionId));
+    }
+
+    /**
+     * The reason the mode is taken from the attempt rather than from the
+     * switch: somebody rehearsing next year's form must not silently drop a
+     * real payment that was still on its way.
+     */
+    public function testALivePaymentStillLandsAfterTheSiteIsSwitchedToTest(): void
+    {
+        CJW_Mollie::storeKey('live_zyxwvutsrq0987654321ZYXWV');
+        CJW_Mollie::setMode(CJW_Mollie::MODE_LIVE);
+
+        $id = $this->given($this->payment([ 'mode' => 'live' ]), 200, true, 'live');
+
+        // The rehearsal begins while the payment is in flight.
+        CJW_Mollie::setMode(CJW_Mollie::MODE_TEST);
+        $this->assertSame(CJW_Mollie::MODE_TEST, CJW_Mollie::mode());
+
+        $result = CJW_Wizard_Ideal::process($id);
+
+        $this->assertTrue($result['handled'], 'the money still arrives');
+        $this->assertSame(12000, CJW_Wizard_Payments::paid($this->submissionId));
+        $this->assertSame(
+            'Bearer live_zyxwvutsrq0987654321ZYXWV',
+            $this->requests[0]['args']['headers']['Authorization'],
+            'and it was verified with the key that created it'
+        );
     }
 
     /**
@@ -364,11 +408,15 @@ final class IdealWebhookTest extends CJW_IntegrationTestCase
     }
 
     /**
-     * An id Mollie has never heard of is not worth 26 hours of retries.
+     * A payment we started that Mollie no longer has -- deleted, or invisible
+     * to this key -- is not worth 26 hours of retries.
      */
     public function testAnIdMollieDoesNotKnowIsNotRetried(): void
     {
-        $result = CJW_Wizard_Ideal::process('tr_cccccccccccccccccccccc');
+        $id = 'tr_cccccccccccccccccccccc';
+        $this->registerAttempt($id);
+
+        $result = CJW_Wizard_Ideal::process($id);
 
         $this->assertFalse($result['retry']);
         $this->assertSame('unknown', $result['reason']);
@@ -380,6 +428,7 @@ final class IdealWebhookTest extends CJW_IntegrationTestCase
     public function testMollieBeingUnreachableAsksForARetry(): void
     {
         $id = 'tr_dddddddddddddddddddddd';
+        $this->registerAttempt($id);
         $this->answers[ $id ] = new WP_Error('http_request_failed', 'cURL error 28: timed out');
 
         $result = CJW_Wizard_Ideal::process($id);
@@ -391,12 +440,29 @@ final class IdealWebhookTest extends CJW_IntegrationTestCase
     public function testTheWebhookAnswers503WhenItWantsARetry(): void
     {
         $id = 'tr_eeeeeeeeeeeeeeeeeeeeee';
+        $this->registerAttempt($id);
         $this->answers[ $id ] = new WP_Error('http_request_failed', 'timed out');
 
         $request = new WP_REST_Request('POST', '/x');
         $request->set_param('id', $id);
 
         $this->assertSame(503, CJW_Wizard_Ideal::handleWebhook($request)->get_status());
+    }
+
+    /**
+     * The key for that mode was removed while a payment was in flight. Not
+     * something to drop: Mollie retries for a day, which is time enough for
+     * somebody to put it back.
+     */
+    public function testAPaymentWhoseKeyIsGoneAsksForARetry(): void
+    {
+        $id = $this->given($this->payment([ 'mode' => 'live' ]), 200, true, 'live');
+
+        $result = CJW_Wizard_Ideal::process($id);
+
+        $this->assertTrue($result['retry']);
+        $this->assertSame('no-key', $result['reason']);
+        $this->assertSame([], $this->requests, 'and nothing is asked with the wrong credential');
     }
 
     /**

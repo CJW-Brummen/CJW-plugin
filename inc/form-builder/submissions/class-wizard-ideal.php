@@ -37,6 +37,16 @@ final class CJW_Wizard_Ideal
     public const string META_ATTEMPTS = '_cjw_wizard_mollie_attempts';
 
     /**
+     * One row per payment id, so a webhook can be traced to a registration
+     * without asking Mollie who it belongs to.
+     *
+     * The attempts above are one array under one key, which cannot be queried.
+     * This can, and that is what lets the webhook establish that a payment
+     * came from here before spending an API call on it.
+     */
+    public const string META_PAYMENT = '_cjw_wizard_mollie_payment';
+
+    /**
      * Query argument on the link that starts a payment.
      */
     public const string ARG_PAY = 'cjw_betalen';
@@ -410,7 +420,29 @@ final class CJW_Wizard_Ideal
             return self::outcome(false, false, 'copy');
         }
 
-        $answer = CJW_Mollie::getPayment($paymentId);
+        // Our own records first. An id that was never started here is refused
+        // before a single API call is made with it.
+        $submissionId = self::submissionForPayment($paymentId);
+        $attempt = self::attempts($submissionId)[ $paymentId ] ?? null;
+
+        if ($submissionId < 1 || $attempt === null) {
+            return self::outcome(false, false, 'foreign');
+        }
+
+        // The mode the payment was created in, not whichever mode the site is
+        // switched to now. Somebody flipping to test for a rehearsal must not
+        // silently drop a real payment that is still in flight -- and a test
+        // key cannot see a live payment, so asking with the wrong one would
+        // read as "Mollie has never heard of it".
+        $mode = $attempt['mode'] !== '' ? $attempt['mode'] : CJW_Mollie::mode();
+
+        if (! CJW_Mollie::hasKey($mode)) {
+            // Recoverable: the key for that mode was removed. Worth asking
+            // Mollie to try again while somebody puts it back.
+            return self::outcome(false, true, 'no-key');
+        }
+
+        $answer = CJW_Mollie::getPayment($paymentId, $mode);
 
         if (! ($answer['ok'] ?? false)) {
             $status = (int) ($answer['status'] ?? 0);
@@ -423,16 +455,17 @@ final class CJW_Wizard_Ideal
         }
 
         $payment = $answer['payment'] ?? [];
-        $submissionId = (int) ($payment['metadata']['submission'] ?? 0);
 
-        if ($submissionId < 1 || ! self::isKnownAttempt($submissionId, $paymentId)) {
-            // Either not ours at all, or an id that never came from here.
-            return self::outcome(false, false, 'foreign');
-        }
-
-        if ((string) ($payment['mode'] ?? '') !== CJW_Mollie::mode()) {
+        if ((string) ($payment['mode'] ?? '') !== $mode) {
             // A test payment must never touch live books, or the other way up.
             return self::outcome(false, false, 'wrong-mode');
+        }
+
+        // Cross-check: the payment should agree about which registration it
+        // belongs to. Our own record is the authority; this catches a mix-up
+        // rather than an attack.
+        if ((int) ($payment['metadata']['submission'] ?? 0) !== $submissionId) {
+            return self::outcome(false, false, 'mismatched-metadata');
         }
 
         if ((string) ($payment['amount']['currency'] ?? '') !== 'EUR') {
@@ -721,16 +754,56 @@ final class CJW_Wizard_Ideal
     }
 
     /**
-     * Whether this payment was started from here, for this registration.
+     * Every payment id started for a registration.
      *
-     * @param int    $submissionId Registration post id.
-     * @param string $paymentId    Mollie payment id.
+     * @param int $submissionId Registration post id.
      *
-     * @return bool
+     * @return array<int, string>
      */
-    private static function isKnownAttempt(int $submissionId, string $paymentId): bool
+    private static function paymentIds(int $submissionId): array
     {
-        return array_key_exists($paymentId, self::attempts($submissionId));
+        $stored = get_post_meta($submissionId, self::META_PAYMENT, false);
+
+        return array_values(array_filter(array_map(
+            static fn($value): string => is_string($value) ? $value : '',
+            is_array($stored) ? $stored : []
+        )));
+    }
+
+    /**
+     * The registration a payment was started for, or 0.
+     *
+     * Asked of this site's own records rather than of Mollie, so a webhook
+     * carrying an id that was never ours costs nothing: no API call, no key
+     * used, nothing to hammer.
+     *
+     * @param string $paymentId Mollie payment id.
+     *
+     * @return int
+     */
+    public static function submissionForPayment(string $paymentId): int
+    {
+        if (! CJW_Mollie::looksLikePaymentId($paymentId)) {
+            return 0;
+        }
+
+        $found = get_posts([
+            'post_type' => CJW_Wizard_Submission_Repository::POST_TYPE,
+            // See submissionForToken(): 'any' finds none of these statuses.
+            'post_status' => array_keys(CJW_Wizard_Submission_Status::all()),
+            'numberposts' => 1,
+            'fields' => 'ids',
+            'no_found_rows' => true,
+            // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- An exact lookup on a payment id; there is no other way in.
+            'meta_query' => [
+                [
+                    'key' => self::META_PAYMENT,
+                    'value' => $paymentId,
+                ],
+            ],
+        ]);
+
+        return $found === [] ? 0 : (int) $found[0];
     }
 
     /**
@@ -781,6 +854,10 @@ final class CJW_Wizard_Ideal
         ];
 
         update_post_meta($submissionId, self::META_ATTEMPTS, $attempts);
+
+        if (! in_array($paymentId, self::paymentIds($submissionId), true)) {
+            add_post_meta($submissionId, self::META_PAYMENT, $paymentId);
+        }
     }
 
     /**

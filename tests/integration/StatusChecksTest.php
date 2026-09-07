@@ -217,6 +217,37 @@ final class StatusChecksTest extends CJW_IntegrationTestCase
         add_filter(CJW_Status_Endpoint::FILTER_CHECKS, [CJW_Summer_Camp_Status_Checks::class, 'add']);
     }
 
+    /**
+     * The rehearsal that nobody switched back. Every parent completes the
+     * form, every registration reads as paid, and no money arrives -- so Site
+     * Health treats it as an outage rather than a note.
+     */
+    public function testTestModeWhileRegistrationIsOpenIsCritical(): void
+    {
+        add_filter('home_url', [ $this, 'httpsHome' ], 10, 1);
+        CJW_Mollie::storeKey('test_abcdefghij1234567890ABCDE');
+        $this->openRegistration();
+
+        $health = new CJW_Summer_Camp_Site_Health();
+
+        $this->assertSame('critical', $health->testIdeal()['status']);
+
+        $this->settings([ 'registration_active' => false ]);
+
+        $this->assertSame('recommended', $health->testIdeal()['status'], 'out of season it is only a reminder');
+
+        CJW_Mollie::clearKey(CJW_Mollie::MODE_TEST);
+        remove_filter('home_url', [ $this, 'httpsHome' ], 10);
+    }
+
+    /**
+     * @param string $url Address WordPress built.
+     */
+    public function httpsHome(string $url): string
+    {
+        return str_replace('http://', 'https://', $url);
+    }
+
     public function testAnOpenRegistrationThatNobodyCanUseMakesTheWholeSiteCritical(): void
     {
         $this->openRegistration();
