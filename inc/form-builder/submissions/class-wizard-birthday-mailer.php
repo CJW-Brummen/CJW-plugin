@@ -63,11 +63,14 @@ final class CJW_Wizard_Birthday_Mailer
     {
         add_action(self::HOOK, [ $this, 'run_scheduled' ]);
 
-        CJW_Cron_Heartbeat::watch(
-            self::HOOK,
-            __('Verjaardagsmail', 'cjw'),
-            2 * DAY_IN_SECONDS
-        );
+        // On init: the label is translated, and the text domain loads there.
+        add_action('init', static function (): void {
+            CJW_Cron_Heartbeat::watch(
+                self::HOOK,
+                __('Verjaardagsmail', 'cjw'),
+                2 * DAY_IN_SECONDS
+            );
+        });
 
         // Self-healing, like the retention sweep: a botched deactivation or a
         // restored database should not end the schedule for ever.
