@@ -76,7 +76,7 @@ final class MailerTest extends CJW_TestCase
         $this->assertSame('info@example.test', CJW_Mailer::senderAddress());
 
         $GLOBALS['cjw_test_options'][CJW_Summer_Camp_Service::OPTION_KEY] = [
-            'contact_email' => 'cjwbrummen@gmail.com',
+            'contact_email' => 'info@ander-domein.example',
         ];
 
         $this->assertSame('', CJW_Mailer::senderAddress());
